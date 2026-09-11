@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://garciabel212.github.io/sitemap.xml

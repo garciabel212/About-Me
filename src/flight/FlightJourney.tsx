@@ -23,9 +23,11 @@ function loadImage(url: string): Promise<HTMLImageElement> {
   return image.decode().then(() => image);
 }
 
+// The top band keeps the transparent navbar legible over bright sky in either theme.
+const NAV_BAND = 'linear-gradient(180deg, color-mix(in srgb, var(--bg) 88%, transparent) 0, transparent 140px)';
 const SCRIM = {
-  desktop: 'linear-gradient(90deg, color-mix(in srgb, var(--bg) 55%, transparent) 0%, transparent 60%)',
-  mobile: 'linear-gradient(0deg, color-mix(in srgb, var(--bg) 55%, transparent) 0%, transparent 55%)',
+  desktop: `${NAV_BAND}, linear-gradient(90deg, color-mix(in srgb, var(--bg) 55%, transparent) 0%, transparent 60%)`,
+  mobile: `${NAV_BAND}, linear-gradient(0deg, color-mix(in srgb, var(--bg) 55%, transparent) 0%, transparent 55%)`,
 };
 
 export default function FlightJourney() {

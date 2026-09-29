@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Atmosphere from '@/components/background/Atmosphere';
@@ -34,6 +35,19 @@ function Loadable({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   const location = useLocation();
   const lenis = useLenis();
+  // Bumped once the outgoing page has unmounted, so scroll geometry is final.
+  const [settled, setSettled] = useState(0);
+
+  const onExitComplete = () => setSettled((count) => count + 1);
+
+  // Pinned sections on the incoming page were measured while the old page was
+  // still in the DOM. Runs after the commit that removes it, before the hash
+  // scroll below re-runs against the corrected geometry.
+  useEffect(() => {
+    if (!settled) return;
+    ScrollTrigger.refresh();
+    lenis?.resize();
+  }, [settled, lenis]);
 
   useEffect(() => {
     if (location.hash) {
@@ -58,10 +72,10 @@ function AppRoutes() {
     }
     lenis?.scrollTo(0, { immediate: true });
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [lenis, location.pathname, location.hash]);
+  }, [lenis, location.pathname, location.hash, settled]);
 
   return (
-    <AnimatePresence mode="sync" initial={false}>
+    <AnimatePresence mode="sync" initial={false} onExitComplete={onExitComplete}>
       <Routes location={location} key={location.pathname}>
         <Route
           path="/"

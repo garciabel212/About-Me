@@ -1,3 +1,4 @@
+import type { MouseEvent } from 'react';
 import { ArrowDown, ArrowUpRight, FileDown, Mail } from 'lucide-react';
 import { veilStyle } from '../veil';
 
@@ -7,9 +8,11 @@ const LINKEDIN = 'https://www.linkedin.com/in/jose-abel-garcia-a5006616b/';
 
 interface IntroBeatProps {
   onExploreWork: () => void;
+  /** Handles in-page "#id" links when smooth scrolling is off. */
+  onInPageLink: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
 
-export default function IntroBeat({ onExploreWork }: IntroBeatProps) {
+export default function IntroBeat({ onExploreWork, onInPageLink }: IntroBeatProps) {
   const portrait = `${import.meta.env.BASE_URL}images/jose_garcia_portrait.png`;
 
   return (
@@ -45,6 +48,7 @@ export default function IntroBeat({ onExploreWork }: IntroBeatProps) {
           </button>
           <a
             href="#contact"
+            onClick={onInPageLink}
             className="btn-secondary inline-flex items-center gap-2 px-5 py-3.5 rounded-xl font-medium text-sm sm:text-base"
           >
             <Mail size={16} aria-hidden="true" />

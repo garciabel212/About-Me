@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FocusEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FocusEvent, type MouseEvent } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -130,6 +130,19 @@ export default function FlightJourney() {
     panels.current.get(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  // SmoothScroll intercepts plain "#id" links only while Lenis runs. Without it
+  // (reduced motion) HashRouter would treat "#work" as a route, so scroll and
+  // move focus here instead.
+  const onInPageLink = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (lenis) return;
+    const target = document.getElementById(decodeURIComponent(event.currentTarget.hash.slice(1)));
+    if (!target) return;
+    event.preventDefault();
+    target.scrollIntoView({ block: 'start' });
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  };
+
   // Keyboard users tabbing into a beat that is not on screen yet: fly there.
   const onFocusCapture = (event: FocusEvent<HTMLElement>) => {
     for (const beat of M1_BEATS) {
@@ -143,6 +156,7 @@ export default function FlightJourney() {
   const skipLink = (
     <a
       href="#work"
+      onClick={onInPageLink}
       className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-24 focus:z-20 focus:rounded-lg focus:bg-[var(--surface)] focus:px-4 focus:py-2 focus:text-[var(--text-primary)]"
     >
       Skip flight
@@ -163,7 +177,7 @@ export default function FlightJourney() {
         </picture>
         <div className="relative flex flex-col gap-16 pt-28 pb-16 lg:pt-36">
           <StagePanel mode={mode} panelRef={registerPanel('intro')}>
-            <IntroBeat onExploreWork={() => scrollToBeat('service-map')} />
+            <IntroBeat onExploreWork={() => scrollToBeat('service-map')} onInPageLink={onInPageLink} />
           </StagePanel>
           <StagePanel mode={mode} panelRef={registerPanel('service-map')}>
             <ServiceMapBeat />
@@ -185,7 +199,7 @@ export default function FlightJourney() {
       <FlightCanvas store={store} frameRef={frameRef} poster={M1.poster} />
       <div className="absolute inset-0 pointer-events-none" style={{ background: SCRIM[size] }} aria-hidden="true" />
       <StagePanel mode={mode} panelRef={registerPanel('intro')}>
-        <IntroBeat onExploreWork={() => scrollToBeat('service-map')} />
+        <IntroBeat onExploreWork={() => scrollToBeat('service-map')} onInPageLink={onInPageLink} />
       </StagePanel>
       <StagePanel mode={mode} panelRef={registerPanel('service-map')}>
         <ServiceMapBeat />

@@ -64,11 +64,11 @@ ABOUT → 5, CONTACT → 6.
 
 ### 4.1 Camera path (Claude authors, user renders)
 
-Claude writes `flight/miami-m1.esp` (Earth Studio project). The `.esp` format is
-undocumented JSON; it is generated from the structure used by community tools
-(e.g. `mkatzef/google-studio-utils`). **Fallback:** `flight/miami-m1-keyframes.md`,
-a table of time / lat / lon / altitude / heading / tilt the user can enter by hand
-in Earth Studio if the import fails.
+Claude writes `flight/m1-camera-path.md`: a keyframe table (time / lat / lon /
+altitude / heading / tilt) plus step-by-step Earth Studio instructions. The user
+enters the keyframes by hand (six keyframes, ~5 minutes). An importable `.esp`
+file was considered and dropped: the format is undocumented, and community
+generators rely on scaling constants reverse-engineered from a 2022 model version.
 
 M1 path:
 
@@ -76,7 +76,7 @@ M1 path:
   at ~100–120 m, looking east downriver. Follow the river's bends east; altitude
   eases to ~250 m and tilt lifts so the skyline rises into frame.
 - **Brickell stop (~3 s):** near the river mouth at Brickell Point, bank gently
-  right; the camera slows to a slight drift with Brickell Avenue towers on the left.
+  right; the camera slows to a slight drift with the Brickell towers on the right.
   This is the hand-off point for milestone 2.
 - **Motion rules:** eased keyframes only; heading change < ~15°/s; sun fixed at
   late golden hour.
@@ -116,15 +116,15 @@ Only optimized WebP output is committed; raw exports are in `.gitignore`.
 |---|---|---|
 | `src/flight/manifest.ts` | Data only: per-size frame URL builder, frame counts, ordered segment list `{ id, kind: 'transit' \| 'stop', frames: [start, end], scrollVh }`. Later milestones extend the flight by appending segments. | — |
 | `src/flight/scrollMap.ts` | Pure function: overall scroll progress (0–1) → fractional frame index, piecewise across segments by `scrollVh` weight. | manifest types |
-| `src/flight/FrameStore.ts` | Plain TS class. Tiered loading (stride 8 → 4 → 2 → 1), each tier ordered by distance from the playhead. Keeps ~±30 decoded frames around the playhead; LRU-evicts others. `nearest(i)` returns the closest ready frame. | `Image`, `decode()` |
+| `src/flight/FrameStore.ts` | Plain TS class with an injected loader. Tiered loading (stride 8 → 4 → 2 → 1), each tier ordered by distance from the playhead, bounded concurrency. Holds loaded, pre-decoded `<img>` elements and lets the browser manage decoded-bitmap memory. (A manual ±30 ImageBitmap window plus always-kept coarse frames would pin ~680 MB at 1080p, too much for phones.) `nearest(i)` returns the closest loaded frame; `get(i)` the exact one. | injected loader (`Image` + `decode()` in the browser) |
 | `src/flight/FlightCanvas.tsx` | DPR-aware canvas, bottom-anchored cover-fit. Cross-fades frame ⌊f⌋ → ⌊f⌋+1 by the fractional part. Redraws only when progress changes. `aria-hidden`. | FrameStore |
-| `src/flight/FlightJourney.tsx` | The pinned section: one ScrollTrigger (`pin`, `scrub: true`), a GSAP timeline with labels at segment boundaries, `gsap.matchMedia` for desktop / mobile / reduced-motion. Hosts panels. | GSAP, manifest, scrollMap |
+| `src/flight/FlightJourney.tsx` | The pinned section: one ScrollTrigger (`pin`; progress read directly, smoothing comes from Lenis) that drives the frame index and panel fades. Mode (desktop / mobile / static) comes from a small React hook rather than `gsap.matchMedia`, because static mode renders different markup. Hosts panels. | GSAP, manifest, scrollMap |
 | `src/flight/StagePanel.tsx` | One content block that fades and drifts in/out over a progress range. Real DOM text in reading order. | — |
 
 ### 5.2 Scroll feel
 
-- Lenis already smooths scrolling, so ScrollTrigger uses `scrub: true` (no extra
-  lag). Stacking both makes the camera feel late and rubbery.
+- Lenis already smooths scrolling, so the ScrollTrigger reads progress directly with
+  no `scrub` lag of its own. Stacking both makes the camera feel late and rubbery.
 - **Targeted fix:** the Lenis → `ScrollTrigger.update` sync currently lives only in
   `src/components/projects/HeroReveal.tsx`. Move it into
   `src/components/motion/SmoothScroll.tsx` once so every trigger on the site stays
@@ -167,7 +167,7 @@ Only optimized WebP output is committed; raw exports are in `.gitignore`.
 
 ## 7. Milestone 1 scope, testing, acceptance
 
-**In scope:** §4 pipeline (`.esp` + fallback table, `build-frames.mjs` with
+**In scope:** §4 pipeline (camera-path keyframe table, `build-frames.mjs` with
 placeholder mode), §5 units, beats 1–2 replacing `<Hero />`, the §5.5 page
 integration, the §5.2 Lenis sync move, the §6 modes.
 
@@ -178,8 +178,8 @@ sections (Work, Methodology, Timeline, About, Contact stay below the flight).
 
 - `scrollMap`: segment boundaries, stop segments map long scroll to few frames,
   clamping at 0 and 1, monotonic in both directions.
-- `FrameStore`: tier order (8 → 4 → 2 → 1) biased toward the playhead; decode
-  window size and LRU eviction; `nearest()` never empty once frame 1 is ready.
+- `FrameStore`: tier order (8 → 4 → 2 → 1) biased toward the playhead; bounded
+  concurrency; failed frames skipped; `nearest()` never empty once any frame is ready.
 
 **In-browser verification (preview pane):**
 
@@ -208,8 +208,8 @@ feel.**
 
 | Risk | Mitigation |
 |---|---|
-| `.esp` import fails (undocumented format) | Hand-entry keyframe table fallback (§4.1). |
+| Keyframe coordinates are approximate | User checks the path in Earth Studio's preview before rendering; the table is adjusted, not the code. |
 | Earth Studio looks melted at low altitude | Start at ~100–120 m, not water level; golden-hour shadows; judge in M1. |
 | Payload grows too large for the full journey (6 beats) | Stop decimation; per-segment lazy loading (load current + next segment only) added in M2 if M1 numbers demand it. |
-| Decoded-frame memory on phones | ±30 decode window, LRU eviction, DPR cap 2. |
+| Decoded-frame memory on phones | Browser-managed decode cache, 720×1280 mobile frames, DPR cap 2; per-segment loading in M2 if needed. |
 | Attribution cropped | Bottom-center placement + bottom-anchored crop; portrait render fallback (§4.2). |

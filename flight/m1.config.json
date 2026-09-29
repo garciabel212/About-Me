@@ -1,0 +1,9 @@
+{
+  "id": "m1",
+  "rawFrameCount": 216,
+  "stillRawFrame": 145,
+  "segments": [
+    { "id": "river", "kind": "transit", "raw": [1, 144], "stride": 1, "scrollVh": { "desktop": 250, "mobile": 150 } },
+    { "id": "brickell", "kind": "stop", "raw": [145, 216], "stride": 3, "scrollVh": { "desktop": 150, "mobile": 100 } }
+  ]
+}

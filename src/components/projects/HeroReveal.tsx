@@ -26,7 +26,6 @@ import { ArrowLeft } from 'lucide-react';
 import { BlurReveal } from '@/components/motion/Primitives';
 import ShinyText from '@/components/bits/ShinyText';
 import SplitRevealText from '@/components/bits/SplitRevealText';
-import useLenis from '@/hooks/useLenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,7 +36,6 @@ interface HeroRevealProps {
 
 export default function HeroReveal({ children }: HeroRevealProps) {
   const reduceMotion = useReducedMotion();
-  const lenis = useLenis();
 
   const sectionRef = useRef<HTMLElement>(null);
   const row1Ref = useRef<HTMLDivElement>(null);
@@ -55,11 +53,6 @@ export default function HeroReveal({ children }: HeroRevealProps) {
       // Skip on mobile or reduced motion
       const isMobile = window.matchMedia('(max-width: 767px)').matches;
       if (!section || !row1 || !row2 || !visual || reduceMotion || isMobile) return;
-
-      // Sync GSAP ScrollTrigger with Lenis if available
-      if (lenis) {
-        lenis.on('scroll', ScrollTrigger.update);
-      }
 
       // Initial state: visual is clipped narrow, rows are at rest
       gsap.set(visual, {
@@ -119,13 +112,10 @@ export default function HeroReveal({ children }: HeroRevealProps) {
 
       return () => {
         window.cancelAnimationFrame(refreshFrame);
-        if (lenis) {
-          lenis.off('scroll', ScrollTrigger.update);
-        }
       };
     },
-    // Re-run if lenis or reduceMotion changes
-    { scope: sectionRef, dependencies: [lenis, reduceMotion] },
+    // Re-run if reduceMotion changes
+    { scope: sectionRef, dependencies: [reduceMotion] },
   );
 
   // ─── Mobile / reduced-motion: plain stacked layout ──────────────────────

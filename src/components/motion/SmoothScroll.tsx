@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Shared Lenis context ────────────────────────────────────────────────────
 export const LenisContext = createContext<Lenis | null>(null);
@@ -35,6 +39,9 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     });
 
     lenisRef.current = lenisInstance;
+
+    // Keep every ScrollTrigger in step with Lenis's smoothed scroll position.
+    lenisInstance.on('scroll', ScrollTrigger.update);
     setLenis(lenisInstance);
 
     // Connect requestAnimationFrame loop
@@ -69,6 +76,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     return () => {
       cancelAnimationFrame(rafId);
       document.removeEventListener('click', handleAnchorClick);
+      lenisInstance.off('scroll', ScrollTrigger.update);
       lenisInstance.destroy();
       lenisRef.current = null;
       setLenis(null);

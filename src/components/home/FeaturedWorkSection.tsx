@@ -27,22 +27,6 @@ export default function FeaturedWorkSection() {
 
   const projects: ProjectPanelData[] = [
     {
-      num: '01',
-      title: 'SERVICE MAP PLANNER',
-      category: 'Field Service Operations & Asset Intelligence',
-      problem:
-        'Managing nationwide hardware installations across research universities and public libraries relied on fragmented spreadsheets, causing scheduling conflicts and version drift.',
-      outcome:
-        'Unified 100+ accounts, scanner inventories, and nationwide routing into an active daily internal tool with proactive compliance flags.',
-      role: 'Architecture · Product Design · Frontend Engineering',
-      techs: ['Next.js', 'Firebase Firestore', 'TypeScript', 'Google Maps API'],
-      image: `${baseUrl}images/service_map_tablet.jpg`,
-      alt: 'Service Map Planner operational interface displayed on a field tablet',
-      badge: 'Active Internal Tool &middot; Daily Field Use',
-      badgeType: 'active',
-      href: '/projects/service-map-planner',
-    },
-    {
       num: '02',
       title: 'SCALE GARAGE STUDIO',
       category: 'Client Product · Interactive 3D Configurator',

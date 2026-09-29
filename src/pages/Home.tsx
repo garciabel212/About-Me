@@ -1,4 +1,5 @@
-import Hero from '@/components/hero/Hero';
+import FlightJourney from '@/flight/FlightJourney';
+import SignalRail from '@/components/hero/SignalRail';
 import FeaturedWorkSection from '@/components/home/FeaturedWorkSection';
 import MethodologySection from '@/components/home/MethodologySection';
 import CareerTimeline from '@/components/home/CareerTimeline';
@@ -9,8 +10,9 @@ import QuickActionBar from '@/components/mobile/QuickActionBar';
 export default function Home() {
   return (
     <main className="relative z-10 overflow-hidden text-[var(--text-primary)]">
-      {/* 01. HERO & SIGNAL RAIL — Identity, Value Proposition, Portrait & Credibility Rail */}
-      <Hero />
+      {/* 01. FLIGHT — Miami River intro → Brickell stop (Service Map Planner) */}
+      <FlightJourney />
+      <SignalRail />
 
       {/* 02. FEATURED WORK — Dominant Cinematic Panels for Service Map Planner & Scale Garage Studio */}
       <FeaturedWorkSection />

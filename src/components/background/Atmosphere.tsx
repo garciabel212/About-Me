@@ -132,6 +132,7 @@ export default function Atmosphere() {
     let elapsed = 0;
     let pageVisible = document.visibilityState === 'visible';
     let regionVisible = true;
+    let flightVisible = false;
     let scene = sceneForPath(location.pathname);
     let project: ProjectVariant = 'service-ops';
 
@@ -336,7 +337,7 @@ export default function Atmosphere() {
     };
 
     const syncLoop = () => {
-      const shouldAnimate = !isPaused && pageVisible && regionVisible;
+      const shouldAnimate = !isPaused && pageVisible && regionVisible && !flightVisible;
       if (shouldAnimate && !animationFrame) {
         lastTime = performance.now();
         animationFrame = window.requestAnimationFrame(frame);
@@ -371,6 +372,11 @@ export default function Atmosphere() {
       project = detail;
       root.dataset.project = detail;
       target = profileForScene(scene, project);
+    };
+
+    const onFlightVisibility = (event: Event) => {
+      flightVisible = (event as CustomEvent<boolean>).detail === true;
+      syncLoop();
     };
 
     const pageObserver = new IntersectionObserver(([entry]) => {
@@ -412,6 +418,7 @@ export default function Atmosphere() {
     document.documentElement.addEventListener('mouseleave', releasePointer);
     document.addEventListener('visibilitychange', onVisibilityChange);
     window.addEventListener('contour-project-change', onProjectChange);
+    window.addEventListener('flight-visibility', onFlightVisibility);
     syncLoop();
 
     return () => {
@@ -425,6 +432,7 @@ export default function Atmosphere() {
       document.documentElement.removeEventListener('mouseleave', releasePointer);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       window.removeEventListener('contour-project-change', onProjectChange);
+      window.removeEventListener('flight-visibility', onFlightVisibility);
     };
   }, [isPaused, location.pathname, resolvedTheme]);
 

@@ -3,30 +3,42 @@ import type { FlightManifest } from '../manifest';
 
 export const M1: FlightManifest = {
   "id": "m1",
-  "frameCount": 168,
+  "frameCount": 235,
   "segments": [
     {
-      "id": "river",
+      "id": "descent",
       "kind": "transit",
       "frames": [
         0,
-        143
+        119
       ],
       "scrollVh": {
-        "desktop": 250,
-        "mobile": 150
+        "desktop": 300,
+        "mobile": 180
       }
     },
     {
-      "id": "brickell",
-      "kind": "stop",
+      "id": "river-brickell",
+      "kind": "transit",
       "frames": [
-        144,
-        167
+        120,
+        209
       ],
       "scrollVh": {
         "desktop": 150,
-        "mobile": 100
+        "mobile": 90
+      }
+    },
+    {
+      "id": "towers",
+      "kind": "stop",
+      "frames": [
+        210,
+        234
+      ],
+      "scrollVh": {
+        "desktop": 120,
+        "mobile": 80
       }
     }
   ],

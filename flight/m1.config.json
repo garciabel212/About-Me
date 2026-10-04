@@ -1,9 +1,10 @@
 {
   "id": "m1",
-  "rawFrameCount": 216,
-  "stillRawFrame": 145,
+  "rawFrameCount": 495,
+  "stillRawFrame": 1,
   "segments": [
-    { "id": "river", "kind": "transit", "raw": [1, 144], "stride": 1, "scrollVh": { "desktop": 250, "mobile": 150 } },
-    { "id": "brickell", "kind": "stop", "raw": [145, 216], "stride": 3, "scrollVh": { "desktop": 150, "mobile": 100 } }
+    { "id": "descent", "kind": "transit", "raw": [1, 240], "stride": 2, "scrollVh": { "desktop": 300, "mobile": 180 } },
+    { "id": "river-brickell", "kind": "transit", "raw": [241, 420], "stride": 2, "scrollVh": { "desktop": 150, "mobile": 90 } },
+    { "id": "towers", "kind": "stop", "raw": [421, 495], "stride": 3, "scrollVh": { "desktop": 120, "mobile": 80 } }
   ]
 }

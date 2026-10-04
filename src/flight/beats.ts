@@ -18,8 +18,10 @@ export interface BeatWindow {
 }
 
 export const M1_BEATS: readonly BeatSpec[] = [
-  { id: 'intro', segment: 'river', fadeIn: null, fadeOut: [0.55, 0.75] },
-  { id: 'service-map', segment: 'brickell', fadeIn: [0.05, 0.25], fadeOut: null },
+  // Readable through the dive; gone as the camera levels onto the river.
+  { id: 'intro', segment: 'descent', fadeIn: null, fadeOut: [0.8, 1] },
+  // The river run and skyline reveal play without panels; Service Map arrives with the turn into the towers.
+  { id: 'service-map', segment: 'river-brickell', fadeIn: [0.7, 1], fadeOut: null },
 ];
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));

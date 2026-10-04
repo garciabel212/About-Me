@@ -19,9 +19,16 @@ with the identity and atmosphere of South Florida.
 - Motion is continuous and smooth, with gentle turns and elevation changes.
 - The route is cinematically compressed so the journey fits the page comfortably.
 
-**Milestone 1 (this spec's build scope):** the river transit with the introduction,
-followed by the Brickell stop with Service Map Planner. It exists to judge realism,
-scroll feel, and readability before extending the flight to the beach.
+**Milestone 1 (this spec's build scope):** the dive from the sky into the river with
+the introduction, the river run with the skyline reveal, and the glide between the
+Brickell towers with Service Map Planner. It exists to judge realism, scroll feel,
+and readability before extending the flight to the beach.
+
+**Revision 2026-10-03:** the source sequence is **30 fps**, and the route follows the
+production storyboard (https://claude.ai/artifact/KSRnjU1GbSHQz4fcCZeGzT): seven
+chapters, one continuous 49 s flight, opening with a dive from ~1,500 m. M1 is the
+storyboard's chapters 1–2. Where this spec and the storyboard disagree, the storyboard
+wins; §3's six-stop table is superseded by its seven chapters.
 
 ## 2. Decisions
 
@@ -29,7 +36,7 @@ scroll feel, and readability before extending the flight to the beach.
 |---|---|---|
 | Footage source | Google Earth Studio render | One continuous camera path over real Miami geometry, consistent light, exports an image sequence directly. Free with attribution. |
 | Placement | Replaces the Home page (`/`) | The flight *is* the landing story; case-study routes stay as deep links. |
-| Light | Late golden hour, sun behind-right of camera flying east | Warm towers, deep-blue bay, long shadows that hide Earth Studio's low-altitude softness. |
+| Light | Clear day, about 1:30 pm, fixed for the whole flight (revised 2026-10-03 from late golden hour) | Chapters 4–6 look back west at the skyline; a late-afternoon sun would backlight it. Turquoise bay and beach water read best with a higher sun. |
 | Scroll → footage | WebP image sequence drawn to `<canvas>`, driven by GSAP ScrollTrigger | Frame-exact in both directions on every browser. Video `currentTime` scrubbing stutters on Safari/iOS, worst in reverse. Live 3D tiles need an exposed API key and stream in blurry. |
 
 **Rejected:** licensed stock clips (inconsistent light/heading between clips),
@@ -70,21 +77,21 @@ enters the keyframes by hand (six keyframes, ~5 minutes). An importable `.esp`
 file was considered and dropped: the format is undocumented, and community
 generators rely on scaling constants reverse-engineered from a 2022 model version.
 
-M1 path:
+M1 path (storyboard keyframes K0–K4):
 
-- **River transit (~6 s):** start over the Miami River near the SW 2nd Ave bridge
-  at ~100–120 m, looking east downriver. Follow the river's bends east; altitude
-  eases to ~250 m and tilt lifts so the skyline rises into frame.
-- **Brickell stop (~3 s):** near the river mouth at Brickell Point, bank gently
-  right; the camera slows to a slight drift with the Brickell towers on the right.
-  This is the hand-off point for milestone 2.
-- **Motion rules:** eased keyframes only; heading change < ~15°/s; sun fixed at
-  late golden hour.
+- **Descent (8 s):** from ~1,500 m west of downtown, tilted steeply down, dive onto
+  the river near the SW 2nd Ave bridge at ~110 m while the tilt eases to the horizon.
+- **River run (6 s):** follow the river east; the skyline reveals at the Brickell
+  Ave bridge; bank right onto Brickell Ave at ~150 m.
+- **Towers stop (2.5 s):** slow drift south between the towers. This is the
+  hand-off point for milestone 2.
+- **Motion rules:** eased keyframes only; heading change < ~15°/s; constant field
+  of view; sun fixed at about 1:30 pm (the later skyline chapters look west).
 - Coordinates are approximate until checked in Earth Studio's preview.
 
 ### 4.2 Render settings
 
-- 2560×1440, 24 fps, JPEG or PNG sequence (~216 frames for ~9 s).
+- 2560×1440, 30 fps, JPEG or PNG sequence (495 frames for 16.5 s).
 - **Attribution:** Earth Studio burns "Google Earth" plus data-provider credits into
   every frame; it cannot be removed. Place it **bottom-center** in Render Settings
   so it survives both the mobile center crop and the canvas's bottom-anchored cover
@@ -100,7 +107,9 @@ M1 path:
 - Output: `public/flight/m1/desktop/0001.webp…` (1920 wide) and
   `public/flight/m1/mobile/0001.webp…` (720×1280 center 9:16 crop, or downscaled
   portrait render), WebP ~q70, tuned to meet §7 budgets.
-- Stop segments are decimated (keep every 3rd frame); the transit keeps every frame.
+- Frames are decimated per segment and cross-faded at runtime: every 2nd frame on
+  transits, every 3rd on stops (decided 2026-10-03 to keep the full flight's payload
+  down). The render stays 30 fps; setting a segment's `stride` to 1 restores every frame.
 - Emits a tiny blurred poster of frame 1 (inlined as a data URI, < 2 KB) and a
   still frame for reduced-motion mode (the skyline reveal).
 - `--placeholder N` generates a synthetic sequence (numbered gradient frames with a
@@ -209,7 +218,7 @@ feel.**
 | Risk | Mitigation |
 |---|---|
 | Keyframe coordinates are approximate | User checks the path in Earth Studio's preview before rendering; the table is adjusted, not the code. |
-| Earth Studio looks melted at low altitude | Start at ~100–120 m, not water level; golden-hour shadows; judge in M1. |
+| Earth Studio looks melted at low altitude | Start at ~100–120 m, not water level; the opening dive is high where Earth Studio is sharpest; look down (tilt ~25°) over roofs; judge in M1. |
 | Payload grows too large for the full journey (6 beats) | Stop decimation; per-segment lazy loading (load current + next segment only) added in M2 if M1 numbers demand it. |
 | Decoded-frame memory on phones | Browser-managed decode cache, 720×1280 mobile frames, DPR cap 2; per-segment loading in M2 if needed. |
 | Attribution cropped | Bottom-center placement + bottom-anchored crop; portrait render fallback (§4.2). |

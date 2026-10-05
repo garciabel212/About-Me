@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ExternalLink, Mail } from 'lucide-react';
+import { ExternalLink, Mail, ArrowUp } from 'lucide-react';
 
 function GithubIcon({ size = 16 }: { size?: number }) {
   return (
@@ -104,6 +104,16 @@ export default function Footer() {
           <p>
             &copy; {new Date().getFullYear()} Jose Garcia. Designed with precision &amp; craft.
           </p>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            aria-label="Back to top"
+            className="flex items-center gap-1.5 text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors group"
+          >
+            <span className="uppercase tracking-widest text-[10px]">Back to top</span>
+            <span className="w-6 h-6 rounded-full border border-[var(--border)] flex items-center justify-center group-hover:border-[var(--accent)] group-hover:bg-[var(--accent)] group-hover:text-white transition-all duration-200">
+              <ArrowUp size={11} />
+            </span>
+          </button>
           <p>
             Boca Raton, FL &middot; B.S. Computer Engineering, FAU
           </p>

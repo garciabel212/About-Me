@@ -20,7 +20,7 @@ interface ProjectPanelData {
   href: string;
 }
 
-export default function FeaturedWorkSection() {
+export default function FeaturedWorkSection({ projectSlug }: { projectSlug?: string }) {
   const reduceMotion = useReducedMotion();
   const navigate = useNavigate();
   const baseUrl = import.meta.env.BASE_URL;
@@ -73,14 +73,14 @@ export default function FeaturedWorkSection() {
 
   return (
     <section
-      id="work"
+      id={projectSlug ? 'more-work' : 'work'}
       className="section-py border-t border-[var(--border)] relative scroll-mt-20"
       data-contour-section="work"
     >
       <div className="section-container">
         
         {/* Section Title Header */}
-        <div className="max-w-3xl mb-14 lg:mb-20">
+        {!projectSlug && <div className="max-w-3xl mb-14 lg:mb-20">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
             <span className="font-mono text-xs font-semibold tracking-widest text-[var(--accent)] uppercase">
@@ -93,11 +93,11 @@ export default function FeaturedWorkSection() {
           <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">
             Real enterprise software, internal operational platforms, and client 3D applications built from requirements to deployment.
           </p>
-        </div>
+        </div>}
 
         {/* Cinematic Panels Stack */}
         <div className="space-y-20 lg:space-y-28">
-          {projects.map((proj, idx) => {
+          {projects.filter(proj => !projectSlug || proj.href.endsWith(projectSlug)).map((proj, idx) => {
             const isReversed = idx % 2 === 1;
 
             return (

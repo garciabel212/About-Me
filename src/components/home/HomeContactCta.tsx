@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowUpRight, Mail, FileDown } from 'lucide-react';
+import { ArrowUpRight, Mail, FileDown, GitBranch } from 'lucide-react';
 
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 
@@ -38,10 +38,13 @@ export default function HomeContactCta() {
           <p className="text-base sm:text-xl text-[var(--text-secondary)] font-normal leading-relaxed">
             Open to Solutions Engineer, Sales Engineer, Technical Consultant, and Customer Engineering opportunities.
           </p>
+          <p className="mt-2 font-mono text-xs text-[var(--text-muted)] tracking-wide">
+            Based in Boca Raton, FL &middot; Open to remote, hybrid, and nationwide-travel roles (up to 40%)
+          </p>
         </div>
 
         {/* Direct Contact Options Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-14">
           
           {/* Email Card */}
           <a
@@ -104,6 +107,29 @@ export default function HomeContactCta() {
             <div className="mt-6 flex items-center gap-2 text-xs font-mono font-semibold text-[var(--accent)] group-hover:translate-x-1 transition-transform">
               <FileDown size={14} />
               <span>Request PDF Copy</span>
+              <ArrowUpRight size={13} />
+            </div>
+          </a>
+
+          {/* GitHub Card */}
+          <a
+            href="https://github.com/garciabel212"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="card p-6 sm:p-7 bg-[var(--surface)] border border-[var(--border)] shadow-[var(--shadow-low)] hover:border-[var(--accent)] group flex flex-col justify-between transition-all"
+          >
+            <div>
+              <span className="meta-label block mb-2">OPEN SOURCE &amp; PROJECTS</span>
+              <h3 className="font-serif font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors mb-2">
+                GitHub Profile
+              </h3>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
+                Browse source code for Service Map Planner, Scale Garage Studio, and other personal engineering projects.
+              </p>
+            </div>
+            <div className="mt-6 flex items-center gap-2 text-xs font-mono font-semibold text-[var(--accent)] group-hover:translate-x-1 transition-transform">
+              <GitBranch size={14} />
+              <span>View GitHub Repositories</span>
               <ArrowUpRight size={13} />
             </div>
           </a>

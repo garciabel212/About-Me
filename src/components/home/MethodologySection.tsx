@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { CheckCircle2, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -67,7 +67,7 @@ const stages: Stage[] = [
   },
 ];
 
-// â”€â”€â”€ Mobile Swipe Carousel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Mobile Swipe Carousel -----------------------------------------------
 function MobileCarousel({ activeIdx, setActiveIdx }: { activeIdx: number; setActiveIdx: (i: number) => void }) {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
@@ -112,7 +112,7 @@ function MobileCarousel({ activeIdx, setActiveIdx }: { activeIdx: number; setAct
         </div>
       </div>
 
-      {/* Slide area â€” overflow hidden for peek effect */}
+      {/* Slide area - overflow hidden for peek effect */}
       <div className="relative overflow-hidden" ref={constraintsRef}>
         <motion.div
           className="flex"
@@ -184,7 +184,7 @@ function MobileCarousel({ activeIdx, setActiveIdx }: { activeIdx: number; setAct
         ))}
       </div>
 
-      {/* Swipe hint (only shows on first render, fades after 3s) */}
+      {/* Swipe hint */}
       <motion.p
         initial={{ opacity: 0.6 }}
         animate={{ opacity: 0 }}
@@ -192,13 +192,13 @@ function MobileCarousel({ activeIdx, setActiveIdx }: { activeIdx: number; setAct
         className="text-center text-[10px] font-mono text-[var(--text-muted)] tracking-widest uppercase pointer-events-none"
         aria-hidden
       >
-        â† Swipe to explore â†’
+        Swipe to explore
       </motion.p>
     </div>
   );
 }
 
-// â”€â”€â”€ Main Section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Main Section ---------------------------------------------------------
 export default function MethodologySection() {
   const [activeIdx, setActiveIdx] = useState(0);
   const reduceMotion = useReducedMotion();
@@ -228,7 +228,7 @@ export default function MethodologySection() {
           </p>
         </div>
 
-        {/* â”€â”€â”€ DESKTOP CONNECTED SYSTEMS FLOW (â‰¥ 1024px) â”€â”€â”€ */}
+        {/* --- DESKTOP CONNECTED SYSTEMS FLOW (>= 1024px) --- */}
         <div className="hidden lg:block mb-8">
           
           {/* Signal Pipeline Bar */}
@@ -350,7 +350,7 @@ export default function MethodologySection() {
 
         </div>
 
-        {/* â”€â”€â”€ MOBILE SWIPE CAROUSEL (< 1024px) â”€â”€â”€ */}
+        {/* --- MOBILE SWIPE CAROUSEL (< 1024px) --- */}
         <div className="lg:hidden">
           <MobileCarousel activeIdx={activeIdx} setActiveIdx={setActiveIdx} />
         </div>
@@ -359,4 +359,3 @@ export default function MethodologySection() {
     </section>
   );
 }
-

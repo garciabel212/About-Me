@@ -216,7 +216,7 @@ export default function Scene03Experience() {
               </div>
 
               <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed font-sans">
-                Maintained 99.999% SLA carrier reliability across multinational submarine fiber-optic cables and terrestrial data infrastructure. Led real-time incident triage, optical telemetry diagnostics, and cross-border emergency restoration protocols during critical network events.
+                Monitored carrier fiber routes, including subsea cables, under a 99.999% SLA. Investigated connectivity incidents, performed root-cause analysis to support service restoration, and coordinated escalations during network events.
               </p>
 
               <div className="flex flex-wrap gap-2 pt-2">
@@ -225,7 +225,7 @@ export default function Scene03Experience() {
                   'Carrier Network Monitoring',
                   'Incident Response',
                   'DWDM Telemetry',
-                  '99.999% SLA Uptime',
+                  'SLA Monitoring',
                   'Cross-Team Escalation',
                 ].map((tag) => (
                   <span
@@ -265,7 +265,7 @@ export default function Scene03Experience() {
             <div className="lg:col-span-8 space-y-6">
               <div>
                 <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[var(--text-primary)] mb-2">
-                  B.S. in Computer Engineering
+                  B.S. in Computer Science &amp; Engineering
                 </h3>
                 <p className="font-mono text-base text-[var(--text-muted)] font-semibold tracking-wide">
                   Florida Atlantic University &middot; College of Engineering &amp; Computer Science

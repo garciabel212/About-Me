@@ -17,6 +17,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { SpotlightCard, ShinyText, DecryptedText } from '@/components/bits';
+import { profile } from '@/data/profile';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,8 +40,8 @@ const capabilities: Capability[] = [
     icon: Presentation,
     color: '#3B82F6',
     realExample:
-      'Partnered with sales executives to lead technical discovery, environment assessments, and customized workflow demos for research libraries (Harvard, Stanford, etc.), turning technical skepticism into closed deals.',
-    impactMetric: '100% technical demo validation rate',
+      'Partnered with sales executives to lead technical discovery, environment assessments, and customized workflow demos for major research universities, supporting Account Executives through the sale.',
+    impactMetric: "Demos tailored to each customer's workflow",
     technologies: ['Discovery Audits', 'Solution Design', 'Executive Demos', 'RFP Technical Scoring'],
   },
   {
@@ -51,7 +52,7 @@ const capabilities: Capability[] = [
     color: '#10B981',
     realExample:
       'Traveled nationwide to execute end-to-end onsite and remote deployments of high-resolution optical scanners, Windows OS environments, optical calibration, and production sign-off.',
-    impactMetric: '100+ nationwide accounts deployed',
+    impactMetric: '100+ institutional accounts supported nationwide',
     technologies: ['Onsite Delivery', 'Hardware Integration', 'OS Provisioning', 'Optical Alignment'],
   },
   {
@@ -61,8 +62,8 @@ const capabilities: Capability[] = [
     icon: Network,
     color: '#06B6D4',
     realExample:
-      'Monitored multinational subsea fiber routes at GlobeNet NOC maintaining 99.999% SLA; configured secure institutional VLANs, proxy routes, and static IP pools for scanning appliances.',
-    impactMetric: '99.999% SLA uptime experience',
+      'Monitored carrier fiber routes at the GlobeNet NOC under a 99.999% SLA; configured secure institutional VLANs, proxy routes, and static IP pools for scanning appliances.',
+    impactMetric: 'Carrier network monitoring under a 99.999% SLA',
     technologies: ['TCP/IP', 'VLANs', 'Subsea Fiber Optics', 'DWDM Telemetry', 'Firewall Rules'],
   },
   {
@@ -117,7 +118,7 @@ const capabilities: Capability[] = [
     color: '#14B8A6',
     realExample:
       'Administered specialized Windows enterprise workstations, created custom provisioning scripts, managed remote diagnostics via TeamViewer/AnyDesk, and handled driver/firmware upgrades.',
-    impactMetric: 'Zero downtime cutovers',
+    impactMetric: 'Planned cutovers to minimize downtime',
     technologies: ['Windows 10/11 Enterprise', 'Driver Integration', 'Firmware Updates', 'Remote Management'],
   },
   {
@@ -139,7 +140,7 @@ const capabilities: Capability[] = [
     color: '#EF4444',
     realExample:
       'Diagnosed complex optical, mechanical, and network faults under high-pressure customer environments, performing root-cause isolation rather than applying temporary surface fixes.',
-    impactMetric: 'First-time fix rate > 95%',
+    impactMetric: 'Root-cause fixes, not temporary workarounds',
     technologies: ['Sensor Calibration', 'Optical Triage', 'Log Analysis', 'Firmware Recovery'],
   },
 ];
@@ -199,7 +200,7 @@ export default function Scene05Capabilities() {
                     JOSE GARCIA
                   </div>
                   <div className="text-xs font-mono text-[var(--text-muted)]">
-                    Solutions Engineer &middot; Technical Consultant
+                    {profile.title} &middot; {profile.focus}
                   </div>
                 </div>
               </div>
@@ -309,7 +310,7 @@ export default function Scene05Capabilities() {
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)] text-xs font-mono">
-                  <span className="text-[var(--text-muted)]">MEASURED OUTCOME:</span>
+                  <span className="text-[var(--text-muted)]">OUTCOME:</span>
                   <span className="font-bold text-[var(--accent)]">
                     <DecryptedText text={selectedCap.impactMetric} speed={35} maxIterations={8} />
                   </span>

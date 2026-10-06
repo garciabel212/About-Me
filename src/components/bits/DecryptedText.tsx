@@ -31,6 +31,15 @@ export default function DecryptedText({
   const [hasAnimated, setHasAnimated] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
 
+  // Callers reuse one instance while switching items (exhibits, stages), so a new
+  // `text` must replace the old one and earn its own reveal.
+  const [shownText, setShownText] = useState(text);
+  if (text !== shownText) {
+    setShownText(text);
+    setDisplayText(text);
+    setHasAnimated(false);
+  }
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

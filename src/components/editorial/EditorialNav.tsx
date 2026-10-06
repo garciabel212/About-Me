@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { FileDown, Menu, X } from 'lucide-react';
 import { useLenis } from '@/components/motion/SmoothScroll';
+import { profile, resumeUrl } from '@/data/profile';
 
 export default function EditorialNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -122,6 +123,15 @@ export default function EditorialNav() {
               <span>Available for SE Roles</span>
             </div>
 
+            <a
+              href={resumeUrl}
+              download={profile.resumeFile}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/25 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+            >
+              <FileDown size={14} aria-hidden="true" />
+              Résumé
+            </a>
+
             {/* Mobile menu trigger */}
             <button
               type="button"
@@ -213,6 +223,9 @@ export default function EditorialNav() {
               className="hover:text-cyan-300"
             >
               Contact
+            </a>
+            <a href={resumeUrl} download={profile.resumeFile} className="hover:text-cyan-300">
+              Download résumé
             </a>
           </nav>
         </div>

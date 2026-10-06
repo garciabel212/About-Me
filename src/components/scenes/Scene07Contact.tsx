@@ -1,5 +1,6 @@
 import { Mail, ArrowUpRight, FileDown, FolderGit2, Briefcase, MapPin } from 'lucide-react';
 import { useLenis } from '@/components/motion/SmoothScroll';
+import { mailto, profile } from '@/data/profile';
 
 function LinkedInIcon({ size = 18 }: { size?: number }) {
   return (
@@ -46,7 +47,7 @@ export default function Scene07Contact() {
               Jose Garcia
             </h2>
             <p className="font-mono text-base sm:text-lg text-[var(--accent)] font-semibold">
-              Solutions Engineer &middot; Solutions Consultant
+              {profile.title} &middot; {profile.focus}
             </p>
             <div className="flex items-center gap-1.5 text-xs font-mono text-[var(--text-muted)] mt-1">
               <MapPin size={13} className="text-[var(--accent)]" />
@@ -130,7 +131,7 @@ export default function Scene07Contact() {
 
           {/* Action 4: LinkedIn */}
           <a
-            href="https://www.linkedin.com/in/jose-abel-garcia-a5006616b/"
+            href={profile.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             className="p-5 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:border-[var(--accent)] hover:shadow-[var(--shadow-low)] transition-all flex items-center justify-between text-left cursor-pointer group"
@@ -153,7 +154,7 @@ export default function Scene07Contact() {
 
           {/* Action 5: Contact Email */}
           <a
-            href="mailto:joseabelgarcia99@gmail.com"
+            href={mailto}
             className="p-5 rounded-xl border border-[var(--accent)] bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] transition-all flex items-center justify-between text-left cursor-pointer group shadow-[var(--shadow-blue)] sm:col-span-2 lg:col-span-2"
           >
             <div className="flex items-center gap-3">
@@ -162,7 +163,7 @@ export default function Scene07Contact() {
               </div>
               <div>
                 <span className="font-serif font-bold text-sm sm:text-base block">
-                  Get in Touch &middot; joseabelgarcia99@gmail.com
+                  Get in Touch &middot; {profile.email}
                 </span>
                 <span className="text-[11px] font-mono text-white/80">
                   Direct inquiry for hiring, technical consulting, and partnerships
@@ -176,7 +177,7 @@ export default function Scene07Contact() {
         {/* Footer Note */}
         <div className="pt-8 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[var(--text-muted)]">
           <span>&copy; {new Date().getFullYear()} Jose Garcia &middot; South Florida</span>
-          <span>B.S. Computer Engineering &middot; AWS Cloud Practitioner</span>
+          <span>B.S. Computer Science &amp; Engineering &middot; AWS Cloud Practitioner</span>
         </div>
       </div>
     </section>

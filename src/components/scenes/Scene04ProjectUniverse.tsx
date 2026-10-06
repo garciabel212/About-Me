@@ -30,11 +30,11 @@ gsap.registerPlugin(ScrollTrigger);
 function ServiceMapVisual() {
   const [activePin, setActivePin] = useState<number>(0);
   const pins = [
-    { id: 0, name: 'Harvard University', location: 'Cambridge, MA', scanners: 6, status: 'Operational', x: '82%', y: '28%' },
-    { id: 1, name: 'Stanford University', location: 'Stanford, CA', scanners: 8, status: 'PM Due', x: '18%', y: '48%' },
-    { id: 2, name: 'University of Chicago', location: 'Chicago, IL', scanners: 4, status: 'Operational', x: '58%', y: '36%' },
-    { id: 3, name: 'Univ. of Florida', location: 'Gainesville, FL', scanners: 5, status: 'Operational', x: '76%', y: '78%' },
-    { id: 4, name: 'Univ. of Washington', location: 'Seattle, WA', scanners: 3, status: 'Upgrade', x: '22%', y: '20%' },
+    { id: 0, name: 'Research University', location: 'Cambridge, MA', scanners: 6, status: 'Operational', x: '82%', y: '28%' },
+    { id: 1, name: 'Research University', location: 'Palo Alto area, CA', scanners: 8, status: 'PM Due', x: '18%', y: '48%' },
+    { id: 2, name: 'Research University', location: 'Chicago, IL', scanners: 4, status: 'Operational', x: '58%', y: '36%' },
+    { id: 3, name: 'State University', location: 'Gainesville, FL', scanners: 5, status: 'Operational', x: '76%', y: '78%' },
+    { id: 4, name: 'State University', location: 'Seattle, WA', scanners: 3, status: 'Upgrade', x: '22%', y: '20%' },
   ];
 
   return (
@@ -48,8 +48,8 @@ function ServiceMapVisual() {
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
-          <span>Active Accounts: <b className="text-white">128</b></span>
-          <span className="hidden sm:inline">Fleet: <b className="text-white">214 Systems</b></span>
+          <span>Accounts: <b className="text-white">100+</b></span>
+          <span className="hidden sm:inline text-slate-300">Sample data</span>
         </div>
       </div>
 
@@ -278,7 +278,7 @@ function AACVisual() {
       {/* Footer Info */}
       <div className="px-5 py-2.5 border-t border-white/10 bg-[#091012] flex items-center justify-between text-[11px] font-mono text-slate-400">
         <span>{phrases.status}</span>
-        <span className="text-emerald-400 font-semibold">ARASAAC &middot; Zero Latency</span>
+        <span className="text-emerald-400 font-semibold">ARASAAC symbols &middot; EN/ES</span>
       </div>
     </div>
   );
@@ -288,10 +288,10 @@ function AACVisual() {
 function AgentSystemVisual() {
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
-    { agent: 'Telemetry Agent', action: 'Ingesting NASDAQ order book & L2 depth stream', latency: '4ms' },
-    { agent: 'Strategy Orchestrator', action: 'Evaluating mean-reversion alpha spread', latency: '12ms' },
-    { agent: 'Risk Guard Agent', action: 'Enforcing max-drawdown & simulation constraints', latency: '2ms' },
-    { agent: 'Execution Dispatcher', action: 'Routing simulated dry-run order via FIX protocol', latency: '8ms' },
+    { agent: 'Market Data', action: 'Reading the Kalshi order book (best bid and ask)', latency: 'live' },
+    { agent: 'Trader Agent', action: 'Proposing a trade from its strategy rules', latency: 'rules' },
+    { agent: 'Risk Check', action: 'Validating position size, limits, and fees', latency: 'check' },
+    { agent: 'Paper Account', action: 'Filling at the ask and logging the decision', latency: 'paper' },
   ];
 
   useEffect(() => {
@@ -427,7 +427,7 @@ export default function Scene04ProjectUniverse() {
       solution:
         'Architected a single-pane-of-glass operations hub integrating real-time geography routing, institutional equipment records, automated maintenance flags, and route optimization.',
       technologies: ['Next.js', 'React', 'TypeScript', 'Firebase', 'Google Maps API', 'Tailwind CSS'],
-      impact: '100+ Accounts Centralized · Zero Unplanned Maintenance Lapses',
+      impact: '100+ institutional accounts in one tool',
       link: '/projects/service-map-planner',
       component: ServiceMapVisual,
     },
@@ -438,30 +438,30 @@ export default function Scene04ProjectUniverse() {
       category: 'ACCESSIBLE HEALTHCARE & EDUCATION',
       color: '#10B981',
       description:
-        'A tablet-first Augmentative and Alternative Communication (AAC) platform engineered for individuals with speech and language differences, featuring prominent binary controls, ARASAAC symbols, and zero-latency bilingual switching.',
+        'A tablet-first Augmentative and Alternative Communication (AAC) platform engineered for individuals with speech and language differences, featuring prominent binary controls, ARASAAC symbols, and instant bilingual switching.',
       challenge:
         'Traditional speech devices are prohibitively complex, lack instant bilingual Spanish/English capability, and frequently fail in offline or high-stress clinical settings.',
       solution:
         'Engineered an accessible, tablet-optimized interface with prominent YES/NO binary tiles, high contrast ratios, instant bilingual phrase translation, and offline-first cache.',
-      technologies: ['React', 'TypeScript', 'ARASAAC Symbols', 'SpeechSynthesis API', 'Offline PWA', 'WCAG AAA'],
-      impact: 'Instant Bilingual EN/ES Toggle · Sub-15ms Tactile Response',
+      technologies: ['React', 'TypeScript', 'ARASAAC Symbols', 'SpeechSynthesis API', 'Offline PWA', 'High-contrast UI'],
+      impact: 'Instant English/Spanish switch · Large, accessible YES/NO tiles',
       link: '/projects',
       component: AACVisual,
     },
     {
       id: 'agent-trading-os',
       title: 'Agent Trading OS',
-      subtitle: 'Multi-Agent Autonomous Systems & Decision Traces',
-      category: 'AUTONOMOUS MULTI-AGENT ARCHITECTURE',
+      subtitle: 'Multi-Agent Paper-Trading Lab',
+      category: 'MULTI-AGENT SIMULATION',
       color: '#8B5CF6',
       description:
-        'A deterministic multi-agent systems architecture where specialized autonomous nodes coordinate live market telemetry, risk boundary evaluation, tool dispatch, and auditable decision execution traces.',
+        'A React and TypeScript lab where rule-based trading agents compete on paper accounts against live Kalshi prediction-market and Coinbase prices, coordinated by a portfolio-manager agent and a coach agent. No real money is traded.',
       challenge:
-        'Unconstrained LLM and AI workflows suffer from hallucinations, non-deterministic side-effects, and lack of verifiable audit trails for mission-critical operations.',
+        'Automated trading ideas are easy to over-trust. Every agent decision, including the decision not to trade, should be recorded and checkable before a strategy earns real capital.',
       solution:
-        'Designed an isolated manager-worker agent network with strict simulation safety checks, deterministic tool calling, and live decision trace graphs.',
-      technologies: ['Python', 'TypeScript', 'Graph Visualizer', 'Autonomous Agents', 'Tool Calling', 'Event Stream'],
-      impact: '100% Auditable Traces · Strict Simulation Sandbox',
+        'Built paper accounts with realistic fills (buy at the ask, sell at the bid, exchange fees), risk checks before every order, human-approved experiments, and a log of every proposal and skipped trade.',
+      technologies: ['React', 'TypeScript', 'Python', 'FastAPI', 'Kalshi API', 'Coinbase API'],
+      impact: 'Every proposal and skipped trade logged · Paper money only',
       link: '/projects',
       component: AgentSystemVisual,
     },
@@ -476,9 +476,9 @@ export default function Scene04ProjectUniverse() {
       challenge:
         'Collector scale dioramas previously required bespoke manual drafting and tedious CAD back-and-forth before 3D printing could begin.',
       solution:
-        'Built an in-browser parametric WebGL studio with layer explosion, 5000K lighting rigs, and instant slicing exports matching Bambu Lab print volumes (256mm³).',
+        'Built an in-browser parametric WebGL studio with layer explosion, 5000K lighting rigs, and instant slicing exports matching Bambu Lab print volumes (256 × 256 × 256 mm).',
       technologies: ['React', 'Three.js', 'React Three Fiber', 'WebGL', 'Bambu Lab 3D Printing', 'PBR Shaders'],
-      impact: 'Direct STL Mesh Generation · Zero CAD Translation Errors',
+      impact: 'Direct STL export for 3D printing',
       link: '/projects/scale-garage-studio',
       component: GarageExhibitVisual,
     },
@@ -675,7 +675,7 @@ export default function Scene04ProjectUniverse() {
                 {/* Measured Impact */}
                 <div className="p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-warm)] mb-3 flex items-center justify-between">
                   <div>
-                    <span className="text-[9px] font-mono uppercase text-[var(--text-muted)] block">VERIFIED PRODUCTION IMPACT</span>
+                    <span className="text-[9px] font-mono uppercase text-[var(--text-muted)] block">OUTCOME</span>
                     <span className="text-xs font-serif font-bold text-[var(--text-primary)]">
                       <DecryptedText text={current.impact} speed={35} maxIterations={8} />
                     </span>

@@ -1,8 +1,9 @@
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronDown, MapPin, Sparkles, Terminal } from 'lucide-react';
+import { ChevronDown, FileDown, Mail, MapPin, Sparkles, Terminal } from 'lucide-react';
 import { ShinyText, DecryptedText } from '@/components/bits';
+import { credentials, mailto, profile, resumeUrl } from '@/data/profile';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -239,7 +240,7 @@ export default function Scene01Hero() {
         />
 
         {/* ─── Hero Content Foreground ─── */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-12 pt-28 sm:pt-32 flex flex-col justify-start">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-12 pt-28 sm:pt-[min(8rem,14vh)] flex flex-col justify-start">
           {/* Eyebrow badge */}
           <div ref={metaRef} className="flex items-center gap-3 mb-6">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.07] border border-white/15 backdrop-blur-md text-[11px] font-mono tracking-wider text-cyan-300 uppercase">
@@ -256,13 +257,13 @@ export default function Scene01Hero() {
           <h1 className="font-serif tracking-tight text-white select-none leading-[0.88] mb-6 sm:mb-8">
             <span
               ref={titleLeftRef}
-              className="block text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] font-bold tracking-tighter drop-shadow-2xl will-change-transform"
+              className="block text-6xl sm:text-8xl md:text-9xl lg:text-[min(10.5rem,15vh)] font-bold tracking-tighter drop-shadow-2xl will-change-transform"
             >
               JOSE
             </span>
             <span
               ref={titleRightRef}
-              className="block text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-100 via-cyan-200 to-blue-400 drop-shadow-2xl will-change-transform"
+              className="block text-6xl sm:text-8xl md:text-9xl lg:text-[min(10.5rem,15vh)] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-100 via-cyan-200 to-blue-400 drop-shadow-2xl will-change-transform"
             >
               GARCIA
             </span>
@@ -271,16 +272,42 @@ export default function Scene01Hero() {
           {/* Role Positioning Subtitle */}
           <div ref={roleRef} className="max-w-2xl space-y-3">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-sm sm:text-base md:text-lg font-medium text-slate-200 tracking-wide">
-              <ShinyText text="Solutions Engineer" baseColor="#93C5FD" shineColor="#FFFFFF" speed={2.5} />
-              <span className="text-slate-500">&middot;</span>
-              <span>Technical Consultant</span>
-              <span className="text-slate-500">&middot;</span>
-              <span className="text-cyan-300">Builder</span>
+              <ShinyText text={profile.title} baseColor="#93C5FD" shineColor="#FFFFFF" speed={2.5} />
+              <span className="text-slate-400" aria-hidden="true">&middot;</span>
+              <span>{profile.focus}</span>
             </div>
 
-            <p className="text-sm sm:text-base text-slate-300/80 font-sans leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-slate-300/80 font-sans leading-relaxed max-w-xl [@media(max-height:700px)]:hidden">
               Connecting technical depth with customer execution. Architecting solutions, proving capability with high-stakes demonstrations, and delivering nationwide deployments.
             </p>
+
+            {/* Recruiter essentials: who, where, credentials, and the two actions they came for. */}
+            <ul className="flex flex-wrap gap-x-5 gap-y-1.5 pt-1 text-[13px] sm:text-sm text-slate-200 font-sans" aria-label="Credentials">
+              {credentials.map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-cyan-300/80" aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-wrap items-center gap-3 pt-3">
+              <a
+                href={resumeUrl}
+                download={profile.resumeFile}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#06080d] transition-colors hover:bg-cyan-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+              >
+                <FileDown size={16} aria-hidden="true" />
+                Download résumé
+              </a>
+              <a
+                href={mailto}
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+              >
+                <Mail size={16} aria-hidden="true" />
+                Email me
+              </a>
+            </div>
           </div>
         </div>
 

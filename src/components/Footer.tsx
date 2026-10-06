@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ExternalLink, Mail, ArrowUp } from 'lucide-react';
+import { mailto, profile, resumeUrl } from '@/data/profile';
 
 function GithubIcon({ size = 16 }: { size?: number }) {
   return (
@@ -11,11 +12,11 @@ function GithubIcon({ size = 16 }: { size?: number }) {
 }
 
 const footerLinks = [
-  { label: 'WORK', href: '/#work' },
+  { label: 'WORK', href: '/#projects' },
   { label: 'EXPERIENCE', href: '/#experience' },
-  { label: 'ABOUT', href: '/#about' },
+  { label: 'ABOUT', href: '/#who-i-am' },
   { label: 'CONTACT', href: '/#contact' },
-  { label: 'RÉSUMÉ', href: 'mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia' },
+  { label: 'RÉSUMÉ', href: resumeUrl },
 ];
 
 const socialLinks = [
@@ -26,12 +27,12 @@ const socialLinks = [
   },
   {
     icon: ExternalLink,
-    href: 'https://www.linkedin.com/in/jose-abel-garcia-a5006616b/',
+    href: profile.linkedin,
     label: 'LinkedIn',
   },
   {
     icon: Mail,
-    href: 'mailto:joseabelgarcia99@gmail.com',
+    href: mailto,
     label: 'Email',
   },
 ];
@@ -56,7 +57,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-[var(--text-secondary)] max-w-sm text-center md:text-left leading-relaxed">
-              Sales Engineering &middot; Solutions Consulting &middot; Technical Implementation
+              Solutions Engineer &middot; Enterprise Software Solutions
             </p>
           </div>
 
@@ -115,7 +116,7 @@ export default function Footer() {
             </span>
           </button>
           <p>
-            Boca Raton, FL &middot; B.S. Computer Engineering, FAU
+            Boca Raton, FL &middot; B.S. Computer Science &amp; Engineering, FAU
           </p>
         </div>
       </div>

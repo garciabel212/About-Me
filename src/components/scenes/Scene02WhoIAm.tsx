@@ -78,7 +78,7 @@ const stages: StageData[] = [
       'Deploying high-precision hardware onsite and remotely, configuring Windows OS environments, calibrating sensors, and completing formal sign-offs.',
     activeResponsibilities: ['Implementation', 'Hardware', 'Networking', 'Technical Problem Solving'],
     deliverables: ['Optical Scanner Integration', 'Driver & Network Provisioning', 'Production Acceptance Sign-Off'],
-    impactMetric: '100% first-pass deployment reliability',
+    impactMetric: 'Formal production acceptance sign-off',
   },
   {
     step: '05',
@@ -312,7 +312,7 @@ export default function Scene02WhoIAm() {
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)] text-xs font-mono">
-                  <span className="text-[var(--text-muted)]">MEASURED VALUE:</span>
+                  <span className="text-[var(--text-muted)]">OUTCOME:</span>
                   <span className="font-bold text-[var(--accent)]">
                     <DecryptedText text={currentStage.impactMetric} speed={35} maxIterations={8} />
                   </span>

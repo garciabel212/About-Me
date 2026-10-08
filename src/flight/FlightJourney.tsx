@@ -13,6 +13,7 @@ import { frameUrl, stillUrl, totalScrollVh } from './manifest';
 import { progressToFrame, segmentRanges } from './scrollMap';
 import { M1_BEATS, beatFocusProgress, beatOpacity, resolveBeat, type BeatId } from './beats';
 import { useFlightMode } from './useFlightMode';
+import { resumeScroll, type PinRange } from './resumeScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,6 +42,10 @@ export default function FlightJourney() {
   const panels = useRef(new Map<BeatId, HTMLDivElement>());
   const triggerRef = useRef<ScrollTrigger | null>(null);
   const [store, setStore] = useState<FrameStore<HTMLImageElement> | null>(null);
+  // Read inside the scroll driver so a new store or Lenis never rebuilds the pin.
+  const storeRef = useRef<FrameStore<HTMLImageElement> | null>(null);
+  const lenisRef = useRef(lenis);
+  const lastPinRef = useRef<(PinRange & { y: number }) | null>(null);
 
   const ranges = useMemo(() => segmentRanges(M1.segments, size), [size]);
   const windows = useMemo(() => new Map(M1_BEATS.map((beat) => [beat.id, resolveBeat(ranges, beat)])), [ranges]);
@@ -62,6 +67,26 @@ export default function FlightJourney() {
     return () => next.dispose();
   }, [mode, size, baseUrl]);
 
+  useEffect(() => {
+    storeRef.current = store;
+    store?.setPlayhead(frameRef.current);
+  }, [store]);
+
+  useEffect(() => {
+    lenisRef.current = lenis;
+  }, [lenis]);
+
+  // Remember where the reader is relative to the pin, so a rebuild with a new
+  // length (phone rotation across the mobile breakpoint) can put them back.
+  useEffect(() => {
+    const record = () => {
+      const trigger = triggerRef.current;
+      if (trigger) lastPinRef.current = { y: window.scrollY, start: trigger.start, end: trigger.end };
+    };
+    window.addEventListener('scroll', record, { passive: true });
+    return () => window.removeEventListener('scroll', record);
+  }, []);
+
   useGSAP(
     () => {
       const section = sectionRef.current;
@@ -70,7 +95,7 @@ export default function FlightJourney() {
       const apply = (progress: number) => {
         const frame = progressToFrame(M1.segments, size, progress);
         frameRef.current = frame;
-        store?.setPlayhead(frame);
+        storeRef.current?.setPlayhead(frame);
         for (const beat of M1_BEATS) {
           const element = panels.current.get(beat.id);
           const beatWindow = windows.get(beat.id);
@@ -92,13 +117,22 @@ export default function FlightJourney() {
         onRefresh: (self) => apply(self.progress),
       });
       triggerRef.current = trigger;
+
+      const previous = lastPinRef.current;
+      if (previous) {
+        const top = resumeScroll(previous, trigger);
+        if (Math.abs(top - window.scrollY) > 1) {
+          if (lenisRef.current) lenisRef.current.scrollTo(top, { immediate: true, force: true });
+          else window.scrollTo(0, top);
+        }
+      }
       apply(trigger.progress);
 
       return () => {
         triggerRef.current = null;
       };
     },
-    { scope: sectionRef, dependencies: [mode, size, store, windows], revertOnUpdate: true },
+    { scope: sectionRef, dependencies: [mode, size, windows], revertOnUpdate: true },
   );
 
   // Let the global Atmosphere background sleep while the opaque flight covers it.

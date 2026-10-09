@@ -111,7 +111,7 @@ export default function Footer() {
             </span>
           </button>
           <p>
-            Boca Raton, FL &middot; B.S. Computer Science &amp; Engineering, FAU
+            South Florida &middot; B.S. Computer Science &amp; Engineering, FAU
           </p>
         </div>
       </div>

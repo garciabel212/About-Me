@@ -245,7 +245,7 @@ export default function Scene01Hero() {
           <div ref={metaRef} className="flex items-center gap-3 mb-6">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.07] border border-white/15 backdrop-blur-md text-[11px] font-mono tracking-wider text-cyan-300 uppercase">
               <MapPin size={12} className="text-cyan-400" />
-              <span>South Florida // Miami &middot; Boca Raton</span>
+              <span>South Florida // Miami</span>
             </span>
             <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-[11px] font-mono text-blue-300">
               <Terminal size={12} />

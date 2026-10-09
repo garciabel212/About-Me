@@ -48,7 +48,7 @@ function ServiceMapVisual() {
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
-          <span>Accounts: <b className="text-white">100+</b></span>
+          <span>Fictional institutions</span>
           <span className="hidden sm:inline text-slate-300">Sample data</span>
         </div>
       </div>
@@ -139,7 +139,7 @@ function ServiceMapVisual() {
             </div>
             <div>
               <span className="text-slate-500 block text-[9px] uppercase">Service Window</span>
-              <span className="text-cyan-300 font-bold">Route Optimized</span>
+              <span className="text-cyan-300 font-bold">Route sequence</span>
             </div>
           </div>
         </div>
@@ -148,7 +148,7 @@ function ServiceMapVisual() {
       {/* Footer Status Bar */}
       <div className="px-5 py-2.5 border-t border-white/10 bg-[#080d17] flex items-center justify-between text-[11px] font-mono text-slate-400">
         <span>Stack: Next.js &middot; TypeScript &middot; Firebase &middot; Google Maps</span>
-        <span className="text-blue-400 font-semibold">GIS Routing Active</span>
+        <span className="text-blue-400 font-semibold">Sample data</span>
       </div>
     </div>
   );
@@ -168,7 +168,7 @@ function AACVisual() {
       rest: 'I need to rest',
       more: 'Tell me more',
       clear: 'Clear',
-      status: 'Offline Ready · High Contrast AA Compliant',
+      status: 'Large buttons · Yes/No first',
     },
     es: {
       yes: 'SÍ',
@@ -178,7 +178,7 @@ function AACVisual() {
       rest: 'Necesito descansar',
       more: 'Dime más',
       clear: 'Borrar',
-      status: 'Listo sin conexión · Contraste accesible AA',
+      status: 'Botones grandes · Sí/No primero',
     },
   }[language];
 
@@ -421,13 +421,13 @@ export default function Scene04ProjectUniverse() {
       category: 'ENTERPRISE OPERATIONS PLATFORM',
       color: '#3B82F6',
       description:
-        'An internal operations platform designed and built to centralize institution accounts, optical scanner inventories, software versions, maintenance status, nationwide travel routing, and preventive scheduling in active daily use.',
+        'An internal operations platform designed and built to centralize institution accounts, optical scanner inventories, software versions, maintenance status, travel planning, and preventive scheduling.',
       challenge:
-        'Manual spreadsheets and fragmented customer emails caused scheduling friction and missing hardware maintenance history across 100+ nationwide institutions.',
+        'Manual spreadsheets and fragmented customer emails caused scheduling friction and missing hardware maintenance history.',
       solution:
-        'Architected a single-pane-of-glass operations hub integrating real-time geography routing, institutional equipment records, automated maintenance flags, and route optimization.',
+        'Architected a single-pane-of-glass operations hub integrating map-based visit planning, institutional equipment records, and maintenance flags.',
       technologies: ['Next.js', 'React', 'TypeScript', 'Firebase', 'Google Maps API', 'Tailwind CSS'],
-      impact: '100+ institutional accounts in one tool',
+      impact: 'Customer, equipment, and visit planning in one tool',
       link: '/projects/service-map-planner',
       component: ServiceMapVisual,
     },
@@ -440,10 +440,10 @@ export default function Scene04ProjectUniverse() {
       description:
         'A tablet-first Augmentative and Alternative Communication (AAC) platform engineered for individuals with speech and language differences, featuring prominent binary controls, ARASAAC symbols, and instant bilingual switching.',
       challenge:
-        'Traditional speech devices are prohibitively complex, lack instant bilingual Spanish/English capability, and frequently fail in offline or high-stress clinical settings.',
+        'Traditional speech devices are prohibitively complex, lack instant bilingual Spanish/English capability, and demand more reading and coordination than some users can manage.',
       solution:
-        'Engineered an accessible, tablet-optimized interface with prominent YES/NO binary tiles, high contrast ratios, instant bilingual phrase translation, and offline-first cache.',
-      technologies: ['React', 'TypeScript', 'ARASAAC Symbols', 'SpeechSynthesis API', 'Offline PWA', 'High-contrast UI'],
+        'Engineered an accessible, tablet-optimized interface with prominent YES/NO binary tiles, high contrast ratios, and predefined Spanish and English phrases.',
+      technologies: ['React', 'TypeScript', 'ARASAAC Symbols', 'SpeechSynthesis API', 'Capacitor (Android)', 'High-contrast UI'],
       impact: 'Instant English/Spanish switch · Large, accessible YES/NO tiles',
       link: '/projects',
       component: AACVisual,
@@ -472,13 +472,13 @@ export default function Scene04ProjectUniverse() {
       category: 'PARAMETRIC 3D & HARDWARE FABRICATION',
       color: '#06B6D4',
       description:
-        'A browser-based 3D configurator connecting custom scale diorama architecture, photorealistic PBR materials, and real-time WebGL assembly with direct-to-machine STL exports for 3D printing.',
+        'A browser-based 3D configurator connecting custom scale diorama architecture, photorealistic PBR materials, and a real-time 3D preview of a 1:18 model-car garage.',
       challenge:
         'Collector scale dioramas previously required bespoke manual drafting and tedious CAD back-and-forth before 3D printing could begin.',
       solution:
-        'Built an in-browser parametric WebGL studio with layer explosion, 5000K lighting rigs, and instant slicing exports matching Bambu Lab print volumes (256 × 256 × 256 mm).',
+        'Built an in-browser parametric WebGL studio with a display-car fit check, pricing estimates, and printability checks.',
       technologies: ['React', 'Three.js', 'React Three Fiber', 'WebGL', 'Bambu Lab 3D Printing', 'PBR Shaders'],
-      impact: 'Direct STL export for 3D printing',
+      impact: '1:18 preview with fit check and printability checks',
       link: '/projects/scale-garage-studio',
       component: GarageExhibitVisual,
     },

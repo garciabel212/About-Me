@@ -42,7 +42,7 @@ const capabilities: Capability[] = [
     realExample:
       'Partnered with sales executives to lead technical discovery, environment assessments, and customized workflow demos for major research universities, supporting Account Executives through the sale.',
     impactMetric: "Demos tailored to each customer's workflow",
-    technologies: ['Discovery Audits', 'Solution Design', 'Executive Demos', 'RFP Technical Scoring'],
+    technologies: ['Discovery Audits', 'Solution Design', 'Executive Demos', 'Technical Presentations'],
   },
   {
     id: 'implementation',
@@ -52,7 +52,7 @@ const capabilities: Capability[] = [
     color: '#10B981',
     realExample:
       'Traveled nationwide to execute end-to-end onsite and remote deployments of high-resolution optical scanners, Windows OS environments, optical calibration, and production sign-off.',
-    impactMetric: '100+ institutional accounts supported nationwide',
+    impactMetric: 'Onsite and remote deployments for institutional customers',
     technologies: ['Onsite Delivery', 'Hardware Integration', 'OS Provisioning', 'Optical Alignment'],
   },
   {
@@ -62,8 +62,8 @@ const capabilities: Capability[] = [
     icon: Network,
     color: '#06B6D4',
     realExample:
-      'Monitored carrier fiber routes at the GlobeNet NOC under a 99.999% SLA; configured secure institutional VLANs, proxy routes, and static IP pools for scanning appliances.',
-    impactMetric: 'Carrier network monitoring under a 99.999% SLA',
+      'Monitored carrier fiber routes at the GlobeNet NOC and coordinated escalations during network events.',
+    impactMetric: 'Incident monitoring and escalation',
     technologies: ['TCP/IP', 'VLANs', 'Subsea Fiber Optics', 'DWDM Telemetry', 'Firewall Rules'],
   },
   {
@@ -73,8 +73,8 @@ const capabilities: Capability[] = [
     icon: Code2,
     color: '#8B5CF6',
     realExample:
-      'Identified operational bottlenecks in field travel and designed/built Service Map Planner from scratch using Next.js, TypeScript, and Firebase—now used daily across operations.',
-    impactMetric: 'Production tool deployed to operations',
+      'Identified operational bottlenecks in field travel and designed/built Service Map Planner from scratch using Next.js, TypeScript, and Firebase.',
+    impactMetric: 'Working prototype for service-visit preparation',
     technologies: ['React', 'Next.js', 'TypeScript', 'Firebase', 'Three.js', 'REST APIs'],
   },
   {
@@ -85,7 +85,7 @@ const capabilities: Capability[] = [
     color: '#EC4899',
     realExample:
       'Maintained sustained relationships with library directors, IT administrators, and operational staff, establishing trust through transparent communication and reliable follow-through.',
-    impactMetric: 'Sustained client retention across accounts',
+    impactMetric: 'Long-term account follow-through',
     technologies: ['Technical Account Management', 'Expectation Alignment', 'Post-Sale Trust'],
   },
   {
@@ -129,8 +129,8 @@ const capabilities: Capability[] = [
     color: '#EAB308',
     realExample:
       'Conducted onsite workshops for IT staff and patrons, authored comprehensive operational runbooks, and ensured clients were fully autonomous post-deployment.',
-    impactMetric: 'High customer autonomy & low ticket rates',
-    technologies: ['Technical Runbooks', 'Admin Certification', 'Workflow Training'],
+    impactMetric: 'Customers trained to run the system',
+    technologies: ['Technical Runbooks', 'Administrator Training', 'Workflow Training'],
   },
   {
     id: 'troubleshooting',

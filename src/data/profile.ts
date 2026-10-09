@@ -5,6 +5,8 @@
 export const profile = {
   title: 'Solutions Engineer',
   focus: 'Enterprise Software Solutions',
+  /** New public positioning line (see content.ts); the Home still shows title + focus until it is redesigned. */
+  headline: 'Customer Solutions | Implementation | Technical Consulting',
   email: 'garciabel212@gmail.com',
   linkedin: 'https://www.linkedin.com/in/jose-abel-garcia/',
   resumeFile: 'Jose-Garcia-Resume.pdf',

@@ -12,7 +12,7 @@ interface CTAProps {
 
 export default function CTA({
   title = "Let's work together",
-  description = "I'm open to Solutions Engineering, Sales Engineering, and Technical Consulting opportunities. Let's connect.",
+  description = "I'm open to implementation, solutions consulting, and technical account opportunities. Let's connect.",
   primaryHref = '/contact',
   primaryLabel = 'Get in Touch',
 }: CTAProps) {

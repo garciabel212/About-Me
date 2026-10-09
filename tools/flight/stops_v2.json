@@ -11,8 +11,8 @@
   },
   {
     "id": "s3_canyon",
-    "arrive": "A wide downtown boulevard at dusk with tall towers with lit windows on the right, street lights, palm trees and light trails below, the sunset glowing at the end of the street.",
-    "depart": "The camera flies forward high above the boulevard past the towers toward the open bay ahead, the city lights falling behind, purple dusk sky.",
+    "arrive": "Tall downtown towers with warm lit windows on the right beside a glowing boulevard with palm trees and light trails, the dark calm bay on the left, deep purple dusk sky, orange glow on the horizon.",
+    "depart": "The camera flies forward and banks left out over the dark calm bay, the downtown towers sliding past on the right, toward the distant islands and lights, purple dusk sky.",
     "seed": 7311,
     "pullback": "Use the provided image as the first frame. FPV drone footage: the camera flies smoothly backward and upward away from the towers in one steady continuous move, the boulevard and the towers recede and the view opens up wide over the city, stabilized, gentle motion blur, no cuts, crisp clean architecture. "
   },
@@ -23,8 +23,8 @@
   },
   {
     "id": "s5_palms",
-    "arrive": "Tall palm trees along a wide beach at dusk, a small pink lifeguard hut with a warm light, the calm ocean beyond, pink and orange sky.",
-    "depart": "The camera flies forward past the palm trees and out over the beach toward the calm ocean and the setting sun on the horizon."
+    "arrive": "A pastel pink lifeguard tower with a warm light on a wide empty sand beach at dusk, palm trees behind it on the right, the calm ocean on the left, pink, orange and violet sky.",
+    "depart": "The camera flies forward past the lifeguard tower and out over the beach toward the calm ocean and the setting sun on the horizon."
   },
   {
     "id": "s6_sunset",

@@ -52,6 +52,15 @@ function AppRoutes() {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [lenis, location.pathname, location.hash]);
 
+  // Pinned sections on the incoming page (e.g. the case-study hero reveal) were
+  // measured while the outgoing page was still in the DOM; re-measure once it is
+  // gone. Hash navigations re-measure in the effect below, before scrolling.
+  useEffect(() => {
+    if (!layoutSettled || location.hash) return;
+    ScrollTrigger.refresh();
+    lenis?.resize();
+  }, [layoutSettled, location.hash, lenis]);
+
   useEffect(() => {
     if (!location.hash || !layoutSettled) return;
     ScrollTrigger.refresh();

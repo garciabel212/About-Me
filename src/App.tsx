@@ -10,13 +10,12 @@ import SmoothScroll, { useLenis } from '@/components/motion/SmoothScroll';
 import EditorialNav from '@/components/editorial/EditorialNav';
 import { PageTransition, ScrollProgress } from '@/components/motion';
 import Home from '@/pages/Home';
+import { legacyRoutes } from '@/data/routes';
 
-const Projects = lazy(() => import('@/pages/Projects'));
-const Experience = lazy(() => import('@/pages/Experience'));
-const Contact = lazy(() => import('@/pages/Contact'));
 const ServiceMapPlanner = lazy(() => import('@/pages/projects/ServiceMapPlanner'));
 const ScaleGarageStudio = lazy(() => import('@/pages/projects/ScaleGarageStudio'));
-const EnterpriseDeployment = lazy(() => import('@/pages/projects/EnterpriseDeployment'));
+const AacCommunicationApp = lazy(() => import('@/pages/projects/AacCommunicationApp'));
+const Lab = lazy(() => import('@/pages/Lab'));
 
 function RouteFallback() {
   return (
@@ -90,20 +89,13 @@ function AppRoutes() {
     <AnimatePresence mode="sync" initial={false} onExitComplete={() => setLayoutSettled(true)}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
-        <Route path="/intro" element={<Navigate to={{ pathname: '/', hash: '#intro' }} replace />} />
-        <Route path="/who-i-am" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
-        <Route path="/work" element={<Navigate to={{ pathname: '/', hash: '#projects' }} replace />} />
-        <Route path="/workflow" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
-        <Route path="/capabilities" element={<Navigate to={{ pathname: '/', hash: '#capabilities' }} replace />} />
-        <Route path="/about" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
-        <Route
-          path="/projects"
-          element={
-            <PageTransition>
-              <Loadable><Projects /></Loadable>
-            </PageTransition>
-          }
-        />
+        {legacyRoutes.map((r) => (
+          <Route
+            key={r.from}
+            path={r.from}
+            element={<Navigate to={{ pathname: '/', hash: `#${r.hash}` }} replace />}
+          />
+        ))}
         <Route
           path="/projects/service-map-planner"
           element={
@@ -121,26 +113,18 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/projects/enterprise-deployment"
+          path="/projects/aac-communication-app"
           element={
             <PageTransition>
-              <Loadable><EnterpriseDeployment /></Loadable>
+              <Loadable><AacCommunicationApp /></Loadable>
             </PageTransition>
           }
         />
         <Route
-          path="/experience"
+          path="/lab"
           element={
             <PageTransition>
-              <Loadable><Experience /></Loadable>
-            </PageTransition>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <PageTransition>
-              <Loadable><Contact /></Loadable>
+              <Loadable><Lab /></Loadable>
             </PageTransition>
           }
         />

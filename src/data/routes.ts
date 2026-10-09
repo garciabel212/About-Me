@@ -30,8 +30,10 @@ export const legacyRoutes = [
   { from: '/work', hash: 'projects' },
   { from: '/workflow', hash: 'who-i-am' },
   { from: '/capabilities', hash: 'capabilities' },
-  { from: '/about', hash: 'about' },
+  // Flip to 'about' when Home gains that section.
+  { from: '/about', hash: 'who-i-am' },
   { from: '/projects', hash: 'projects' },
   { from: '/experience', hash: 'experience' },
   { from: '/contact', hash: 'contact' },
+  { from: '/projects/enterprise-deployment', hash: 'experience' },
 ] as const;

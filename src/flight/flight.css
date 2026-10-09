@@ -120,7 +120,8 @@
 .fl-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: var(--fl-accent); flex: none; }
 .fl-contents { position: relative; flex: 1; min-height: 0; }
 .fl-content { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
-.fl-content[inert] { visibility: hidden; }
+/* Stops that are not on the card don't render (and don't load their images) until their turn. */
+.fl-content[inert] { display: none; }
 .fl-card.is-moving .fl-content { overflow: hidden; }
 .fl-inner { display: grid; gap: 14px; padding-top: 14px; }
 .fl-inner > * { margin: 0; }

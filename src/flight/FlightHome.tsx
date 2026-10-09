@@ -102,7 +102,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
       cardLeft: 0, cardW: 0, stripH: 64, contentH: [] as number[], maxH: [] as number[], lift: 0, trackH: 0,
     };
     let drawn = -1;
-    let active = -2;
+    let active = 0;
     let passed = -2;
     let current = -1;
     let tl: gsap.core.Timeline | null = null;
@@ -263,7 +263,10 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
     Object.assign(st, { frame: f0, k: 0, open: 1, body: 0, x: 0 });
 
     layout();
-    store.start();
+    // The poster frame paints first; the rest of the film loads after it, coarse to fine.
+    let started = false;
+    const startLoading = () => { if (!started) { started = true; store.start(); } };
+    poster.decode().then(startLoading, startLoading);
     const trigger = ScrollTrigger.create({ trigger: trackEl, start: 'top top', end: 'bottom bottom', scrub: 0.7, animation: tl });
 
     jump.current = (stop: number) => {
@@ -389,8 +392,9 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
                 ))}
               </div>
               <div className="fl-contents">
-                {STOPS.map((stop) => (
-                  <section key={stop.id} className="fl-content" data-lenis-prevent aria-label={`${STOP_LABEL[stop.id]}: ${stop.place}`}>
+                {STOPS.map((stop, i) => (
+                  <section key={stop.id} className="fl-content" data-lenis-prevent inert={i !== 0} aria-hidden={i !== 0}
+                    aria-label={`${STOP_LABEL[stop.id]}: ${stop.place}`}>
                     <div className="fl-inner"><StopContent id={stop.id} beachTab={beachTab} /></div>
                   </section>
                 ))}

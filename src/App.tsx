@@ -94,7 +94,7 @@ function AppRoutes() {
         <Route path="/work" element={<Navigate to={{ pathname: '/', hash: '#projects' }} replace />} />
         <Route path="/workflow" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
         <Route path="/capabilities" element={<Navigate to={{ pathname: '/', hash: '#capabilities' }} replace />} />
-        <Route path="/about" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
+        <Route path="/about" element={<Navigate to={{ pathname: '/', hash: '#about' }} replace />} />
         <Route
           path="/projects"
           element={

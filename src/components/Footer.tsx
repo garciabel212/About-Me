@@ -12,7 +12,7 @@ function GithubIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-const footerLinks = [...homeSectionLinks, { label: 'RÉSUMÉ', href: resumeUrl }];
+const footerLinks = [...homeSectionLinks, { label: 'RÉSUMÉ PDF', href: resumeUrl }];
 
 const socialLinks = [
   {
@@ -99,6 +99,7 @@ export default function Footer() {
         <div className="mt-12 pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs text-[var(--text-muted)]">
           <p>
             &copy; {new Date().getFullYear()} Jose Garcia. Designed with precision &amp; craft.
+            {' '}The Home flight is AI-generated imagery, not real footage.
           </p>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

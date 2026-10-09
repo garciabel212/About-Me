@@ -1,5 +1,8 @@
 /* Flight Home: one fixed dusk flight scrubbed by scroll, one living glass card that never leaves the screen,
    and one glowing thread from the card to the landmark. Ported from docs/prototypes/flight-v2. */
+html.fl-edge { scrollbar-width: none; }
+html.fl-edge::-webkit-scrollbar, html.fl-edge body::-webkit-scrollbar { display: none; }
+
 .fl-root {
   --fl-night: #06080d;
   --fl-paper: #F5F2EC;
@@ -89,7 +92,7 @@
 .fl-hud-btn:focus-visible { outline: 2px solid var(--fl-signal); outline-offset: 3px; }
 .fl-hud-bottom { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
   padding: 14px var(--fl-gutter) calc(14px + env(safe-area-inset-bottom, 0px));
-  display: flex; justify-content: space-between; align-items: end; gap: 16px;
+  display: flex; justify-content: flex-end; align-items: end; gap: 16px;
   font: 400 10.5px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-hud);
   background: linear-gradient(rgba(6, 8, 13, 0), rgba(6, 8, 13, 0.6)); }
 .fl-hud-bottom a { color: var(--fl-hud-dim); }
@@ -120,6 +123,8 @@
 .fl-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: var(--fl-accent); flex: none; }
 .fl-contents { position: relative; flex: 1; min-height: 0; }
 .fl-content { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+/* Scrolling chains from an overflowing card to the flight instead of stopping at its end. */
+.lenis.lenis-smooth .fl-content[data-lenis-prevent], .fl-content { overscroll-behavior: auto; }
 /* Stops that are not on the card don't render (and don't load their images) until their turn. */
 .fl-content[inert] { display: none; }
 .fl-card.is-moving .fl-content { overflow: hidden; }

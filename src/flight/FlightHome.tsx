@@ -30,6 +30,11 @@ const STOPS = flight.stops;
 const LAST = STOPS.length - 1;
 const PUFFS = puffLayout(9, 7);
 const plan = buildTimeline(STOPS.map((s) => s.frame));
+/** The intro glides over the last SETTLE frames into the River stop; the poster is its first frame. */
+const SETTLE = 24;
+const POSTER_FRAME = Math.max(0, STOPS[0].frame - SETTLE);
+/** The reader's place when a Flight unmounts, so a phone rotating across the breakpoint resumes there. */
+let carried: { start: number; end: number; y: number; at: number } | null = null;
 
 function trackFor(vh: number) {
   return { height: Math.round((plan.total * VH_PER_UNIT * vh) / 100), vh };
@@ -96,7 +101,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
     const srcW = phone ? flight.phoneWidth : flight.width;
     const f0 = STOPS[0].frame;
     // Everything the timeline moves is plain state; render() turns it into pixels.
-    const st = { frame: f0, k: 0, open: 1, body: 0, x: 0 };
+    const st = { frame: POSTER_FRAME, k: 0, open: 1, body: 0, x: 0 };
     const geo = {
       vw: 0, vh: 0, rect: { dx: 0, dy: 0, dw: 0, dh: 0 } as DrawRect, marks: [] as Point[],
       cardLeft: 0, cardW: 0, stripH: 64, contentH: [] as number[], maxH: [] as number[], lift: 0, trackH: 0,
@@ -115,6 +120,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
           drawn = -1;
           draw();
         }
+        maybeSettle();
       },
     });
 
@@ -260,14 +266,49 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
         tl.to({}, { duration: d }, at);
       }
     }
-    Object.assign(st, { frame: f0, k: 0, open: 1, body: 0, x: 0 });
+    Object.assign(st, { frame: POSTER_FRAME, k: 0, open: 1, body: 0, x: 0 });
 
     layout();
     // The poster frame paints first; the rest of the film loads after it, coarse to fine.
     let started = false;
     const startLoading = () => { if (!started) { started = true; store.start(); } };
     poster.decode().then(startLoading, startLoading);
-    const trigger = ScrollTrigger.create({ trigger: trackEl, start: 'top top', end: 'bottom bottom', scrub: 0.7, animation: tl });
+    // The reader's place, recorded outside refreshes so a resize can't skew it.
+    let place = { start: 0, end: 1, y: 0 };
+    let refreshing = false;
+    const onRefreshInit = () => { refreshing = true; };
+    const onRefreshed = () => { refreshing = false; };
+    ScrollTrigger.addEventListener('refreshInit', onRefreshInit);
+    ScrollTrigger.addEventListener('refresh', onRefreshed);
+    const trigger = ScrollTrigger.create({
+      trigger: trackEl, start: 'top top', end: 'bottom bottom', scrub: 0.7, animation: tl,
+      onUpdate: (self) => { if (!refreshing) place = { start: self.start, end: self.end, y: window.scrollY }; },
+    });
+    /** The flight's scroll range from the layout itself (ScrollTrigger measures it lazily). */
+    const range = () => {
+      const top = trackEl.getBoundingClientRect().top + window.scrollY;
+      return { start: top, end: top + Math.max(0, geo.trackH - geo.vh) };
+    };
+    place = { ...range(), y: window.scrollY };
+    const scrollToY = (y: number) => {
+      const l = lenisRef.current;
+      if (l) {
+        l.resize();
+        l.scrollTo(y, { immediate: true, force: true });
+      } else window.scrollTo(0, y);
+    };
+    // Rotated across the phone/desktop breakpoint: the previous Flight just unmounted; resume its place.
+    let pendingResume: typeof carried = null;
+    let resumeFrame = 0;
+    if (carried && performance.now() - carried.at < 1500) {
+      pendingResume = carried;
+      carried = null;
+      const y = resumeScroll(pendingResume, range());
+      resumeFrame = requestAnimationFrame(() => {
+        pendingResume = null;
+        scrollToY(y);
+      });
+    }
 
     jump.current = (stop: number) => {
       const y = trackEl.getBoundingClientRect().top + window.scrollY + anchorTop(plan.readingAt[stop], plan.total, geo.trackH, geo.vh);
@@ -275,18 +316,26 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
       else window.scrollTo({ top: y, behavior: 'smooth' });
     };
 
-    // Intro: a gentle settle onto the River while the hero card is already readable.
+    // Intro: once the frames into the River are loaded, the camera glides from the poster frame onto the
+    // stop. The hero card is readable from the first paint; scrolling first skips the glide.
     let settle: gsap.core.Tween | null = null;
-    if (window.scrollY < 4) {
-      settle = gsap.fromTo(st, { frame: Math.max(0, f0 - 24) }, {
+    let settled = false;
+    function maybeSettle() {
+      if (settled || settle) return;
+      for (let f = POSTER_FRAME; f <= f0; f += 2) if (!store.get(f)) return;
+      settle = gsap.to(st, {
         frame: f0, duration: 3, ease: 'power2.out', onUpdate: render,
-        onComplete: () => { gsap.to(hint, { opacity: 1, duration: 0.6 }); },
+        onComplete: () => { settled = true; gsap.to(hint, { opacity: 1, duration: 0.6 }); },
       });
     }
     const onScroll = () => {
       if (window.scrollY <= 4) return;
-      settle?.progress(1);
+      settled = true;
+      settle?.progress(1, true);
+      st.frame = Math.max(st.frame, f0);
+      gsap.killTweensOf(hint);
       gsap.to(hint, { opacity: 0, duration: 0.3 });
+      render();
       window.removeEventListener('scroll', onScroll);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -296,12 +345,10 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
     const onResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        const before = { start: trigger.start, end: trigger.end, y: window.scrollY };
+        const before = place;
         layout();
         ScrollTrigger.refresh();
-        const y = resumeScroll(before, { start: trigger.start, end: trigger.end });
-        if (lenisRef.current) lenisRef.current.scrollTo(y, { immediate: true });
-        else window.scrollTo(0, y);
+        scrollToY(resumeScroll(before, range()));
       }, 120);
     };
     window.addEventListener('resize', onResize);
@@ -312,9 +359,18 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
     });
     inners.forEach((inner) => ro.observe(inner));
 
+    // The flight fills the window edge to edge: no page scrollbar while it is on screen.
+    document.documentElement.classList.add('fl-edge');
+
     return () => {
+      // A resume that never ran (unmounted again at once, e.g. StrictMode) is handed on unchanged.
+      cancelAnimationFrame(resumeFrame);
+      carried = pendingResume ? { ...pendingResume, at: performance.now() } : { ...place, at: performance.now() };
+      document.documentElement.classList.remove('fl-edge');
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      ScrollTrigger.removeEventListener('refreshInit', onRefreshInit);
+      ScrollTrigger.removeEventListener('refresh', onRefreshed);
       clearTimeout(resizeTimer);
       ro.disconnect();
       settle?.kill();
@@ -335,7 +391,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
           )),
         )}
         <div className="fl-stage">
-          <img className="fl-poster" src={`${base}flight/${set}/f${pad(STOPS[0].frame)}.webp`} alt="" fetchPriority="high" />
+          <img className="fl-poster" src={`${base}flight/${set}/f${pad(POSTER_FRAME)}.webp`} alt="" fetchPriority="high" />
           <canvas className="fl-canvas" aria-hidden="true" />
           <div className="fl-veil" aria-hidden="true" />
           <div className="fl-overlay" aria-hidden="true">
@@ -404,7 +460,6 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
 
           <div className="fl-hint" aria-hidden="true">Scroll to fly</div>
           <footer className="fl-hud-bottom">
-            <span>AI-rendered flight · not real footage</span>
             <Link to="/?view=page">Read as a page</Link>
           </footer>
         </div>

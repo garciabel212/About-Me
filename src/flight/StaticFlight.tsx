@@ -36,7 +36,6 @@ export default function StaticFlight({ beachTab, canFly }: { beachTab?: BeachTab
           </section>
         );
       })}
-      <p className="fl-static-foot">Backgrounds: AI-rendered flight · not real footage</p>
     </div>
   );
 }

@@ -1,10 +1,7 @@
+import { navLinks } from '@/data/routes';
+
 /**
- * Links from any page to a section on Home. Each hash must match a section id
- * on Home; src/data/__tests__/navigation.test.ts fails the build if one doesn't.
+ * Links from any page to a stop on the flight Home, in the brief's nav order.
+ * src/data/__tests__/navigation.test.ts checks them against `navLinks` and `sectionIds`.
  */
-export const homeSectionLinks = [
-  { label: 'WORK', href: '/#projects' },
-  { label: 'EXPERIENCE', href: '/#experience' },
-  { label: 'ABOUT', href: '/#who-i-am' },
-  { label: 'CONTACT', href: '/#contact' },
-] as const;
+export const homeSectionLinks = navLinks.map((l) => ({ label: l.label.toUpperCase(), href: `/${l.hash}` }));

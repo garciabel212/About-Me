@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ExternalLink, Mail, ArrowUp } from 'lucide-react';
 import { mailto, profile, resumeUrl } from '@/data/profile';
+import { homeSectionLinks } from '@/data/navigation';
 
 function GithubIcon({ size = 16 }: { size?: number }) {
   return (
@@ -11,13 +12,7 @@ function GithubIcon({ size = 16 }: { size?: number }) {
   );
 }
 
-const footerLinks = [
-  { label: 'WORK', href: '/#projects' },
-  { label: 'EXPERIENCE', href: '/#experience' },
-  { label: 'ABOUT', href: '/#who-i-am' },
-  { label: 'CONTACT', href: '/#contact' },
-  { label: 'RÉSUMÉ', href: resumeUrl },
-];
+const footerLinks = [...homeSectionLinks, { label: 'RÉSUMÉ', href: resumeUrl }];
 
 const socialLinks = [
   {

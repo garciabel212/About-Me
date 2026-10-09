@@ -38,11 +38,11 @@ export const flight: { frames: number; width: number; height: number; phoneWidth
     {
       "id": "downtown",
       "frame": 189,
-      "x": 0.69,
-      "y": 0.22,
+      "x": 0.65,
+      "y": 0.28,
       "place": "Downtown",
       "coords": "25.774° N · 80.194° W",
-      "phoneX": 0.5005
+      "phoneX": 0.5
     },
     {
       "id": "bay",
@@ -56,20 +56,20 @@ export const flight: { frames: number; width: number; height: number; phoneWidth
     {
       "id": "beach",
       "frame": 338,
-      "x": 0.77,
-      "y": 0.72,
+      "x": 0.63,
+      "y": 0.3,
       "place": "The Beach",
       "coords": "25.790° N · 80.130° W",
-      "phoneX": 0.5014
+      "phoneX": 0.501
     },
     {
       "id": "sunset",
       "frame": 412,
-      "x": 0.54,
-      "y": 0.52,
+      "x": 0.505,
+      "y": 0.465,
       "place": "Sunset",
       "coords": "25.785° N · 80.100° W",
-      "phoneX": 0.5005
+      "phoneX": 0.501
     }
   ]
 };

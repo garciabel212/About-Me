@@ -96,11 +96,7 @@ export default function Scene03Experience() {
               <div className="pt-2 text-xs font-mono text-[var(--text-muted)] space-y-1">
                 <div className="flex items-center gap-1.5">
                   <MapPin size={13} className="text-[var(--accent)]" />
-                  <span>Boca Raton, FL &middot; Nationwide Deployments</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck size={13} className="text-[var(--accent)]" />
-                  <span>100+ Institutional Accounts</span>
+                  <span>South Florida &middot; Nationwide Deployments</span>
                 </div>
               </div>
             </div>
@@ -109,7 +105,7 @@ export default function Scene03Experience() {
             <div className="lg:col-span-8 space-y-8">
               <div>
                 <h3 className="text-2xl sm:text-4xl font-serif font-bold text-[var(--text-primary)] mb-2">
-                  Service Engineer &middot; Sales Engineering Support
+                  Service Engineer
                 </h3>
                 <p className="font-mono text-base text-[var(--accent)] font-semibold tracking-wide">
                   Digital Library Systems Group / Image Access
@@ -154,7 +150,7 @@ export default function Scene03Experience() {
                     Software Development
                   </span>
                   <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
-                    Designed and built <strong className="text-[var(--text-primary)]">Service Map Planner</strong> to centralize customer records, equipment registries, and travel logistics in active daily operations.
+                    Designed and built <strong className="text-[var(--text-primary)]">Service Map Planner</strong> to centralize customer records, equipment registries, and travel planning.
                   </p>
                 </div>
               </div>
@@ -199,7 +195,7 @@ export default function Scene03Experience() {
               <div className="pt-2 text-xs font-mono text-[var(--text-muted)]">
                 <div className="flex items-center gap-1.5">
                   <MapPin size={13} className="text-[var(--text-muted)]" />
-                  <span>Boca Raton, FL</span>
+                  <span>South Florida</span>
                 </div>
               </div>
             </div>
@@ -216,7 +212,7 @@ export default function Scene03Experience() {
               </div>
 
               <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed font-sans">
-                Monitored carrier fiber routes, including subsea cables, under a 99.999% SLA. Investigated connectivity incidents, performed root-cause analysis to support service restoration, and coordinated escalations during network events.
+                Monitored carrier fiber routes, including subsea cables. Investigated connectivity incidents, performed root-cause analysis to support service restoration, and coordinated escalations during network events.
               </p>
 
               <div className="flex flex-wrap gap-2 pt-2">

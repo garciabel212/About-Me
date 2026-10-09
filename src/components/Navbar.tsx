@@ -137,7 +137,7 @@ export default function Navbar() {
 
             <div className="pt-3 flex items-center justify-between border-t border-[var(--border)]">
               <span className="font-mono text-xs text-[var(--text-muted)]">
-                BOCA RATON, FL
+                SOUTH FLORIDA
               </span>
               <a
                 href={resumeUrl}

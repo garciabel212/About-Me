@@ -68,7 +68,7 @@ export function GarageVisual() {
             <span>SCALE GARAGE 3D</span>
           </div>
           <span className="text-xs text-slate-500 font-mono hidden sm:inline">
-            1:10 &amp; 1:24 DIORAMA STUDIO
+            1:18 GARAGE CONFIGURATOR
           </span>
         </div>
 
@@ -252,7 +252,7 @@ export function GarageVisual() {
             {exploded ? 'LAYER SEPARATION: +180mm' : 'ASSEMBLY MODE: LOCKED'}
           </div>
           <div className="text-slate-500 text-[10px]">
-            Modular Wall System &middot; 200+ Assets
+            Modular wall system &middot; Concept render
           </div>
         </div>
       </div>
@@ -260,7 +260,7 @@ export function GarageVisual() {
       {/* Bottom telemetry footer */}
       <div className="relative z-20 flex flex-wrap items-center justify-between px-5 py-3 border-t border-white/[0.06] bg-navy-950/90 text-xs font-mono text-slate-400">
         <div className="flex items-center gap-4">
-          <span><strong className="text-white">SCALES:</strong> 1:10 &middot; 1:24</span>
+          <span><strong className="text-white">SCALE:</strong> 1:18</span>
           <span><strong className="text-white">LIGHTING:</strong> 5000K Color Temp</span>
           <span className="hidden md:inline"><strong className="text-white">MATERIALS:</strong> PBR Diamond Plate, Raw Steel, Powder Coat</span>
         </div>

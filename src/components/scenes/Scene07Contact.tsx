@@ -51,7 +51,7 @@ export default function Scene07Contact() {
             </p>
             <div className="flex items-center gap-1.5 text-xs font-mono text-[var(--text-muted)] mt-1">
               <MapPin size={13} className="text-[var(--accent)]" />
-              <span>Boca Raton, South Florida &middot; Open to Remote, Hybrid, &amp; National Travel</span>
+              <span>South Florida &middot; Open to Remote, Hybrid, &amp; National Travel</span>
             </div>
           </div>
 

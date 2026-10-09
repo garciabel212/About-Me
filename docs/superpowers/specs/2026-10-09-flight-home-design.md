@@ -19,19 +19,37 @@ Reference implementation: `docs/prototypes/flight-v2/index.html` (published prot
 
 | Decision | Source |
 |---|---|
-| Six stops: River (intro) · Brickell (Service Map Planner) · Downtown (AAC, Agent Trading OS, Scale Garage) · The Bay (how I work) · The Beach (experience) · Sunset (contact) | approved 2026-10-07 |
+| Six stops over Miami, footage as rendered: River · Brickell · Downtown · The Bay · The Beach · Sunset | approved 2026-10-07 |
 | Pin + line + card at each stop, scroll-linked and reversible | approved 2026-10-07 |
 | Cards reveal by **condensing mist**, not a clip-path unfold | approved 2026-10-09 |
+| **Content comes from the Website Content Brief** (2026-10-08) and the content session's spec `2026-10-08-content-brief-design.md`, including its claims register | Jose, 2026-10-09 |
 | Keep the site's look: Playfair Display headlines, Inter body, JetBrains Mono labels, accent #2452C6 | standing |
 | "AI-rendered flight" label is always visible (LTX-2 license) | standing |
-| **Assumed:** Capabilities and Philosophy scenes leave Home. Their best lines fold into the Bay and Beach cards. | needs confirmation |
-| **Assumed:** launch with the prototype's card copy; screenshots and proof panels come in phase 2 | needs confirmation |
+| **Proposed:** stop-to-section mapping below (it replaces the 2026-10-07 mapping, which had Service Map Planner alone at Brickell) | needs confirmation |
+| **Proposed:** the content session builds the shared data layer, case-study pages, Lab, nav and SEO; this branch builds only Home; the content session's Scene01–07 rewrites are dropped | needs confirmation |
+
+## Content at each stop (from the brief, in its homepage order)
+
+| Stop | Brief section | Card content |
+|---|---|---|
+| 1 River | Hero | Jose Garcia · role line "Customer Solutions \| Implementation \| Technical Consulting" · heading "Helping customers understand, implement, and use technology." · intro paragraph · details line (South Florida \| English and Spanish \| Open to remote and South Florida \| up to 40% travel) · **View My Work** + **Download Resume** · evidence strip (Customer delivery since 2022 · Previous network operations experience · Fluent in English and Spanish) |
+| 2 Brickell | What I help customers do | The five capabilities as compact rows (title + one line), each linking to its experience example or case study |
+| 3 Downtown | Selected work | Service Map Planner (lead), AAC communication app, Miniature Garage Configurator: one line each, status label, thumbnail (labelled "concept" until real screenshots exist), **Read case study** links; small "More in the Lab" link |
+| 4 The Bay | Experience | Service Engineer · DLSG / Image Access · Oct 2022–present: paragraph + five responsibility bullets (three shown, "Show all") · NOC Engineer · Globenet · Nov 2021–Sep 2022: paragraph |
+| 5 The Beach | Working approach · tools and education · short bio | Tabs inside the card: **How I work** (five steps) · **Tools & education** (professional vs project columns; B.S. CS&E FAU; certificate only with issuer and date; English and Spanish) · **About** (short bio) |
+| 6 Sunset | Resume downloads · contact | "Let us talk about your team" + contact paragraph · email (copy button) · LinkedIn · **Download Resume** (master) · three role PDFs ("Download PDF", last-updated date) |
+
+Every number, status and claim follows the claims register in the content spec. In particular: no
+"100+ accounts" as a project result, Service Map Planner is "map-based visit planning" (MapLibre/OSM +
+OSRM; not "routing optimization", not the Google Maps API), AAC has no offline/AA claims, Garage is 1:18
+with no STL export claim, location is "South Florida", and Agent Trading OS lives in the Lab, not on Home.
 
 ## What the visitor experiences
 
-1. **Load:** the River stop frame paints immediately (poster), then the camera flies in over the river
-   (about 3 s, skippable by scrolling) and the intro card condenses: name, title, five credentials,
-   Résumé and LinkedIn.
+1. **Load:** the River stop frame paints immediately (preloaded poster) **with the hero card already
+   visible**: name, focus and the résumé link never wait for animation (brief: "keep essential text
+   visible without waiting for an introduction animation"). The camera then makes a gentle 3 s settle
+   behind the card. There is no fly-in that delays the text.
 2. **Scroll:** the card evaporates, the camera flies to the next stop with the speed-ramped footage, and
    the next card condenses. About 4 viewport heights of scroll per hop, about 42 in total.
 3. **HUD:** top bar with the brand, the six-stop route (click to jump), and an always-visible
@@ -72,22 +90,25 @@ src/flight/                      (new on main; tested pieces carried over from f
   StopMarks.tsx                  reticle, lock label, pin, leader line for one stop
   MistCard.tsx                   card shell + mist puffs; exposes reveal/fold tweens for the timeline
   StaticFlight.tsx               reduced-motion / Save-Data page
-  stops/                         six card bodies: IntroCard, ServiceMapCard, ProjectsCard,
-                                 HowIWorkCard, ExperienceCard, ContactCard
+  stops/                         six card bodies: HeroCard, CapabilitiesCard, WorkCard,
+                                 ExperienceCard, ApproachCard (tabs), ContactCard
 public/flight/desktop/fNNN.webp  413 frames, 1280 px, about 12 MB in total, loaded progressively
 public/flight/mobile/fNNN.webp   413 frames, 720 px, about 4 MB
 ```
 
-- **Content stays single-sourced.** Cards render from `src/data/profile.ts`, `projects.ts` and
-  `experience.ts`, so the flight can't contradict the résumé or the project pages. The Service Map
-  Planner stack is corrected there (MapLibre/OpenStreetMap + OSRM, export to Google Maps; not "Google
-  Maps API").
+- **Content stays single-sourced.** Cards contain no prose of their own. They render from the content
+  session's data layer (`src/data/content.ts` plus `profile.ts`, `experience.ts` and `projects.ts`,
+  delivered in its PR 2), so the flight can't contradict the résumé, the case-study pages or the claims
+  register. **Dependency:** this branch starts after that PR merges. If it slips, the cards read from the
+  current `src/data` files with the claims register applied, and switch over afterwards.
 - **Section links keep working.** Each stop renders an invisible anchor at its reading position with a
-  stable id: `intro`, `projects` (Brickell), `work` (Downtown), `how-i-work`, `experience`, `contact`.
-  `homeSectionLinks` and the Home nav point at these, and the existing navigation test is changed to
-  read stop ids from `flightData`/stops instead of scanning `scenes/`.
-- **Routing:** `/` renders `FlightHome`. Other routes are unchanged. `EditorialNav`'s section list
-  becomes the six stops.
+  stable id: `intro` (River), `capabilities` (Brickell), `work` (Downtown), `experience` (Bay), `about`
+  (Beach), `resume` and `contact` (Sunset). The brief's nav (Work, Experience, About, Resume, Contact)
+  and `homeSectionLinks` point at these. The navigation test reads the stop ids from the stops module
+  instead of scanning `scenes/`.
+- **Routing:** `/` renders `FlightHome`. Other routes are unchanged; case-study pages, `/lab` and
+  redirects come from the content session. `EditorialNav` becomes the HUD's route bar plus
+  Résumé and Email buttons.
 - **Removed:** `Scene01`–`Scene07`, `JourneyBackground`/`JourneyNav`/`journeyConfig`, and any assets
   only they use. They stay in git history.
 

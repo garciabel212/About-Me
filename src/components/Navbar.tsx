@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './theme/ThemeToggle';
+import { profile, resumeUrl } from '@/data/profile';
 
 const navLinks = [
   { label: 'WORK', href: '/#work' },
@@ -89,8 +90,9 @@ export default function Navbar() {
               <ThemeToggle />
 
               <a
-                href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
-                title="Request current résumé via email"
+                href={resumeUrl}
+                download={profile.resumeFile}
+                title="Download résumé (PDF)"
                 className="btn-secondary px-4 py-2 rounded-xl font-mono text-xs font-semibold tracking-wider inline-flex items-center gap-1.5"
               >
                 <span>R&Eacute;SUM&Eacute;</span>
@@ -142,11 +144,12 @@ export default function Navbar() {
                 BOCA RATON, FL
               </span>
               <a
-                href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia&body=Hi%20Jose,%0D%0A%0D%0AI%20would%20like%20to%20request%20a%20copy%20of%20your%20current%20r%C3%A9sum%C3%A9.%0D%0A%0D%0AThanks!"
-                title="Request current résumé via email"
+                href={resumeUrl}
+                download={profile.resumeFile}
+                title="Download résumé (PDF)"
                 className="btn-primary px-4 py-2.5 rounded-xl font-mono text-xs font-bold inline-flex items-center gap-1.5"
               >
-                <span>R&Eacute;SUM&Eacute; ON REQUEST</span>
+                <span>DOWNLOAD R&Eacute;SUM&Eacute;</span>
                 <ArrowUpRight size={13} />
               </a>
             </div>

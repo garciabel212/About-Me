@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Mail, ExternalLink } from 'lucide-react';
 import { Reveal } from '@/components/motion';
+import { mailto, profile } from '@/data/profile';
 
 interface CTAProps {
   title?: string;
@@ -41,7 +42,7 @@ export default function CTA({
               <ArrowRight size={18} />
             </Link>
             <a
-              href="https://www.linkedin.com/in/jose-abel-garcia-a5006616b/"
+              href={profile.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary text-base px-6 py-3.5"
@@ -50,7 +51,7 @@ export default function CTA({
               LinkedIn
             </a>
             <a
-              href="mailto:joseabelgarcia99@gmail.com"
+              href={mailto}
               className="btn-ghost text-base"
             >
               <Mail size={17} />

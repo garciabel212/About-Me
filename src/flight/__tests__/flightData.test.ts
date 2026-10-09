@@ -9,7 +9,7 @@ describe('generated flight data', () => {
     const frames = flight.stops.map((s) => s.frame);
     expect([...frames].sort((a, b) => a - b)).toEqual(frames);
     for (const f of frames) expect(f).toBeGreaterThanOrEqual(0);
-    expect(frames.at(-1)).toBeLessThan(flight.frames);
+    expect(frames[frames.length - 1]).toBeLessThan(flight.frames);
   });
   it('keeps landmarks inside the frame on desktop and phone crops', () => {
     for (const s of flight.stops) {

@@ -35,8 +35,8 @@ Default if undecided: **drop or soften** to what is evidenced. "Where" is curren
 
 | Claim | Where | Default |
 |---|---|---|
-| AWS Certified Cloud Practitioner | `profile.ts`, `experience.ts`, Scene03 | Remove unless credential verified (issuer + status) |
-| "100+ institutional accounts" | Scene03, Scene04, Scene05 | Remove, or define scope (personal vs employer reach vs sample data) |
+| AWS Certified Cloud Practitioner | `profile.ts`, `experience.ts`, Scene03 | **Keep** — Jose confirmed 2026-10-08 it is held and current. Still add credential ID/validation link to the resume if available |
+| "100+ institutional accounts" | Scene03, Scene04, Scene05 | Jose confirmed it is true 2026-10-08; **scope wording still needed** (brief: personal work vs employer reach vs dataset size). Until then use "supports 100+ institutional accounts" only in Experience, not as a project impact |
 | 99.999% SLA | Scene03, Scene05 | Remove; describe NOC monitoring without attributing the SLA as a result |
 | SMP "active in daily operations", routing optimization | `projects.ts`, Scene04 | "Personal project / working prototype"; map-based visit planning only |
 | AAC "Offline Ready", "AA Compliant" | Scene04 | Remove both; say "large touch targets, bilingual presentation" |
@@ -63,3 +63,11 @@ Portrait; master PDF plus Implementation / Solutions Engineering / Technical Acc
 ## Verification
 
 `npm run lint`, `npm test`, `npm run build`; keyboard and mobile (375px) pass; reduced-motion pass; essential text visible with animation disabled; every link and PDF opens under `/About-Me/`; a grep for each retired claim string returns nothing.
+
+## Evidence from the project repos (read 2026-10-08)
+
+| Project | What the code shows | Consequence for copy |
+|---|---|---|
+| Service Map Planner (`Map-Planer`, private, Next 16 + Firebase, Vercel) | Pages: customers, map, maintenance, calendar, tickets, replacement requests, travel planner, reports, import. Travel planner builds a **nearest-neighbor** route and gets driving distance/time from OSRM; urgency sorting; saved travel plans. No test suite except Firestore-rules tests in CI. Repo is private and holds real customer data in places. | Say "map-based visit planning with nearest-stop route sequencing", not "routing optimization". Status label: Working prototype / Deployed tool only once Jose confirms users. **Screenshots must use fictional emulator data** — never real customer records. |
+| AAC app "Contigo" (`AAC-App`, private, React + Capacitor Android) | Spanish-first ES/EN, 9 fixed categories, Yes/No-first "Preguntas" mode, Dos Opciones (two-choice), sentence builder, caregiver settings, debounce, large cards, paper/high-contrast mode, native TTS, photos in IndexedDB. Ships as an APK with bundled assets, but **no service worker/PWA and no tests**. ARASAAC pictograms with an in-app attribution notice and license modal. README claims WCAG AAA contrast; no accessibility audit. | Drop "Offline PWA" and "AA Compliant". Safe wording: "Android app with bundled assets; speech via the device's text-to-speech" and concrete choices (target size, fixed Sí/No positions). Keep ARASAAC attribution on the page. Bilingual = predefined phrases, not automatic translation. Do not publish family identity or medical history. |
+| Garage configurator (`3d-app`, Next 16 + R3F, 23 tests) | Scale profiles exist in seed data (1:18, 1:24, 1:43, 1:64) but **all designs, the display car, and the pavilion are 1:18**. 5 STL parts and 5 GLB equipment models are **inputs** for the preview. Pricing and printability services exist (with tests) over seed data; checkout is mocked. **No STL/slicer export code found.** | 1:18 only (others "planned"). Remove "200+ assets", "1:10", and "direct STL export". Pricing/printability can be shown as "estimates from seed data". Label renders as renders. |

@@ -4,13 +4,9 @@ import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from './theme/ThemeToggle';
 import { profile, resumeUrl } from '@/data/profile';
+import { homeSectionLinks } from '@/data/navigation';
 
-const navLinks = [
-  { label: 'WORK', href: '/#work' },
-  { label: 'EXPERIENCE', href: '/#experience' },
-  { label: 'ABOUT', href: '/#about' },
-  { label: 'CONTACT', href: '/#contact' },
-];
+const navLinks = homeSectionLinks;
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -31,7 +27,7 @@ export default function Navbar() {
   const isActive = (href: string) => {
     if (href.startsWith('/#')) {
       const targetHash = href.replace('/', '');
-      return location.pathname === '/' && (location.hash === targetHash || (!location.hash && targetHash === '#work'));
+      return location.pathname === '/' && (location.hash === targetHash || (!location.hash && targetHash === '#projects'));
     }
     return location.pathname === href || location.pathname.startsWith(href + '/');
   };

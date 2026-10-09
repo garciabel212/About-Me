@@ -101,11 +101,20 @@ public/flight/mobile/fNNN.webp   413 frames, 720 px, about 4 MB
   delivered in its PR 2), so the flight can't contradict the résumé, the case-study pages or the claims
   register. **Dependency:** this branch starts after that PR merges. If it slips, the cards read from the
   current `src/data` files with the claims register applied, and switch over afterwards.
-- **Section links keep working.** Each stop renders an invisible anchor at its reading position with a
-  stable id: `intro` (River), `capabilities` (Brickell), `work` (Downtown), `experience` (Bay), `about`
-  (Beach), `resume` and `contact` (Sunset). The brief's nav (Work, Experience, About, Resume, Contact)
-  and `homeSectionLinks` point at these. The navigation test reads the stop ids from the stops module
-  instead of scanning `scenes/`.
+- **Section links keep working.** Anchors use the content session's `sectionIds` from
+  `src/data/routes.ts`, unchanged: `intro` (River), `capabilities` (Brickell), `projects` (Downtown),
+  `experience` (Bay), `who-i-am` (Beach, opens the How I work tab), `about` (Beach, opens the About tab),
+  `resume` and `contact` (Sunset). Each anchor sits at its stop's reading position. The brief's nav
+  (`navLinks`: Work, Experience, About, Resume, Contact) points at these. The navigation test reads the
+  ids from `sectionIds` and checks that each has an anchor in the flight.
+- **Data names follow `src/data/content.ts` exactly:** `site`, `hero`, `evidenceStrip`, `capabilities`,
+  `featuredWork` (renders `image` or, when `imageIsConcept` is set and there is no image, a labeled
+  placeholder; never an invented screenshot), `experience`, `approach`, `tools`, `education`,
+  `languages`, `bio`, `contact`, and résumés from `availableResumes()` only, so links never point at
+  PDFs that don't exist.
+- **Claims guard:** the content session's build check (it fails on retired claims anywhere outside
+  `content.ts`) also covers the flight. Flight files contain no copy of their own, only layout labels
+  and place names.
 - **Routing:** `/` renders `FlightHome`. Other routes are unchanged; case-study pages, `/lab` and
   redirects come from the content session. `EditorialNav` becomes the HUD's route bar plus
   Résumé and Email buttons.

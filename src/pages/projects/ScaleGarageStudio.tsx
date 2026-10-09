@@ -177,7 +177,7 @@ export default function ScaleGarageStudio() {
               </div>
               <div>
                 <span className="text-slate-500 block text-xs tracking-widest uppercase mb-1">Target Production</span>
-                <span className="text-white font-medium">Bambu Lab P2S (256mm³ envelope)</span>
+                <span className="text-white font-medium">Bambu Lab P2S (256 × 256 × 256 mm build volume)</span>
               </div>
             </div>
           </motion.div>
@@ -372,7 +372,7 @@ export default function ScaleGarageStudio() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 mt-0.5 font-bold">✓</span>
-                  <span>Bambu Lab P2S (256mm³) build volume constraint verification</span>
+                  <span>Bambu Lab P2S (256 × 256 × 256 mm) build volume constraint verification</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-emerald-400 mt-0.5 font-bold">✓</span>

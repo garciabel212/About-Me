@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Mail, ExternalLink, Code2, FileText, MessageSquare, MapPin, Plane, Globe2, Briefcase } from 'lucide-react';
+import { mailto, profile, resumeUrl } from '@/data/profile';
 
 const targetRoles = [
   'Solutions Engineer',
@@ -13,8 +14,8 @@ const contactMethods = [
   {
     icon: Mail,
     label: 'Direct Email',
-    value: 'joseabelgarcia99@gmail.com',
-    href: 'mailto:joseabelgarcia99@gmail.com',
+    value: profile.email,
+    href: mailto,
     desc: 'Best for interview scheduling & technical inquiries',
     color: '#3B82F6',
     primary: true,
@@ -23,7 +24,7 @@ const contactMethods = [
     icon: ExternalLink,
     label: 'LinkedIn',
     value: 'jose-abel-garcia',
-    href: 'https://www.linkedin.com/in/jose-abel-garcia-a5006616b/',
+    href: profile.linkedin,
     desc: 'Connect professionally & view network recommendations',
     color: '#0A66C2',
     primary: false,
@@ -39,10 +40,10 @@ const contactMethods = [
   },
   {
     icon: FileText,
-    label: 'Résumé on Request',
-    value: 'Request via Email',
-    href: 'mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia',
-    desc: 'Current CV delivered directly with verified credentials',
+    label: 'Résumé',
+    value: 'Download PDF',
+    href: resumeUrl,
+    desc: 'Current two-page résumé: experience, education, and tools',
     color: '#10B981',
     primary: false,
   },
@@ -177,15 +178,15 @@ export default function Contact() {
               Looking for a résumé?
             </h2>
             <p className="text-[var(--text-secondary)] text-sm sm:text-base mb-8 max-w-lg mx-auto">
-              I provide an up-to-date, comprehensive PDF résumé with full deployment history, technical certifications,
-              and institutional references on request.
+              Download the current two-page PDF: experience, education, tools, and languages.
             </p>
             <a
-              href="mailto:joseabelgarcia99@gmail.com?subject=R%C3%A9sum%C3%A9%20Request%20-%20Jose%20Garcia"
+              href={resumeUrl}
+              download={profile.resumeFile}
               className="btn-lime inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-sm mx-auto shadow-lg hover:brightness-105 transition-all"
             >
               <FileText size={17} />
-              <span>REQUEST RÉSUMÉ VIA EMAIL</span>
+              <span>DOWNLOAD RÉSUMÉ (PDF)</span>
             </a>
           </motion.div>
         </div>

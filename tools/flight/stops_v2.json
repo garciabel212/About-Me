@@ -1,0 +1,36 @@
+[
+  {
+    "id": "s1_river",
+    "arrive": "Tall modern residential towers with warm lit windows on the right bank of the Miami River at dusk, purple sky, orange glow on the horizon, glowing reflections on the dark water.",
+    "depart": "The camera flies forward low over the river and rises toward a tall glass tower with warm lit windows ahead, the city lights of Brickell at dusk."
+  },
+  {
+    "id": "s2_towers",
+    "arrive": "A tall modern residential tower with warm lit windows and white balconies on the right, the bay and the orange sunset glow on the horizon, deep purple dusk sky.",
+    "depart": "The camera flies forward and banks past the left side of the tower toward the glowing downtown skyline at dusk, the tower sliding past close on the right, city lights ahead."
+  },
+  {
+    "id": "s3_canyon",
+    "arrive": "A wide downtown boulevard at dusk with tall towers with lit windows on the right, street lights, palm trees and light trails below, the sunset glowing at the end of the street.",
+    "depart": "The camera flies forward high above the boulevard past the towers toward the open bay ahead, the city lights falling behind, purple dusk sky.",
+    "seed": 7311,
+    "pullback": "Use the provided image as the first frame. FPV drone footage: the camera flies smoothly backward and upward away from the towers in one steady continuous move, the boulevard and the towers recede and the view opens up wide over the city, stabilized, gentle motion blur, no cuts, crisp clean architecture. "
+  },
+  {
+    "id": "s4_bay",
+    "arrive": "Calm Biscayne Bay at dusk, a few residential towers with lit windows on the water on the right, anchored sailboats, a long causeway bridge with lights, pink and violet sky.",
+    "depart": "The camera flies forward low across the calm bay toward the distant beach and palm trees, glittering reflections on the water, pink and violet dusk sky."
+  },
+  {
+    "id": "s5_palms",
+    "arrive": "Tall palm trees along a wide beach at dusk, a small pink lifeguard hut with a warm light, the calm ocean beyond, pink and orange sky.",
+    "depart": "The camera flies forward past the palm trees and out over the beach toward the calm ocean and the setting sun on the horizon."
+  },
+  {
+    "id": "s6_sunset",
+    "arrive": "The calm open ocean at sunset, the sun touching the horizon in the center, a glowing orange path of light on the water, soft pink and violet clouds.",
+    "depart": "-",
+    "seed": 7611,
+    "pullback": "Use the provided image as the first frame. FPV drone footage: the camera flies fast backward low over the ocean toward the shore, the water rushes toward the camera, the sun recedes on the horizon, a sandy beach with palm trees appears at the bottom of the frame, smooth continuous motion, no cuts. "
+  }
+]

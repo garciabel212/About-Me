@@ -1,0 +1,496 @@
+<title>Miami Flight Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one fixed full-bleed flight scrubbed by scroll. At each of six stops the camera settles on a composed
+   shot, a reticle locks on the landmark, a pin drops, a leader line draws, and a card opens in the shot's calm
+   left side (a bottom sheet on phones). Single dark look: the dusk flight from the portfolio's hero, built from
+   the portfolio's own tokens. */
+:root {
+  color-scheme: dark;
+  --night: #06080d;
+  --paper: #F5F2EC;
+  --paper-line: rgba(25, 27, 30, 0.10);
+  --ink: #191B1E;
+  --ink-soft: #4A5058;
+  --accent: #2452C6;
+  --signal: #A9D2FF;
+  --hud: rgba(244, 243, 239, 0.88);
+  --hud-dim: rgba(244, 243, 239, 0.52);
+  --serif: "Playfair Display", "Times New Roman", Georgia, serif;
+  --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --gutter: clamp(16px, 4vw, 56px);
+}
+html, body { background: var(--night); color: var(--hud); }
+body { font-family: var(--sans); }
+.track { height: 100vh; }
+
+.stage { position: fixed; inset: 0; overflow: hidden; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.veil { position: absolute; inset: 0; opacity: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(6, 8, 13, 0.5) 0%, rgba(6, 8, 13, 0.16) 42%, rgba(6, 8, 13, 0) 62%); }
+.overlay { position: absolute; inset: 0; pointer-events: none; }
+
+.hud-top { position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) var(--gutter) 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font: 500 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--hud);
+  background: linear-gradient(rgba(6, 8, 13, 0.55), rgba(6, 8, 13, 0)); }
+.brand { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.brand i { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px var(--signal); }
+.route { display: flex; gap: 18px; margin: 0; padding: 0; list-style: none; }
+.route button { all: unset; cursor: pointer; display: flex; gap: 6px; white-space: nowrap; color: var(--hud-dim);
+  transition: color 0.3s; pointer-events: auto; }
+.route button b { font-weight: 500; }
+.route button:hover, .route button.on { color: var(--hud); }
+.route button.on b { color: var(--signal); }
+.route button:focus-visible { outline: 1px solid var(--signal); outline-offset: 4px; }
+.route-short { display: none; white-space: nowrap; }
+.route-short b { color: var(--signal); font-weight: 500; }
+
+.hud-bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+  padding: 14px var(--gutter) calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: space-between; align-items: end; gap: 16px;
+  font: 400 10.5px/1.4 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--hud-dim);
+  background: linear-gradient(rgba(6, 8, 13, 0), rgba(6, 8, 13, 0.5)); }
+.counter { font-variant-numeric: tabular-nums; }
+.hint { position: fixed; left: 50%; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 4;
+  transform: translateX(-50%); display: grid; justify-items: center; gap: 10px; opacity: 0;
+  font: 500 11px/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--hud); }
+.hint::after { content: ""; width: 1px; height: 34px; background: linear-gradient(var(--hud), transparent);
+  animation: drip 1.8s ease-in-out infinite; transform-origin: top; }
+@keyframes drip { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+.reticle { position: absolute; width: 56px; height: 56px; transform: translate(-50%, -50%); opacity: 0; }
+.reticle span { position: absolute; width: 14px; height: 14px; border: 0 solid var(--signal); }
+.reticle span:nth-child(1) { left: 0; top: 0; border-left-width: 1.5px; border-top-width: 1.5px; }
+.reticle span:nth-child(2) { right: 0; top: 0; border-right-width: 1.5px; border-top-width: 1.5px; }
+.reticle span:nth-child(3) { left: 0; bottom: 0; border-left-width: 1.5px; border-bottom-width: 1.5px; }
+.reticle span:nth-child(4) { right: 0; bottom: 0; border-right-width: 1.5px; border-bottom-width: 1.5px; }
+.lock { position: absolute; margin: 38px 0 0 14px; opacity: 0; white-space: nowrap;
+  font: 500 10.5px/1.5 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--signal);
+  text-shadow: 0 1px 8px rgba(6, 8, 13, 0.9); }
+.lock em { font-style: normal; color: var(--hud); }
+.pin { position: absolute; width: 0; height: 0; opacity: 0; }
+.pin .stem { position: absolute; left: -0.75px; bottom: 0; width: 1.5px; height: 34px;
+  background: linear-gradient(transparent, var(--signal)); }
+.pin .dot { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--signal); box-shadow: 0 0 0 3px rgba(169, 210, 255, 0.25), 0 0 18px var(--signal); }
+.pin .ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;
+  border: 1.5px solid var(--signal); opacity: 0; }
+.pin .pulse { position: absolute; left: -16px; top: -16px; width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--signal); animation: pulse 2.4s ease-out infinite; }
+@keyframes pulse { from { transform: scale(0.4); opacity: 0.8; } to { transform: scale(1.6); opacity: 0; } }
+.leader { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.leader path { fill: none; stroke: var(--signal); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 4px rgba(169, 210, 255, 0.6)); }
+.leader circle { fill: var(--signal); opacity: 0; }
+
+/* Cards: the portfolio's editorial exhibit card, opened from where the line lands */
+.card { position: fixed; z-index: 3; left: var(--gutter); top: 50%; transform: translateY(-46%);
+  width: min(420px, 36vw); max-height: calc(100vh - 150px); overflow: auto; padding: 26px 28px 24px;
+  border-radius: 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--paper-line);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.55), 0 8px 24px -4px rgba(0, 0, 0, 0.3);
+  clip-path: inset(0% 0% 100% 100% round 14px); display: grid; gap: 14px; visibility: hidden; }
+.card.center { left: 50%; transform: translate(-50%, 0); top: auto; bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  width: min(560px, calc(100vw - 2 * var(--gutter))); text-align: center; justify-items: center; }
+.card > * { margin: 0; }
+.eyebrow { display: flex; align-items: center; gap: 8px;
+  font: 500 10.5px/1.4 var(--mono); letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-soft); }
+.eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
+.card h1, .card h2 { font: 600 clamp(28px, 2.6vw, 36px)/1.05 var(--serif); letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+.card h1 { font-size: clamp(40px, 4.4vw, 60px); line-height: 0.95; }
+.card h1 em, .card h2 em { font-style: italic; font-weight: 500; color: var(--accent); }
+.sub { font: 500 11.5px/1.5 var(--mono); color: var(--accent); }
+.desc { font: 400 14.5px/1.6 var(--sans); color: var(--ink-soft); }
+.impact { display: flex; align-items: baseline; gap: 12px; padding: 12px 0; border-block: 1px solid var(--paper-line); }
+.impact strong { font: 600 34px/1 var(--serif); color: var(--ink); font-variant-numeric: tabular-nums; }
+.impact span { font: 400 13px/1.4 var(--sans); color: var(--ink-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; list-style: none; }
+.chips li { font: 400 11px/1 var(--mono); padding: 6px 8px; border: 1px solid var(--paper-line); border-radius: 6px; color: var(--ink-soft); background: #fff; }
+.facts { list-style: none; padding: 0; display: grid; gap: 7px; font: 400 13.5px/1.45 var(--sans); color: var(--ink-soft); }
+.facts li { display: grid; grid-template-columns: 10px 1fr; gap: 8px; }
+.facts li::before { content: ""; width: 5px; height: 5px; margin-top: 7px; border-radius: 50%; background: var(--accent); }
+.rows { list-style: none; padding: 0; display: grid; }
+.rows li { display: grid; gap: 3px; padding: 11px 0; border-top: 1px solid var(--paper-line); }
+.rows li:last-child { border-bottom: 1px solid var(--paper-line); }
+.rows b { font: 600 18px/1.2 var(--serif); color: var(--ink); }
+.rows span { font: 400 13px/1.45 var(--sans); color: var(--ink-soft); }
+.rows small { font: 500 10.5px/1.4 var(--mono); letter-spacing: 0.06em; color: var(--accent); }
+.steps { list-style: none; padding: 0; display: grid; gap: 0; counter-reset: step; }
+.steps li { display: grid; grid-template-columns: 34px 1fr; gap: 2px 10px; padding: 9px 0; border-top: 1px solid var(--paper-line); counter-increment: step; }
+.steps li::before { content: "0" counter(step); grid-row: span 2; font: 500 11px/1.9 var(--mono); color: var(--accent); }
+.steps b { font: 600 13px/1.3 var(--mono); letter-spacing: 0.12em; color: var(--ink); }
+.steps span { font: 400 13px/1.4 var(--sans); color: var(--ink-soft); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; pointer-events: auto; cursor: pointer;
+  font: 600 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none;
+  padding: 12px 16px; border-radius: 8px; border: 1px solid var(--accent); }
+.btn.primary { color: #fff; background: var(--accent); }
+.btn.primary:hover { background: #1B44AA; }
+.btn.ghost { color: var(--accent); background: transparent; }
+.btn:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.email { font: 500 13px/1 var(--mono); color: var(--ink); user-select: all; }
+
+@media (max-width: 760px) {
+  .route { display: none; }
+  .route-short { display: block; }
+  .counter { display: none; }
+  .card, .card.center { top: auto; left: var(--gutter); right: var(--gutter); width: auto; transform: none;
+    bottom: calc(52px + env(safe-area-inset-bottom, 0px)); max-height: 58vh; padding: 20px 20px 18px; gap: 11px;
+    clip-path: inset(0% 50% 100% 50% round 14px); }
+  .desc { font-size: 13.5px; }
+  .card h1 { font-size: 40px; }
+  .impact strong { font-size: 28px; }
+  .lock { margin: -66px 0 0 0; transform: translateX(-50%); }
+}
+
+/* Reduced motion: no flight. Each stop becomes a still section with its card in place. */
+.static .stage, .static .hint, .static .track { display: none; }
+.stops-static { display: none; }
+.static .stops-static { display: grid; }
+.stops-static section { position: relative; min-height: 100vh; display: grid; align-items: center;
+  padding: 90px var(--gutter) 70px; background-size: cover; background-position: center; }
+.static .card { position: relative; left: auto; top: auto; bottom: auto; transform: none; visibility: visible;
+  clip-path: none; max-height: none; }
+.static .card.center { align-self: end; justify-self: center; }
+</style>
+
+<div class="track" id="track" aria-hidden="true"></div>
+
+<div class="stage" aria-hidden="true">
+  <canvas id="flight"></canvas>
+  <div class="veil" id="veil"></div>
+  <div class="overlay" id="overlay">
+    <svg class="leader" id="leader"></svg>
+  </div>
+</div>
+
+<header class="hud-top">
+  <span class="brand"><i></i>Jose Garcia</span>
+  <ol class="route" id="route" aria-label="Flight stops"></ol>
+  <span class="route-short" id="routeShort"></span>
+</header>
+
+<div class="hint" id="hint">Scroll to fly</div>
+
+<main class="stops-static" id="static"></main>
+
+<article class="card" data-stop="0" aria-label="Introduction">
+  <p class="eyebrow"><i></i>Stop 01 · Miami, Florida</p>
+  <h1>Jose <em>Garcia</em></h1>
+  <p class="sub">Solutions Engineer · Enterprise Software Solutions</p>
+  <ul class="facts">
+    <li>Service Engineer at DLSG / Image Access, Oct 2022 – present</li>
+    <li>Previously NOC Engineer at GlobeNet</li>
+    <li>B.S. Computer Science &amp; Engineering, FAU</li>
+    <li>AWS Certified Cloud Practitioner</li>
+    <li>English &amp; Spanish, fluent</li>
+  </ul>
+  <div class="actions">
+    <a class="btn primary" href="https://garciabel212.github.io/About-Me/Jose-Garcia-Resume.pdf" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a>
+    <a class="btn ghost" href="https://www.linkedin.com/in/jose-abel-garcia/" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+  </div>
+</article>
+
+<article class="card" data-stop="1" aria-label="Service Map Planner">
+  <p class="eyebrow"><i></i>Stop 02 · Exhibit 01 of 04</p>
+  <h2>Service Map <em>Planner</em></h2>
+  <p class="sub">Internal operations &amp; nationwide field-service GIS</p>
+  <p class="desc">An internal operations platform designed and built to centralize institution accounts, optical scanner inventories, software versions, maintenance status, nationwide travel routing, and preventive scheduling in active daily use.</p>
+  <div class="impact"><strong>100+</strong><span>institutional accounts in one tool</span></div>
+  <ul class="chips"><li>Next.js</li><li>React</li><li>TypeScript</li><li>Firebase</li><li>Google Maps API</li></ul>
+  <div class="actions"><a class="btn primary" href="https://garciabel212.github.io/About-Me/#/projects/service-map-planner" target="_blank" rel="noopener">Case study <span aria-hidden="true">↗</span></a></div>
+</article>
+
+<article class="card" data-stop="2" aria-label="Projects">
+  <p class="eyebrow"><i></i>Stop 03 · Exhibits 02–04</p>
+  <h2>Built for <em>real people</em></h2>
+  <ul class="rows">
+    <li><b>AAC Communication Platform</b><span>A bilingual, tablet-first speech aid with large YES/NO tiles and offline use.</span><small>Instant English / Spanish switch</small></li>
+    <li><b>Agent Trading OS</b><span>A multi-agent paper-trading lab where every proposal and skipped trade is logged.</span><small>Paper money only</small></li>
+    <li><b>Scale Garage Studio</b><span>A browser 3D configurator for scale dioramas, from layout to printable parts.</span><small>Direct STL export for 3D printing</small></li>
+  </ul>
+  <div class="actions"><a class="btn primary" href="https://garciabel212.github.io/About-Me/#/projects" target="_blank" rel="noopener">All projects <span aria-hidden="true">↗</span></a></div>
+</article>
+
+<article class="card" data-stop="3" aria-label="How I work">
+  <p class="eyebrow"><i></i>Stop 04 · The customer lifecycle</p>
+  <h2>How I <em>work</em></h2>
+  <ol class="steps">
+    <li><b>Discover</b><span>Requirements and operational constraints</span></li>
+    <li><b>Design</b><span>System architecture and compatibility</span></li>
+    <li><b>Demonstrate</b><span>Interactive proofs of concept and demos</span></li>
+    <li><b>Implement</b><span>Hardware integration and production rollout</span></li>
+    <li><b>Support</b><span>Customer enablement and preventive care</span></li>
+  </ol>
+</article>
+
+<article class="card" data-stop="4" aria-label="Experience">
+  <p class="eyebrow"><i></i>Stop 05 · Experience</p>
+  <h2>Where I've <em>worked</em></h2>
+  <ul class="rows">
+    <li><b>Service Engineer</b><span>Digital Library Systems Group / Image Access · Boca Raton</span><small>Oct 2022 – present</small></li>
+    <li><b>Network Operations Center Engineer</b><span>GlobeNet Telecom · Boca Raton</span><small>Nov 2021 – Sep 2022</small></li>
+    <li><b>B.S. Computer Science &amp; Engineering</b><span>Florida Atlantic University</span><small>2018 – 2022</small></li>
+  </ul>
+  <ul class="chips"><li>AWS Certified Cloud Practitioner</li><li>English &amp; Spanish</li></ul>
+</article>
+
+<article class="card center" data-stop="5" aria-label="Contact">
+  <p class="eyebrow"><i></i>Stop 06 · End of the flight</p>
+  <h2>Let's build the <em>next one</em></h2>
+  <p class="desc">Open to Solutions Engineer roles in South Florida and remote.</p>
+  <p class="email" id="email">garciabel212@gmail.com</p>
+  <div class="actions">
+    <button class="btn primary" id="copy" type="button">Copy email</button>
+    <a class="btn ghost" href="https://garciabel212.github.io/About-Me/Jose-Garcia-Resume.pdf" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a>
+    <a class="btn ghost" href="https://www.linkedin.com/in/jose-abel-garcia/" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+  </div>
+</article>
+
+<footer class="hud-bottom" aria-hidden="true">
+  <span>AI-rendered flight · not real footage</span>
+  <span class="counter" id="counter"></span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(() => {
+  /* FLIGHT_DATA: frames, stop frames and landmarks are filled from the render (flight_v2.json + measured pins). */
+  const FLIGHT = /*DATA*/{"frames": 413, "stride": 2, "stops": [{"id": "s1_river", "frame": 40, "place": "River", "coords": "25.770° N · 80.189° W", "x": 0.59, "y": 0.3}, {"id": "s2_towers", "frame": 114, "place": "Brickell", "coords": "25.759° N · 80.194° W", "x": 0.64, "y": 0.3}, {"id": "s3_canyon", "frame": 189, "place": "Downtown", "coords": "25.774° N · 80.194° W", "x": 0.69, "y": 0.22}, {"id": "s4_bay", "frame": 264, "place": "The Bay", "coords": "25.790° N · 80.170° W", "x": 0.56, "y": 0.42}, {"id": "s5_palms", "frame": 338, "place": "The Beach", "coords": "25.790° N · 80.130° W", "x": 0.77, "y": 0.72}, {"id": "s6_sunset", "frame": 412, "place": "Sunset", "coords": "25.785° N · 80.100° W", "x": 0.54, "y": 0.52}]}/*END*/;
+  const SRC_W = 1280, SRC_H = 704;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad = (n) => String(n).padStart(3, '0');
+  const src = (i) => `frames/f${pad(i)}.webp`;
+  const STOPS = FLIGHT.stops;
+  const cards = [...document.querySelectorAll('.card')];
+
+  // Route HUD
+  const route = document.getElementById('route');
+  const routeShort = document.getElementById('routeShort');
+  STOPS.forEach((s, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<button type="button"><b>${pad(i + 1).slice(1)}</b>${s.place}</button>`;
+    route.appendChild(li);
+  });
+  const routeButtons = [...route.querySelectorAll('button')];
+  let activeStop = -1;
+  function setActive(i) {
+    if (i === activeStop) return;
+    activeStop = i;
+    routeButtons.forEach((b, k) => { b.classList.toggle('on', k === i); b.toggleAttribute('aria-current', k === i); });
+    routeShort.innerHTML = `<b>${pad(i + 1).slice(1)}</b> / 06 · ${STOPS[i].place}`;
+  }
+  setActive(0);
+
+  document.getElementById('copy').addEventListener('click', async (e) => {
+    const text = document.getElementById('email').textContent;
+    try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied'; }
+    catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('email'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); e.target.textContent = 'Selected · press Ctrl+C'; }
+  });
+
+  // Reduced motion: still sections, cards in place, no flight.
+  if (reduced) {
+    document.body.classList.add('static');
+    const host = document.getElementById('static');
+    STOPS.forEach((s, i) => {
+      const sec = document.createElement('section');
+      sec.style.backgroundImage = `linear-gradient(90deg, rgba(6,8,13,.55), rgba(6,8,13,0) 60%), url(${src(s.frame)})`;
+      sec.appendChild(cards[i]);
+      host.appendChild(sec);
+    });
+    return;
+  }
+
+  const canvas = document.getElementById('flight');
+  const ctx = canvas.getContext('2d');
+  const counter = document.getElementById('counter');
+  const veil = document.getElementById('veil');
+  const hint = document.getElementById('hint');
+  const overlay = document.getElementById('overlay');
+  const svg = document.getElementById('leader');
+
+  // Per-stop marks
+  const marks = STOPS.map((s) => {
+    const reticle = Object.assign(document.createElement('div'), { className: 'reticle', innerHTML: '<span></span><span></span><span></span><span></span>' });
+    const lock = Object.assign(document.createElement('div'), { className: 'lock', innerHTML: `Lock · <em>${s.place}</em><br>${s.coords}` });
+    const pin = Object.assign(document.createElement('div'), { className: 'pin', innerHTML: '<div class="stem"></div><div class="ring"></div><div class="pulse"></div><div class="dot"></div>' });
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('pathLength', '1');
+    const end = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    end.setAttribute('r', '3');
+    svg.append(path, end);
+    overlay.append(reticle, lock, pin);
+    return { reticle, lock, pin, path, end, ring: pin.querySelector('.ring') };
+  });
+
+  // Frames: stops first, then coarse to fine, so scrubbing works while the rest arrive.
+  const imgs = new Array(FLIGHT.frames);
+  const order = [...new Set([...STOPS.map((s) => s.frame), 0])];
+  for (const step of [16, 8, 4, 2, 1]) for (let i = 0; i < FLIGHT.frames; i += step) order.push(i);
+  const queue = [...new Set(order)];
+  let current = 0;
+  function loadNext() {
+    const i = queue.shift();
+    if (i === undefined) return;
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => { imgs[i] = img; if (Math.abs(i - current) < 3) draw(current); loadNext(); };
+    img.onerror = loadNext;
+    img.src = src(i);
+  }
+  for (let k = 0; k < 6; k++) loadNext();
+
+  const view = { w: 0, h: 0, s: 1 };
+  // Phones crop hard; slide the crop toward the landmark of the nearest stops so pins stay in view.
+  function focalX(f) {
+    let a = STOPS[0], b = STOPS[STOPS.length - 1];
+    for (let k = 0; k < STOPS.length - 1; k++) if (f >= STOPS[k].frame && f <= STOPS[k + 1].frame) { a = STOPS[k]; b = STOPS[k + 1]; break; }
+    const t = b.frame === a.frame ? 0 : Math.min(Math.max((f - a.frame) / (b.frame - a.frame), 0), 1);
+    return a.x + (b.x - a.x) * t;
+  }
+  function offsets(f) {
+    const dw = SRC_W * view.s, dh = SRC_H * view.s;
+    const ox = view.w < view.h ? Math.min(Math.max(focalX(f) * dw - view.w * 0.5, 0), dw - view.w) : (dw - view.w) / 2;
+    return { ox, oy: (dh - view.h) / 2, dw, dh };
+  }
+  function draw(f) {
+    current = f;
+    const i = Math.min(Math.max(Math.round(f), 0), FLIGHT.frames - 1);
+    let img = imgs[i];
+    for (let d = 1; !img && d < FLIGHT.frames; d++) img = imgs[i - d] || imgs[i + d];
+    counter.textContent = `Frame ${pad(i * FLIGHT.stride)} · 30 fps`;
+    if (!img) return;
+    const { ox, oy, dw, dh } = offsets(f);
+    ctx.drawImage(img, -ox, -oy, dw, dh);
+  }
+
+  function placeMarks() {
+    const phone = view.w <= 760;
+    STOPS.forEach((s, i) => {
+      const { ox, oy, dw, dh } = offsets(s.frame);
+      const x = s.x * dw - ox, y = s.y * dh - oy;
+      const m = marks[i];
+      for (const el of [m.reticle, m.pin, m.lock]) { el.style.left = `${x}px`; el.style.top = `${y}px`; }
+      const card = cards[i].getBoundingClientRect();
+      let d, end;
+      if (phone || cards[i].classList.contains('center')) {
+        const ex = Math.min(Math.max(x, card.left + 24), card.right - 24);
+        end = [ex, card.top];
+        d = `M${x} ${y + 8} L${x} ${Math.max(card.top - 28, y + 8)} L${ex} ${card.top}`;
+      } else {
+        end = [card.right, card.top + 34];
+        d = `M${x - 8} ${y} L${card.right + 64} ${end[1]} L${end[0]} ${end[1]}`;
+      }
+      m.path.setAttribute('d', d);
+      m.end.setAttribute('cx', end[0]);
+      m.end.setAttribute('cy', end[1]);
+    });
+  }
+
+  function layout() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    view.w = innerWidth; view.h = innerHeight;
+    canvas.width = Math.round(view.w * dpr); canvas.height = Math.round(view.h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingQuality = 'high';
+    view.s = Math.max(view.w / SRC_W, view.h / SRC_H);
+    placeMarks();
+    draw(current);
+  }
+  addEventListener('resize', () => { layout(); ScrollTrigger.refresh(); });
+  layout();
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // One stop's reveal: lock, pin, line, card. Returns a timeline of 22 units.
+  function reveal(i, closed) {
+    const m = marks[i], card = cards[i], items = card.children;
+    return gsap.timeline({ defaults: { ease: 'none' } })
+      .set(card, { visibility: 'visible' }, 0)
+      .fromTo(m.reticle, { opacity: 0, width: 300, height: 300 }, { opacity: 1, width: 190, height: 190, duration: 3, ease: 'power1.out' }, 0)
+      .to(m.reticle, { width: 56, height: 56, duration: 4, ease: 'power3.inOut' }, 3)
+      .fromTo(m.lock, { opacity: 0 }, { opacity: 1, duration: 2 }, 6)
+      .fromTo(m.pin, { opacity: 0, y: -80 }, { opacity: 1, y: 0, duration: 3, ease: 'power2.in' }, 7)
+      .fromTo(m.ring, { opacity: 0.9, scale: 0.2 }, { opacity: 0, scale: 2.4, duration: 3, ease: 'power2.out' }, 10)
+      .to(m.reticle, { opacity: 0.35, duration: 2 }, 10)
+      .to(veil, { opacity: 1, duration: 6 }, 10)
+      .fromTo(m.path, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 5, ease: 'power1.inOut' }, 10)
+      .fromTo(m.end, { opacity: 0 }, { opacity: 1, duration: 1 }, 14.5)
+      .fromTo(card, { clipPath: closed }, { clipPath: 'inset(0% 0% 0% 0% round 14px)', duration: 6, ease: 'power3.out' }, 15)
+      .fromTo(items, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 3, stagger: 0.5, ease: 'power2.out' }, 16.5);
+  }
+  // Folding back toward the landmark. 6 units.
+  function fold(i, closed) {
+    const m = marks[i], card = cards[i];
+    return gsap.timeline({ defaults: { ease: 'none' } })
+      .to(card.children, { opacity: 0, y: -6, duration: 1.5, stagger: 0.1 }, 0)
+      .to(card, { clipPath: closed, duration: 3, ease: 'power3.in' }, 0.5)
+      .to(m.end, { opacity: 0, duration: 1 }, 1.5)
+      .to(m.path, { strokeDashoffset: 1, duration: 2.5, ease: 'power1.in' }, 2)
+      .to([m.pin, m.lock], { opacity: 0, duration: 1.5 }, 4)
+      .to(m.pin, { y: -40, duration: 1.5, ease: 'power2.in' }, 4)
+      .to(m.reticle, { opacity: 0, width: 140, height: 140, duration: 1.5 }, 4)
+      .to(veil, { opacity: 0, duration: 2 }, 4)
+      .set(card, { visibility: 'hidden' }, 6);
+  }
+
+  const mm = gsap.matchMedia();
+  mm.add({ phone: '(max-width: 760px)', wide: '(min-width: 761px)' }, ({ conditions }) => {
+    const closedFor = (i) => (conditions.phone || cards[i].classList.contains('center'))
+      ? 'inset(0% 50% 100% 50% round 14px)' : 'inset(0% 0% 100% 100% round 14px)';
+    const state = { frame: STOPS[0].frame };
+    const HOLD = 10, UNITS_PER_FRAME = 1 / 3;
+    const tl = gsap.timeline({ defaults: { ease: 'none' }, paused: true });
+    const stopAt = [];
+    // Stop 1 is already open when scrolling starts (the intro flew in); it reads, folds, then the flight goes on.
+    reveal(0, closedFor(0)).progress(1); // standalone: just leaves stop 1 in its open state
+    let t = HOLD;
+    stopAt.push(0);
+    for (let i = 0; i < STOPS.length; i++) {
+      if (i > 0) {
+        tl.add(reveal(i, closedFor(i)), t);
+        stopAt.push(t + 22);
+        t += 22 + HOLD;
+      }
+      if (i < STOPS.length - 1) {
+        tl.add(fold(i, closedFor(i)), t);
+        t += 6;
+        const span = (STOPS[i + 1].frame - STOPS[i].frame) * UNITS_PER_FRAME;
+        // Ease out of each stop and into the next: the clips already slow at both ends, this keeps scroll honest.
+        tl.fromTo(state, { frame: STOPS[i].frame }, { frame: STOPS[i + 1].frame, duration: span, ease: 'none',
+          onUpdate: () => draw(state.frame) }, t);
+        tl.call(() => setActive(i + 1), null, t + span * 0.5);
+        tl.call(() => setActive(i), null, t + span * 0.5 - 0.001);
+        t += span;
+      }
+    }
+    tl.to({}, { duration: 6 }, t); // breathing room at the end
+    const total = tl.duration();
+    document.getElementById('track').style.height = `${Math.round(total * 4.2)}vh`;
+    const st = ScrollTrigger.create({ trigger: '#track', start: 'top top', end: 'bottom bottom', scrub: 0.7, animation: tl });
+    tl.progress(0.0001).progress(0);
+
+    // Route HUD jumps to a stop's reading position.
+    routeButtons.forEach((b, i) => b.onclick = () => {
+      const y = st.start + (st.end - st.start) * (stopAt[i] / total);
+      scrollTo({ top: y, behavior: 'smooth' });
+    });
+    return () => draw(STOPS[0].frame);
+  });
+
+  // Intro: on load the camera flies in over the river and the first card opens. Scrolling takes over at any time.
+  const intro = { frame: 0 };
+  gsap.set(cards[0], { visibility: 'visible' });
+  const introTl = gsap.timeline({ onComplete: () => gsap.to(hint, { opacity: 1, duration: 0.6 }) })
+    .to(intro, { frame: STOPS[0].frame, duration: 3.2, ease: 'power2.out', onUpdate: () => scrollY < 4 && draw(intro.frame) });
+  introTl.from([overlay, cards[0], veil], { opacity: 0, duration: 0.9, ease: 'power2.out' }, 2.6);
+  const skip = () => { if (scrollY > 4) { introTl.progress(1); gsap.to(hint, { opacity: 0, duration: 0.3 }); removeEventListener('scroll', skip); } };
+  addEventListener('scroll', skip, { passive: true });
+})();
+</script>

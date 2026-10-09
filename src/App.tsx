@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '@/components/Navbar';
@@ -7,12 +7,12 @@ import Footer from '@/components/Footer';
 import Atmosphere from '@/components/background/Atmosphere';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import SmoothScroll, { useLenis } from '@/components/motion/SmoothScroll';
+import EditorialNav from '@/components/editorial/EditorialNav';
 import { PageTransition, ScrollProgress } from '@/components/motion';
 import Home from '@/pages/Home';
 
 const Projects = lazy(() => import('@/pages/Projects'));
 const Experience = lazy(() => import('@/pages/Experience'));
-const About = lazy(() => import('@/pages/About'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const ServiceMapPlanner = lazy(() => import('@/pages/projects/ServiceMapPlanner'));
 const ScaleGarageStudio = lazy(() => import('@/pages/projects/ScaleGarageStudio'));
@@ -35,56 +35,67 @@ function Loadable({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   const location = useLocation();
   const lenis = useLenis();
-  // Bumped once the outgoing page has unmounted, so scroll geometry is final.
-  const [settled, setSettled] = useState(0);
-
-  const onExitComplete = () => setSettled((count) => count + 1);
-
-  // Pinned sections on the incoming page were measured while the old page was
-  // still in the DOM. Runs after the commit that removes it, before the hash
-  // scroll below re-runs against the corrected geometry.
-  useEffect(() => {
-    if (!settled) return;
-    ScrollTrigger.refresh();
-    lenis?.resize();
-  }, [settled, lenis]);
+  // mode="sync" keeps the outgoing page mounted until its exit animation ends,
+  // which inflates the document, leaves Lenis with the old page's scroll limit
+  // and GSAP pins measured against the wrong layout. Hash targets are only
+  // measured once the outgoing page is gone.
+  const [layoutSettled, setLayoutSettled] = useState(true);
+  const [renderedPath, setRenderedPath] = useState(location.pathname);
+  if (renderedPath !== location.pathname) {
+    setRenderedPath(location.pathname);
+    setLayoutSettled(false);
+  }
 
   useEffect(() => {
-    if (location.hash) {
-      const targetId = decodeURIComponent(location.hash.slice(1));
-      let attempts = 0;
-      let retryTimer: ReturnType<typeof setTimeout> | undefined;
-      const scrollToTarget = () => {
-        const target = document.getElementById(targetId);
-        if (target) {
-          if (lenis) {
-            lenis.scrollTo(target, { offset: -72 });
-          } else {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-          return;
-        }
-        attempts += 1;
-        if (attempts < 20) retryTimer = setTimeout(scrollToTarget, 50);
-      };
-      scrollToTarget();
-      return () => clearTimeout(retryTimer);
-    }
+    if (location.hash) return;
     lenis?.scrollTo(0, { immediate: true });
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [lenis, location.pathname, location.hash, settled]);
+  }, [lenis, location.pathname, location.hash]);
+
+  // Pinned sections on the incoming page (e.g. the case-study hero reveal) were
+  // measured while the outgoing page was still in the DOM; re-measure once it is
+  // gone. Hash navigations re-measure in the effect below, before scrolling.
+  useEffect(() => {
+    if (!layoutSettled || location.hash) return;
+    ScrollTrigger.refresh();
+    lenis?.resize();
+  }, [layoutSettled, location.hash, lenis]);
+
+  useEffect(() => {
+    if (!location.hash || !layoutSettled) return;
+    ScrollTrigger.refresh();
+    lenis?.resize();
+    const targetId = decodeURIComponent(location.hash.slice(1));
+    let attempts = 0;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    const scrollToTarget = () => {
+      const target = document.getElementById(targetId);
+      if (target) {
+        if (lenis) {
+          lenis.scrollTo(target, { offset: -64 });
+        } else {
+          target.scrollIntoView({ behavior: 'instant', block: 'start' });
+          if (targetId === 'intro') target.focus({ preventScroll: true });
+        }
+        return;
+      }
+      attempts += 1;
+      if (attempts < 20) retryTimer = setTimeout(scrollToTarget, 50);
+    };
+    scrollToTarget();
+    return () => clearTimeout(retryTimer);
+  }, [lenis, location.pathname, location.hash, layoutSettled]);
 
   return (
-    <AnimatePresence mode="sync" initial={false} onExitComplete={onExitComplete}>
+    <AnimatePresence mode="sync" initial={false} onExitComplete={() => setLayoutSettled(true)}>
       <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <PageTransition>
-              <Home />
-            </PageTransition>
-          }
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/intro" element={<Navigate to={{ pathname: '/', hash: '#intro' }} replace />} />
+        <Route path="/who-i-am" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
+        <Route path="/work" element={<Navigate to={{ pathname: '/', hash: '#projects' }} replace />} />
+        <Route path="/workflow" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
+        <Route path="/capabilities" element={<Navigate to={{ pathname: '/', hash: '#capabilities' }} replace />} />
+        <Route path="/about" element={<Navigate to={{ pathname: '/', hash: '#who-i-am' }} replace />} />
         <Route
           path="/projects"
           element={
@@ -126,14 +137,6 @@ function AppRoutes() {
           }
         />
         <Route
-          path="/about"
-          element={
-            <PageTransition>
-              <Loadable><About /></Loadable>
-            </PageTransition>
-          }
-        />
-        <Route
           path="/contact"
           element={
             <PageTransition>
@@ -146,28 +149,30 @@ function AppRoutes() {
   );
 }
 
+function SiteLayout() {
+  const pathname = useLocation().pathname;
+  const home = pathname === '/' || pathname === '/intro' || pathname === '/work' || pathname === '/workflow' || pathname === '/who-i-am';
+  return (
+    <div className={`site-shell isolate min-h-screen flex flex-col relative ${home ? 'miami-home' : ''}`}>
+      {!home && <Atmosphere />}
+      {home ? <EditorialNav /> : <><ScrollProgress /><Navbar /></>}
+      <div className="relative z-[1] flex-1"><AppRoutes /></div>
+      <Footer />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <ThemeProvider>
-      <SmoothScroll>
-        <HashRouter>
+      <HashRouter>
+        <SmoothScroll>
           <MotionConfig reducedMotion="user">
-            <div className="site-shell isolate min-h-screen flex flex-col relative">
-              {/* Global Editorial Atmosphere Background */}
-              <Atmosphere />
-
-              <ScrollProgress />
-              <Navbar />
-
-              <div className="relative z-[1] flex-1">
-                <AppRoutes />
-              </div>
-
-              <Footer />
-            </div>
+            <SiteLayout />
           </MotionConfig>
-        </HashRouter>
-      </SmoothScroll>
+        </SmoothScroll>
+      </HashRouter>
     </ThemeProvider>
   );
 }
+

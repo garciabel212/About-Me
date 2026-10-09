@@ -1,34 +1,34 @@
-import Hero from '@/components/hero/Hero';
-import FeaturedWorkSection from '@/components/home/FeaturedWorkSection';
-import MethodologySection from '@/components/home/MethodologySection';
-import CareerTimeline from '@/components/home/CareerTimeline';
-import AboutSection from '@/components/home/AboutSection';
-import HomeContactCta from '@/components/home/HomeContactCta';
-import QuickActionBar from '@/components/mobile/QuickActionBar';
+import Scene01Hero from '@/components/scenes/Scene01Hero';
+import Scene02WhoIAm from '@/components/scenes/Scene02WhoIAm';
+import Scene03Experience from '@/components/scenes/Scene03Experience';
+import Scene04ProjectUniverse from '@/components/scenes/Scene04ProjectUniverse';
+import Scene05Capabilities from '@/components/scenes/Scene05Capabilities';
+import Scene06Philosophy from '@/components/scenes/Scene06Philosophy';
+import Scene07Contact from '@/components/scenes/Scene07Contact';
 
 export default function Home() {
   return (
-    <main className="relative z-10 overflow-hidden text-[var(--text-primary)]">
-      {/* 01. HERO & SIGNAL RAIL — Identity, Value Proposition, Portrait & Credibility Rail */}
-      <Hero />
+    <main className="relative z-10 w-full bg-[var(--bg)] text-[var(--text-primary)]">
+      {/* 01. SCENE 01 — OPENING / SOUTH FLORIDA PARALLAX HERO */}
+      <Scene01Hero />
 
-      {/* 02. FEATURED WORK — Dominant Cinematic Panels for Service Map Planner & Scale Garage Studio */}
-      <FeaturedWorkSection />
+      {/* 02. SCENE 02 — WHO I AM / CUSTOMER TECHNOLOGY LIFECYCLE */}
+      <Scene02WhoIAm />
 
-      {/* 03. METHODOLOGY — Interactive 5-Stage Systems-Flow Lifecycle */}
-      <MethodologySection />
+      {/* 03. SCENE 03 — EXPERIENCE / EDITORIAL CHRONOLOGY & POSITIONING */}
+      <Scene03Experience />
 
-      {/* 04. CAREER TIMELINE — Unified Vertical Technical Timeline */}
-      <CareerTimeline />
+      {/* 04. SCENE 04 — PROJECT UNIVERSE / EXHIBIT CASE STUDIES */}
+      <Scene04ProjectUniverse />
 
-      {/* 05. ABOUT — Editorial Visual Break & Engineering Philosophy */}
-      <AboutSection />
+      {/* 05. SCENE 05 — CAPABILITIES / CONNECTED CONSTELLATION GRAPH */}
+      <Scene05Capabilities />
 
-      {/* 06. CONTACT — Streamlined Conversion Panel */}
-      <HomeContactCta />
+      {/* 06. SCENE 06 — PHILOSOPHY / MOMENT OF VISUAL CALM */}
+      <Scene06Philosophy />
 
-      {/* MOBILE ONLY — Sticky Quick-Action Bar (slides in after hero scroll) */}
-      <QuickActionBar />
+      {/* 07. FINAL SCENE — MINIMAL PROFESSIONAL CONTACT */}
+      <Scene07Contact />
     </main>
   );
 }

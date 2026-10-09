@@ -1,0 +1,8 @@
+{
+  "s1_river":  {"place": "River",     "coords": "25.770° N · 80.189° W", "x": 0.59, "y": 0.30},
+  "s2_towers": {"place": "Brickell",  "coords": "25.759° N · 80.194° W", "x": 0.64, "y": 0.30},
+  "s3_canyon": {"place": "Downtown",  "coords": "25.774° N · 80.194° W", "x": 0.69, "y": 0.22},
+  "s4_bay":    {"place": "The Bay",   "coords": "25.790° N · 80.170° W", "x": 0.56, "y": 0.42},
+  "s5_palms":  {"place": "The Beach", "coords": "25.790° N · 80.130° W", "x": 0.77, "y": 0.72},
+  "s6_sunset": {"place": "Sunset",    "coords": "25.785° N · 80.100° W", "x": 0.54, "y": 0.52}
+}

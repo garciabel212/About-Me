@@ -1,0 +1,57 @@
+[
+  {
+    "video": "The camera flies steadily forward low along the Miami River at golden hour toward the bridge, the glass towers on the riverbanks slide past the edges of the frame with strong parallax.",
+    "heal": "Aerial view low over the Miami River at golden hour, modern glass towers on both riverbanks bathed in warm golden sunlight, a bridge ahead, shimmering golden light on calm water.",
+    "denoise": 0.32
+  },
+  {
+    "video": "The camera keeps flying forward and gently banks right while rising slightly, heading into the narrow gap between two tall glass towers lit by warm golden sunlight.",
+    "heal": "Aerial view entering the gap between tall modern glass towers in Brickell, Miami, warm golden-hour sunlight striking the glass facades, bright golden reflections, blue sky.",
+    "denoise": 0.32
+  },
+  {
+    "video": "The camera flies decisively forward through the canyon between tall glass skyscrapers, the towers on both sides sliding past close to the camera, warm golden sunlight streaming between the buildings.",
+    "heal": "Aerial view from mid-height flying through a canyon of tall modern glass skyscrapers in Brickell, Miami, warm golden sunlight streaming between the towers, glowing orange reflections on the glass, a palm-lined boulevard far below.",
+    "denoise": 0.32
+  },
+  {
+    "video": "The camera continues forward through the towers as the canyon opens up ahead, revealing bright open blue water of the bay beyond the last buildings, golden light flooding in.",
+    "heal": "Aerial view at the end of a canyon of glass towers in Brickell, the last skyscrapers on both edges of the frame, open blue Biscayne Bay water visible straight ahead, warm golden sunlight.",
+    "denoise": 0.36
+  },
+  {
+    "video": "The camera flies out past the last towers and glides out over the open water of Biscayne Bay, descending gently toward the shimmering surface as the sun lowers.",
+    "heal": "Aerial view low over open Biscayne Bay just past downtown Miami, turquoise water glittering with warm orange sunlight, a long causeway bridge in the distance, the sky turning soft orange.",
+    "denoise": 0.4
+  },
+  {
+    "video": "The camera glides steadily forward low across Biscayne Bay toward the distant Miami Beach skyline, small waves passing beneath, warm orange sunset light on the water.",
+    "heal": "Aerial view low over Biscayne Bay heading east toward the low Miami Beach skyline on the horizon, glittering orange sunset light on small waves, a causeway on the side, pink and orange sky.",
+    "denoise": 0.36
+  },
+  {
+    "video": "The camera keeps flying forward over the bay as the Miami Beach shoreline grows closer, palm trees and pastel buildings coming into view, the sky glowing orange and pink.",
+    "heal": "Aerial view approaching the Miami Beach shoreline across the bay at sunset, palm trees and pastel art deco hotels ahead, orange, pink and violet sky, warm light on the buildings.",
+    "denoise": 0.38
+  },
+  {
+    "video": "The camera flies forward over the palm trees and pastel art deco rooftops of Miami Beach toward the white sand and the ocean beyond, glowing sunset sky.",
+    "heal": "Aerial view over palm trees and pastel art deco rooftops of Miami Beach with the white sand beach and the Atlantic Ocean just ahead, glowing orange and pink sunset sky.",
+    "denoise": 0.38
+  },
+  {
+    "video": "The camera passes over the last rooftops and out above the wide white sand beach, gentle waves rolling in ahead, beautiful sunset colors in the sky.",
+    "heal": "Aerial view above a wide white sand beach in Miami Beach at sunset, gentle turquoise waves rolling onto the sand, a colorful lifeguard tower, palm trees along the dunes, orange, pink and violet sky.",
+    "denoise": 0.38
+  },
+  {
+    "video": "The camera slows down and descends gently over the beach, waves rolling softly onto the sand, the sunset sky glowing, the motion becoming calm.",
+    "heal": "Calm aerial view over Miami Beach at sunset, gentle waves rolling onto white sand, a colorful lifeguard tower, golden reflections on the wet sand, glowing orange, pink and violet sky, serene.",
+    "denoise": 0.34
+  },
+  {
+    "video": "The camera drifts very slowly forward and settles into a calm, nearly still view of the beach at sunset, waves gently rolling in, a peaceful final shot.",
+    "heal": "",
+    "denoise": 0.0
+  }
+]

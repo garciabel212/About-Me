@@ -28,3 +28,12 @@ export function stopForSection(id: string): StopId | null {
   }
   return null;
 }
+
+export type BeachTab = 'approach' | 'tools' | 'about';
+
+/** The beach card opens on the tab a hash link asks for: #about → About, #who-i-am → How I work. */
+export function beachTabFor(hash: string): BeachTab | undefined {
+  if (hash === '#about') return 'about';
+  if (hash === '#who-i-am') return 'approach';
+  return undefined;
+}

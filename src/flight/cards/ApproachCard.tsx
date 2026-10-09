@@ -10,6 +10,12 @@ const TABS: { id: Tab; label: string }[] = [
 
 export default function ApproachCard({ initialTab = 'approach' }: { initialTab?: Tab }) {
   const [tab, setTab] = useState<Tab>(initialTab);
+  // A later #about / #who-i-am link switches the tab without remounting the card.
+  const [requested, setRequested] = useState(initialTab);
+  if (requested !== initialTab) {
+    setRequested(initialTab);
+    setTab(initialTab);
+  }
   return (
     <>
       <div className="fl-tabs" role="tablist">

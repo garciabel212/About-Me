@@ -24,16 +24,15 @@ export const experience: ExperienceEntry[] = [
     company: 'Digital Library Systems Group / Image Access',
     companyShort: 'DLSG / Image Access',
     role: 'Service Engineer',
-    roleSubtitle: 'Sales Engineering Support',
     period: 'October 2022 – Present',
-    location: 'Boca Raton, FL · National Travel',
+    location: 'South Florida · National Travel',
     type: 'full-time',
     current: true,
     summary:
       'Customer-facing engineering role spanning technical discovery, product demonstrations, solution configuration, nationwide hardware and software deployments, customer training, troubleshooting, and long-term technical support.',
     responsibilities: [
       {
-        category: 'Customer & Sales Engineering',
+        category: 'Customer Engineering',
         icon: 'Users',
         items: [
           'Technical discovery, requirements gathering, product demonstrations, solution configuration, technical presentations, and collaboration with sales and engineering teams.',
@@ -75,7 +74,7 @@ export const experience: ExperienceEntry[] = [
     companyShort: 'GlobeNet',
     role: 'Network Operations Center Engineer',
     period: 'November 2021 – September 2022',
-    location: 'Boca Raton, FL',
+    location: 'South Florida',
     type: 'full-time',
     current: false,
     summary:

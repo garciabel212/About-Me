@@ -21,17 +21,9 @@ const files = [...walk(root + 'src/'), root + 'index.html']
 
 const CONTENT = 'src/data/content.ts';
 
-// Legacy files that the case-study PR (PR 5) deletes or rewrites. Remove each
-// entry when that file goes; the list must reach [] by the end of PR 5.
-const PENDING = [
-  'src/data/experience.ts',
-  'src/data/projects.ts',
-  'src/pages/Contact.tsx',
-  'src/pages/Experience.tsx',
-  'src/pages/Projects.tsx',
-  'src/pages/projects/EnterpriseDeployment.tsx',
-  'src/pages/projects/ScaleGarageStudio.tsx',
-];
+// Files allowed to keep a retired claim while they are being replaced. Add a
+// path here only with a plan to delete it; keep the list empty otherwise.
+const PENDING: string[] = [];
 
 interface Rule {
   name: string;

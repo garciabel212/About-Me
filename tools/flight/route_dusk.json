@@ -1,0 +1,47 @@
+[
+  {
+    "video": "FPV drone footage: the camera skims fast and low over the dark Miami River at dusk toward the towers, lit windows and sunset glow reflecting in streaks on the water, slight motion blur, the camera begins to rise.",
+    "heal": "FPV aerial view low over the Miami River at dusk, modern glass towers on both banks with warm lit windows, deep purple and orange sunset sky, glowing reflections on dark water, cinematic high contrast.",
+    "denoise": 0.3
+  },
+  {
+    "video": "FPV drone footage: the camera rises and banks toward the narrow gap between two tall glass residential towers with warm lit windows, the sunset glowing between them, slight motion blur.",
+    "heal": "FPV aerial view rising toward the gap between two tall modern residential towers in Brickell at dusk, warm lit windows, balconies, orange sunset glow between the buildings, purple sky.",
+    "denoise": 0.32
+  },
+  {
+    "video": "FPV drone footage: the camera dives forward through the narrow gap between the towers, balconies and lit windows rushing past close on both sides, strong parallax and motion blur.",
+    "heal": "FPV aerial view flying between two tall residential towers at dusk, balconies and warm lit windows close on both sides, a glowing orange sunset sky visible straight ahead between the buildings.",
+    "denoise": 0.32
+  },
+  {
+    "video": "FPV drone footage: the camera flies straight down a narrow street canyon between towers toward a bright sunset glow at the end, street lights and palm trees below, motion blur on the facades.",
+    "heal": "FPV aerial view down a narrow street canyon between residential towers at dusk, warm street lights and palm trees below, the glowing sunset and the ocean horizon visible at the end of the street.",
+    "denoise": 0.34
+  },
+  {
+    "video": "FPV drone footage: the camera bursts out past the last buildings and flies over swaying palm trees toward the beach, the ocean and the glowing sunset horizon opening up ahead.",
+    "heal": "FPV aerial view flying over palm trees toward a wide beach and the ocean at sunset, the glowing sun low on the horizon, orange and purple sky with scattered clouds.",
+    "denoise": 0.38
+  },
+  {
+    "video": "FPV drone footage: the camera flies out over the white sand beach and the gentle surf toward the open ocean, the sunset glowing on the horizon ahead, smooth fast motion.",
+    "heal": "FPV aerial view over a white sand beach and gentle surf heading toward the open ocean at sunset, the sun glowing on the horizon, orange and pink clouds, glittering water.",
+    "denoise": 0.36
+  },
+  {
+    "video": "FPV drone footage: the camera skims low over the calm ocean toward the setting sun on the horizon, glittering orange reflections on the water, smooth and steady.",
+    "heal": "FPV aerial view low over the calm ocean at sunset, the sun touching the horizon straight ahead, a glowing path of orange light on the water, pink and purple clouds.",
+    "denoise": 0.32
+  },
+  {
+    "video": "The camera slows down and rises gently over the ocean, the setting sun centered on the horizon, calm waves, the sky glowing orange, pink and violet.",
+    "heal": "Calm aerial view over the ocean at sunset, the sun on the horizon in the center of the frame, glowing orange path on the water, soft pink and violet clouds, serene.",
+    "denoise": 0.3
+  },
+  {
+    "video": "The camera drifts very slowly forward and settles into a calm, nearly still view of the sun setting on the ocean horizon, gentle waves, a peaceful final shot.",
+    "heal": "",
+    "denoise": 0.0
+  }
+]

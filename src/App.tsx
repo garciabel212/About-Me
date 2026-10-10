@@ -7,7 +7,6 @@ import Footer from '@/components/Footer';
 import Atmosphere from '@/components/background/Atmosphere';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import SmoothScroll, { useLenis } from '@/components/motion/SmoothScroll';
-import EditorialNav from '@/components/editorial/EditorialNav';
 import { PageTransition, ScrollProgress } from '@/components/motion';
 import Home from '@/pages/Home';
 import { legacyRoutes } from '@/data/routes';
@@ -139,7 +138,8 @@ function SiteLayout() {
   return (
     <div className={`site-shell isolate min-h-screen flex flex-col relative ${home ? 'miami-home' : ''}`}>
       {!home && <Atmosphere />}
-      {home ? <EditorialNav /> : <><ScrollProgress /><Navbar /></>}
+      {/* Home is the flight: its HUD replaces the site nav. */}
+      {!home && <><ScrollProgress /><Navbar /></>}
       <div className="relative z-[1] flex-1"><AppRoutes /></div>
       <Footer />
     </div>

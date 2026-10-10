@@ -36,27 +36,32 @@ STOPS = {
         'the right edge of the frame with warm lit windows and curved white balconies, beyond it the city skyline '
         'glows and the orange sun sits low on the horizon, deep purple sky.' + SPACE + LOOK
     ),
+    # v3 (2026-10-09): the desktop card sat on a busy lit city grid; the left side is now open sky over dark water.
     's3_canyon': (
-        'Hovering high above a wide downtown Miami boulevard at dusk, looking down the street toward the glowing '
-        'sunset at its far end, tall office towers with lit windows line the right side, street lights, palm trees '
-        'and red and white light trails of traffic far below, the left side opens over low dark rooftops toward a '
-        'violet sky.' + SPACE + LOOK
+        'Hovering high above downtown Miami at dusk, a cluster of tall office towers with lit windows rises on the '
+        'right, a glowing boulevard with palm trees and light trails runs between them far below on the right, '
+        'the left half of the frame looks out over the dark, almost unlit bay under a wide soft violet sky with '
+        'the orange sunset glow low on the horizon.' + SPACE + LOOK
     ),
     's4_bay': (
         'Hovering 60 meters above calm Biscayne Bay at dusk, looking across dark glassy water toward the lights of '
         'a long causeway bridge and a small island skyline on the right, a few anchored sailboats with tiny lights, '
         'soft pink and violet sky with the last orange glow on the horizon.' + SPACE + LOOK
     ),
+    # v3 (2026-10-09): the phone bottom sheet covered the lifeguard tower; it now sits high, above smooth sand.
     's5_palms': (
-        'Hovering just above a row of tall palm trees at the edge of Miami Beach at dusk, dark palm silhouettes on '
-        'the right, a wide white sand beach and the calm ocean beyond, a pastel lifeguard tower with a warm light, '
-        'pink, orange and violet sky.' + SPACE + LOOK
+        'Low aerial view at dusk of a wide empty white sand beach in Miami Beach, a pastel pink lifeguard tower with '
+        'a warm light stands raised in the upper right of the frame with tall palm silhouettes behind it, the calm '
+        'ocean on the left, pink, orange and violet sky. Composition: the lifeguard tower and the palms sit in the '
+        'upper half of the frame on the right; the lower half of the frame is smooth, empty, softly lit sand; the '
+        'left 40 percent is calm ocean and soft dusk sky. ' + LOOK
     ),
+    # v3 (2026-10-09): horizon raised so the phone bottom sheet leaves the sun and its light path visible.
     's6_sunset': (
         'Hovering low over the calm open ocean at sunset, the sun touching the horizon in the center of the frame, '
         'a glowing orange path of light on the water leading toward the camera, soft pink and violet clouds, '
-        'serene and minimal. Composition: the sun is centered, the lower third of the frame is calm dark water, '
-        'uncluttered, wide open sky. ' + LOOK
+        'serene and minimal. Composition: the horizon sits high, one third from the top of the frame, the sun is '
+        'centered on it, the lower two thirds are calm dark water, uncluttered, open sky above. ' + LOOK
     ),
 }
 

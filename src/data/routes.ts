@@ -1,8 +1,7 @@
 /**
- * Section ids on the Home page, in the brief's page order. This is the target
- * contract: 'about' and 'resume' arrive with the new Home, and the nav in
- * navigation.ts is switched to `navLinks` then (its test checks ids against
- * the scene source, so it stays accurate until that switch).
+ * Section ids on the Home page (the flight), in the brief's page order. Each id
+ * is an anchor at its stop (src/flight/stops.ts); navigation.ts builds the site
+ * nav from `navLinks`.
  */
 export const sectionIds = [
   'intro',
@@ -30,8 +29,7 @@ export const legacyRoutes = [
   { from: '/work', hash: 'projects' },
   { from: '/workflow', hash: 'who-i-am' },
   { from: '/capabilities', hash: 'capabilities' },
-  // Flip to 'about' when Home gains that section.
-  { from: '/about', hash: 'who-i-am' },
+  { from: '/about', hash: 'about' },
   { from: '/projects', hash: 'projects' },
   { from: '/experience', hash: 'experience' },
   { from: '/contact', hash: 'contact' },

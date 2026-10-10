@@ -59,6 +59,46 @@ with no STL export claim, location is "South Florida", and Agent Trading OS live
 5. **Reduced motion or Save-Data:** no flight. Six still sections (stop frame plus card in place), a
    normal readable page.
 
+## Flow: one thread and one living card (approved 2026-10-09)
+
+Jose asked for a natural flow: something that connects all the information and simply flows, with no
+hard start or stop between stops. The stops therefore share one card and one thread, instead of six
+cards that each open and close.
+
+- **One living card.** A single glass panel stays on screen for the whole flight. At each stop its
+  content condenses out of mist (below). During a hop the content mists out and the panel does not
+  disappear: it narrows to a slim travel strip showing the next stop's label and place
+  ("Stop 02 · Brickell"), then grows to fit the next stop's content as that content condenses. The
+  panel drifts a few pixels against the camera motion (parallax), so it reads as floating in the
+  scene. Its height eases between the measured heights of the outgoing and incoming content.
+- **One thread.** A glowing line (signal `#A9D2FF`) always joins the card to the landmark. At a stop
+  it ends on the pin. During a hop the pin lifts off, glides along a smooth curve to where the next
+  landmark will sit, and lands as the next content opens, so the line never breaks.
+- **The route keeps the trail.** The HUD route is the same thread in miniature: a line through six
+  dots that fills as you fly. Passed stops stay lit and clicking a dot flies there.
+- **Everything is scroll-linked and reversible**, as before. Reduced motion and Save-Data still get
+  the static page, with no card motion, thread or parallax.
+- **Phones:** the living card is the bottom sheet, the thread runs from the top edge of the sheet up
+  to the landmark, and there is no parallax.
+- **Accessibility:** every stop's content stays in the DOM in reading order. Content that is not on
+  screen is `inert` and `aria-hidden`, so keyboard focus never lands on invisible links. The route
+  buttons and section links move between stops, and the HUD has a "Read as a page" link to the static
+  view.
+
+## Footage fixes for the layout (2026-10-09)
+
+The stop frames were checked against the card zones (desktop card on the left 40%, phone bottom
+sheet on the lower 45% of a 420-px crop). Three stops were re-composed and re-rendered with the same
+pipeline (`make_stops.py` v3 prompts → `render_stops.py --only` → `assemble_v2.py` → `export_site.py`):
+
+| Stop | Problem | Fix |
+|---|---|---|
+| Downtown | Desktop card sat on a busy lit city grid | Towers on the right, calm dark bay on the left |
+| The Beach | Phone sheet covered the lifeguard tower (the pinned landmark) | Tower raised into the upper half, smooth sand below |
+| Sunset | Phone sheet covered the sun's light path | Sun and horizon raised above the sheet |
+
+River, Brickell and The Bay were already clear and are unchanged.
+
 ## The condensing mist reveal
 
 Per stop, scroll-linked and fully reversible (scrolling back re-condenses the card into mist):
@@ -69,8 +109,8 @@ Per stop, scroll-linked and fully reversible (scrolling back re-condenses the ca
    `backdrop-filter: blur(18px)`, edges feathered with a soft mask. The puffs shrink into its edges.
 3. **Text (60–100%):** label, headline and body fade in crisp, staggered. Text sits on near-opaque
    paper, so contrast stays at or above 4.5:1 regardless of the frame behind it.
-4. **Leave:** the reverse of the reveal: text out, the card thins to mist, puffs drift off toward the
-   direction of travel.
+4. **Leave:** the reverse of the reveal: text out and the content thins to mist, with puffs drifting off
+   toward the direction of travel. The panel itself stays and narrows to the travel strip (see Flow).
 
 Phones: no backdrop blur (cost), opaque paper, 3 puffs. Reduced motion: no mist, the card is simply there.
 

@@ -1,0 +1,212 @@
+/* Flight Home: one fixed dusk flight scrubbed by scroll, one living glass card that never leaves the screen,
+   and one glowing thread from the card to the landmark. Ported from docs/prototypes/flight-v2. */
+html.fl-edge { scrollbar-width: none; }
+html.fl-edge::-webkit-scrollbar, html.fl-edge body::-webkit-scrollbar { display: none; }
+
+.fl-root {
+  --fl-night: #06080d;
+  --fl-paper: #F5F2EC;
+  --fl-line: rgba(25, 27, 30, 0.1);
+  --fl-ink: #191B1E;
+  --fl-ink-soft: #4A5058;
+  --fl-accent: #2452C6;
+  --fl-signal: #A9D2FF;
+  --fl-hud: rgba(244, 243, 239, 0.9);
+  --fl-hud-dim: rgba(244, 243, 239, 0.6);
+  --fl-serif: "Playfair Display", "Times New Roman", Georgia, serif;
+  --fl-sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fl-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --fl-gutter: clamp(16px, 4vw, 56px);
+  position: relative;
+  background: var(--fl-night);
+  color: var(--fl-hud);
+  font-family: var(--fl-sans);
+}
+
+/* The track is the scroll distance; the stage sticks to the viewport while the track scrolls past. */
+.fl-track { position: relative; }
+.fl-anchor { position: absolute; left: 0; width: 1px; height: 1px; pointer-events: none; }
+.fl-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.fl-poster, .fl-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fl-poster { object-fit: cover; }
+.fl-veil { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(6, 8, 13, 0.5) 0%, rgba(6, 8, 13, 0.16) 42%, rgba(6, 8, 13, 0) 62%); }
+.fl-overlay { position: absolute; inset: 0; pointer-events: none; }
+
+/* The thread: a glowing line from the card to the pin, with light flowing along it. */
+.fl-thread { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.fl-thread-line { fill: none; stroke: var(--fl-signal); stroke-width: 1.5; opacity: 0.85;
+  filter: drop-shadow(0 0 4px rgba(169, 210, 255, 0.6)); }
+.fl-thread-flow { fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 2 18;
+  opacity: 0.75; animation: fl-flow 1.6s linear infinite; }
+@keyframes fl-flow { to { stroke-dashoffset: -40; } }
+.fl-thread-end { fill: var(--fl-signal); }
+
+/* Landmark marks: a reticle and lock label per stop, one pin that glides between them. */
+.fl-reticle { position: absolute; left: 0; top: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; opacity: 0; }
+.fl-reticle span { position: absolute; width: 14px; height: 14px; border: 0 solid var(--fl-signal); }
+.fl-reticle span:nth-child(1) { left: 0; top: 0; border-left-width: 1.5px; border-top-width: 1.5px; }
+.fl-reticle span:nth-child(2) { right: 0; top: 0; border-right-width: 1.5px; border-top-width: 1.5px; }
+.fl-reticle span:nth-child(3) { left: 0; bottom: 0; border-left-width: 1.5px; border-bottom-width: 1.5px; }
+.fl-reticle span:nth-child(4) { right: 0; bottom: 0; border-right-width: 1.5px; border-bottom-width: 1.5px; }
+.fl-lock { position: absolute; left: 0; top: 0; margin: 38px 0 0 14px; opacity: 0; white-space: nowrap;
+  font: 500 10.5px/1.5 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-signal);
+  text-shadow: 0 1px 8px rgba(6, 8, 13, 0.9); }
+.fl-lock em { font-style: normal; color: var(--fl-hud); }
+.fl-pin { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
+.fl-pin-stem { position: absolute; left: -0.75px; bottom: 0; width: 1.5px; height: 34px; transform-origin: bottom;
+  background: linear-gradient(transparent, var(--fl-signal)); }
+.fl-pin-dot { position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--fl-signal); box-shadow: 0 0 0 3px rgba(169, 210, 255, 0.25), 0 0 18px var(--fl-signal); }
+.fl-pin-ring { position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%;
+  border: 1.5px solid var(--fl-signal); opacity: 0; }
+.fl-pin-pulse { position: absolute; left: -16px; top: -16px; width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--fl-signal); animation: fl-pulse 2.4s ease-out infinite; }
+@keyframes fl-pulse { from { transform: scale(0.4); opacity: 0.8; } to { transform: scale(1.6); opacity: 0; } }
+
+/* HUD */
+.fl-hud-top { position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) var(--fl-gutter) 18px;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px;
+  font: 500 11px/1 var(--fl-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fl-hud);
+  background: linear-gradient(rgba(6, 8, 13, 0.6), rgba(6, 8, 13, 0)); }
+.fl-brand { display: flex; align-items: center; gap: 8px; white-space: nowrap; color: inherit; text-decoration: none; }
+.fl-brand i { width: 6px; height: 6px; border-radius: 50%; background: var(--fl-signal); box-shadow: 0 0 10px var(--fl-signal); }
+.fl-route-nav { position: relative; max-width: 620px; width: 100%; justify-self: center; }
+.fl-route { display: grid; grid-template-columns: repeat(6, 1fr); margin: 0; padding: 0; list-style: none; }
+.fl-route-line, .fl-route-fill { position: absolute; top: 5px; left: calc(100% / 12); right: calc(100% / 12); height: 1px; }
+.fl-route-line { background: rgba(244, 243, 239, 0.22); }
+.fl-route-fill { background: var(--fl-signal); box-shadow: 0 0 8px var(--fl-signal); transform-origin: left; transform: scaleX(0); }
+.fl-route button { all: unset; cursor: pointer; position: relative; display: grid; justify-items: center; gap: 8px;
+  width: 100%; color: var(--fl-hud-dim); font: inherit; letter-spacing: inherit; transition: color 0.3s; }
+.fl-route button i { width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(244, 243, 239, 0.5);
+  background: var(--fl-night); transition: background 0.3s, border-color 0.3s, box-shadow 0.3s; }
+.fl-route button span { font-size: 9.5px; white-space: nowrap; }
+.fl-route button:hover, .fl-route button[aria-current="step"] { color: var(--fl-hud); }
+.fl-route button.is-passed i { background: var(--fl-signal); border-color: var(--fl-signal); box-shadow: 0 0 10px var(--fl-signal); }
+.fl-route button:focus-visible { outline: 1px solid var(--fl-signal); outline-offset: 4px; }
+.fl-hud-actions { display: flex; gap: 8px; align-items: center; }
+.fl-hud-btn { display: inline-flex; align-items: center; padding: 9px 12px; border-radius: 7px; white-space: nowrap;
+  border: 1px solid rgba(244, 243, 239, 0.35); color: var(--fl-hud); text-decoration: none; font: inherit; }
+.fl-hud-btn:hover { border-color: var(--fl-signal); color: #fff; }
+.fl-hud-btn:focus-visible { outline: 2px solid var(--fl-signal); outline-offset: 3px; }
+.fl-hud-bottom { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
+  padding: 14px var(--fl-gutter) calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: flex-end; align-items: end; gap: 16px;
+  font: 400 10.5px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-hud);
+  background: linear-gradient(rgba(6, 8, 13, 0), rgba(6, 8, 13, 0.6)); }
+.fl-hud-bottom a { color: var(--fl-hud-dim); }
+.fl-hud-bottom a:hover { color: var(--fl-hud); }
+.fl-hint { position: absolute; left: 50%; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 4;
+  transform: translateX(-50%); display: grid; justify-items: center; gap: 10px; opacity: 0; pointer-events: none;
+  font: 500 11px/1 var(--fl-mono); letter-spacing: 0.2em; text-transform: uppercase; color: var(--fl-hud); }
+.fl-hint::after { content: ""; width: 1px; height: 34px; background: linear-gradient(var(--fl-hud), transparent);
+  animation: fl-drip 1.8s ease-in-out infinite; transform-origin: top; }
+@keyframes fl-drip { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* The living card. JS sets its height (travel strip ↔ content) and position; contents stack in one cell. */
+.fl-cardwrap { position: absolute; left: var(--fl-gutter); top: 0; z-index: 3; width: min(440px, 38vw); will-change: transform; }
+.fl-puffs { position: absolute; inset: 0; pointer-events: none; }
+.fl-puff { position: absolute; border-radius: 50%; opacity: 0; filter: blur(22px);
+  background: radial-gradient(circle, rgba(245, 242, 236, 0.85) 0%, rgba(214, 205, 230, 0.45) 45%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0.4); }
+.fl-card { position: relative; display: flex; flex-direction: column; overflow: hidden; height: 64px;
+  padding: 22px 26px 20px; border-radius: 18px; color: var(--fl-ink);
+  background: rgba(245, 242, 236, 0.9); backdrop-filter: blur(18px) saturate(1.1); -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35) inset, 0 30px 80px -20px rgba(0, 0, 0, 0.55); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .fl-card { background: var(--fl-paper); }
+}
+.fl-eyebrows { position: relative; flex: none; height: 16px; }
+.fl-eyebrow { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; margin: 0; white-space: nowrap;
+  font: 500 10.5px/1.4 var(--fl-mono); letter-spacing: 0.13em; text-transform: uppercase; color: var(--fl-ink-soft); }
+.fl-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: var(--fl-accent); flex: none; }
+.fl-contents { position: relative; flex: 1; min-height: 0; }
+.fl-content { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+/* Scrolling chains from an overflowing card to the flight instead of stopping at its end. */
+.lenis.lenis-smooth .fl-content[data-lenis-prevent], .fl-content { overscroll-behavior: auto; }
+/* Stops that are not on the card don't render (and don't load their images) until their turn. */
+.fl-content[inert] { display: none; }
+.fl-card.is-moving .fl-content { overflow: hidden; }
+.fl-inner { display: grid; gap: 14px; padding-top: 14px; }
+.fl-inner > * { margin: 0; }
+
+/* Card typography (content comes from src/data/content.ts) */
+.fl-h1, .fl-h2 { font: 600 clamp(26px, 2.4vw, 34px)/1.05 var(--fl-serif); letter-spacing: -0.01em; text-wrap: balance; color: var(--fl-ink); }
+.fl-h1 { font-size: clamp(38px, 4vw, 54px); line-height: 0.95; }
+.fl-role { font: 500 11.5px/1.5 var(--fl-mono); color: var(--fl-accent); }
+.fl-lead { font: 500 19px/1.35 var(--fl-serif); color: var(--fl-ink); }
+.fl-body { font: 400 14px/1.6 var(--fl-sans); color: var(--fl-ink-soft); }
+.fl-details { font: 400 12px/1.5 var(--fl-mono); color: var(--fl-ink-soft); }
+.fl-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.fl-btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none;
+  font: 600 11.5px/1 var(--fl-mono); letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 11px 14px; border-radius: 8px; border: 1px solid var(--fl-accent); }
+.fl-btn-primary { color: #fff; background: var(--fl-accent); }
+.fl-btn-primary:hover { background: #1B44AA; }
+.fl-btn-ghost { color: var(--fl-accent); background: transparent; }
+.fl-btn:focus-visible, .fl-link:focus-visible, .fl-tabs button:focus-visible { outline: 2px solid var(--fl-accent); outline-offset: 3px; }
+.fl-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; list-style: none; }
+.fl-chips li { font: 400 11px/1.3 var(--fl-mono); padding: 6px 8px; border: 1px solid var(--fl-line); border-radius: 6px; color: var(--fl-ink-soft); background: #fff; }
+.fl-rows, .fl-work, .fl-resumes { list-style: none; padding: 0; display: grid; }
+.fl-rows li, .fl-work li, .fl-resumes li { display: grid; gap: 3px; padding: 11px 0; border-top: 1px solid var(--fl-line); }
+.fl-rows li:last-child, .fl-work li:last-child, .fl-resumes li:last-child { border-bottom: 1px solid var(--fl-line); }
+.fl-rows b, .fl-work b, .fl-job b { font: 600 17px/1.25 var(--fl-serif); color: var(--fl-ink); }
+.fl-rows span, .fl-work span { font: 400 13px/1.45 var(--fl-sans); color: var(--fl-ink-soft); }
+.fl-work li { grid-template-columns: 112px 1fr; gap: 12px; align-items: start; }
+.fl-work li > div { display: grid; gap: 3px; }
+.fl-thumb { margin: 0; position: relative; }
+.fl-thumb img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block; }
+.fl-thumb figcaption { position: absolute; left: 6px; top: 6px; padding: 4px 5px; border-radius: 4px; background: rgba(25, 27, 30, 0.75); color: #fff;
+  font: 500 9.5px/1 var(--fl-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.fl-thumb-empty { display: grid; place-items: center; aspect-ratio: 16 / 10; border-radius: 8px; text-align: center; padding: 6px;
+  border: 1px dashed rgba(25, 27, 30, 0.3); color: var(--fl-ink-soft); font: 500 10px/1.4 var(--fl-mono); }
+.fl-status { font: 500 10.5px/1.4 var(--fl-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--fl-accent); }
+.fl-link { all: unset; cursor: pointer; justify-self: start; font: 600 12px/1.4 var(--fl-mono); color: var(--fl-accent);
+  text-decoration: underline; text-underline-offset: 3px; }
+.fl-quiet { color: var(--fl-ink-soft); }
+.fl-job { display: grid; gap: 6px; padding-top: 12px; border-top: 1px solid var(--fl-line); }
+.fl-meta { font: 400 12px/1.4 var(--fl-mono); color: var(--fl-ink-soft); }
+.fl-bullets { list-style: none; padding: 0; display: grid; gap: 7px; font: 400 13px/1.5 var(--fl-sans); color: var(--fl-ink-soft); }
+.fl-bullets li { display: grid; grid-template-columns: 10px 1fr; gap: 8px; }
+.fl-bullets li::before { content: ""; width: 5px; height: 5px; margin-top: 7px; border-radius: 50%; background: var(--fl-accent); }
+.fl-tabs { display: flex; gap: 4px; padding: 3px; border-radius: 9px; background: rgba(25, 27, 30, 0.06); }
+.fl-tabs button { all: unset; cursor: pointer; flex: 1; text-align: center; padding: 8px 6px; border-radius: 7px;
+  font: 500 10.5px/1.2 var(--fl-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--fl-ink-soft); }
+.fl-tabs button[aria-selected="true"] { background: #fff; color: var(--fl-ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.fl-steps { list-style: none; padding: 0; display: grid; counter-reset: step; }
+.fl-steps li { display: grid; grid-template-columns: 34px 1fr; gap: 2px 10px; padding: 9px 0; border-top: 1px solid var(--fl-line); counter-increment: step; }
+.fl-steps li::before { content: "0" counter(step); grid-row: span 2; font: 500 11px/1.9 var(--fl-mono); color: var(--fl-accent); }
+.fl-steps b { font: 600 13px/1.3 var(--fl-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--fl-ink); }
+.fl-steps span { font: 400 13px/1.4 var(--fl-sans); color: var(--fl-ink-soft); }
+.fl-cols { display: grid; gap: 14px; }
+.fl-email { font: 500 14px/1 var(--fl-mono); color: var(--fl-ink); user-select: all; }
+.fl-resumes li { grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 12px; font: 400 13px/1.4 var(--fl-sans); color: var(--fl-ink); }
+.fl-resumes small { grid-column: 1 / -1; font: 400 11px/1.4 var(--fl-mono); color: var(--fl-ink-soft); }
+
+/* Phones: the card is a bottom sheet, the thread rises from its top edge, no backdrop blur. */
+@media (max-width: 767px) {
+  .fl-hud-top { grid-template-columns: auto 1fr; gap: 12px; }
+  .fl-hud-actions .fl-hud-btn:not(.fl-hud-resume) { display: none; }
+  .fl-route-nav { grid-column: 1 / -1; grid-row: 2; }
+  .fl-route button span { display: none; }
+  .fl-cardwrap { left: 12px; right: 12px; width: auto; }
+  .fl-card { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fl-paper); padding: 18px 18px 16px; }
+  .fl-puff:nth-child(n + 4) { display: none; }
+  .fl-h1 { font-size: 38px; }
+  .fl-veil { background: linear-gradient(0deg, rgba(6, 8, 13, 0.55) 0%, rgba(6, 8, 13, 0) 55%); }
+  .fl-lock { margin: -66px 0 0 0; transform: translateX(-50%); }
+  .fl-hud-bottom { font-size: 9px; letter-spacing: 0.08em; }
+  .fl-hud-bottom > * { white-space: nowrap; }
+}
+
+/* Static page: reduced motion, Save-Data, or "Read as a page". */
+.fl-static section { position: relative; min-height: 100vh; display: grid; align-items: center;
+  padding: 110px var(--fl-gutter) 80px; background-size: cover; background-position: center; }
+.fl-static .fl-card { height: auto; width: min(560px, 100%); overflow: visible; }
+.fl-static .fl-eyebrow { position: static; }
+.fl-static-head { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; gap: 16px;
+  padding: 14px var(--fl-gutter); background: rgba(6, 8, 13, 0.85);
+  font: 500 11px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.fl-static-head a { color: var(--fl-hud); }
+.fl-static-foot { padding: 18px var(--fl-gutter); font: 400 10.5px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-hud-dim); }

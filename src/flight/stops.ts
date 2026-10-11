@@ -22,6 +22,9 @@ export const STOP_LABEL: Record<StopId, string> = {
   sunset: 'Stop 06',
 };
 
+/** The LTX-2 license requires the footage to be disclosed as machine-generated wherever it is shown. */
+export const AI_DISCLOSURE = 'AI-rendered flight · not real footage';
+
 export function stopForSection(id: string): StopId | null {
   for (const [stop, ids] of Object.entries(STOP_SECTIONS) as [StopId, readonly string[]][]) {
     if (ids.includes(id)) return stop;

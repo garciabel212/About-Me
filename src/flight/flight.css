@@ -32,6 +32,11 @@ html.fl-edge::-webkit-scrollbar, html.fl-edge body::-webkit-scrollbar { display:
 .fl-veil { position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(90deg, rgba(6, 8, 13, 0.5) 0%, rgba(6, 8, 13, 0.16) 42%, rgba(6, 8, 13, 0) 62%); }
 .fl-overlay { position: absolute; inset: 0; pointer-events: none; }
+/* Film look over the footage only (the card and HUD sit above it): a soft vignette and static grain. */
+.fl-film { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.3) 100%); }
+.fl-film::after { content: ""; position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 240px 240px; }
 
 /* The thread: a glowing line from the card to the pin, with light flowing along it. */
 .fl-thread { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -92,10 +97,12 @@ html.fl-edge::-webkit-scrollbar, html.fl-edge body::-webkit-scrollbar { display:
 .fl-hud-btn:focus-visible { outline: 2px solid var(--fl-signal); outline-offset: 3px; }
 .fl-hud-bottom { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
   padding: 14px var(--fl-gutter) calc(14px + env(safe-area-inset-bottom, 0px));
-  display: flex; justify-content: flex-end; align-items: end; gap: 16px;
+  display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: end; gap: 4px 16px;
   font: 400 10.5px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-hud);
   background: linear-gradient(rgba(6, 8, 13, 0), rgba(6, 8, 13, 0.6)); }
 .fl-hud-bottom a { color: var(--fl-hud-dim); }
+/* The AI-footage label (LTX-2 license): always on screen, full HUD colour, lifted off bright frames. */
+.fl-disclosure { margin: 0; color: var(--fl-hud); text-shadow: 0 1px 6px rgba(6, 8, 13, 0.9); }
 .fl-hud-bottom a:hover { color: var(--fl-hud); }
 .fl-hint { position: absolute; left: 50%; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 4;
   transform: translateX(-50%); display: grid; justify-items: center; gap: 10px; opacity: 0; pointer-events: none;
@@ -198,6 +205,8 @@ html.fl-edge::-webkit-scrollbar, html.fl-edge body::-webkit-scrollbar { display:
   .fl-lock { margin: -66px 0 0 0; transform: translateX(-50%); }
   .fl-hud-bottom { font-size: 9px; letter-spacing: 0.08em; }
   .fl-hud-bottom > * { white-space: nowrap; }
+  .fl-film { background: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, 0.2) 100%); }
+  .fl-film::after { opacity: 0.03; }
 }
 
 /* Static page: reduced motion, Save-Data, or "Read as a page". */
@@ -205,8 +214,9 @@ html.fl-edge::-webkit-scrollbar, html.fl-edge body::-webkit-scrollbar { display:
   padding: 110px var(--fl-gutter) 80px; background-size: cover; background-position: center; }
 .fl-static .fl-card { height: auto; width: min(560px, 100%); overflow: visible; }
 .fl-static .fl-eyebrow { position: static; }
-.fl-static-head { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; gap: 16px;
+.fl-static-head { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px;
   padding: 14px var(--fl-gutter); background: rgba(6, 8, 13, 0.85);
   font: 500 11px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; }
 .fl-static-head a { color: var(--fl-hud); }
+.fl-static-head .fl-disclosure { color: var(--fl-hud-dim); text-shadow: none; }
 .fl-static-foot { padding: 18px var(--fl-gutter); font: 400 10.5px/1.4 var(--fl-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--fl-hud-dim); }

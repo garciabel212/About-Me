@@ -1,15 +1,16 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { HashRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation, useNavigationType, Navigate } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Atmosphere from '@/components/background/Atmosphere';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import SmoothScroll, { useLenis } from '@/components/motion/SmoothScroll';
 import { PageTransition, ScrollProgress } from '@/components/motion';
+import { ViewModeProvider, useViewMode } from '@/components/view/ViewMode';
+import { takeHomeReturn } from '@/components/home/homeReturn';
 import Home from '@/pages/Home';
-import { legacyRoutes } from '@/data/routes';
+import { hashAliases, legacyRoutes } from '@/data/routes';
 
 const ServiceMapPlanner = lazy(() => import('@/pages/projects/ServiceMapPlanner'));
 const ScaleGarageStudio = lazy(() => import('@/pages/projects/ScaleGarageStudio'));
@@ -19,9 +20,7 @@ const Lab = lazy(() => import('@/pages/Lab'));
 function RouteFallback() {
   return (
     <div className="flex min-h-[55vh] items-center justify-center" role="status" aria-live="polite">
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">
-        LOADING VIEW&hellip;
-      </span>
+      <span className="text-sm text-[var(--text-muted)]">Loading&hellip;</span>
     </div>
   );
 }
@@ -32,11 +31,12 @@ function Loadable({ children }: { children: React.ReactNode }) {
 
 function AppRoutes() {
   const location = useLocation();
+  const navigationType = useNavigationType();
   const lenis = useLenis();
+  const { mode, motion } = useViewMode();
   // mode="sync" keeps the outgoing page mounted until its exit animation ends,
-  // which inflates the document, leaves Lenis with the old page's scroll limit
-  // and GSAP pins measured against the wrong layout. Hash targets are only
-  // measured once the outgoing page is gone.
+  // which inflates the document and leaves Lenis with the old page's scroll
+  // limit. Scroll targets are only measured once the outgoing page is gone.
   const [layoutSettled, setLayoutSettled] = useState(true);
   const [renderedPath, setRenderedPath] = useState(location.pathname);
   if (renderedPath !== location.pathname) {
@@ -45,36 +45,41 @@ function AppRoutes() {
   }
 
   useEffect(() => {
-    if (location.hash) return;
-    lenis?.scrollTo(0, { immediate: true });
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [lenis, location.pathname, location.hash]);
-
-  // Pinned sections on the incoming page (e.g. the case-study hero reveal) were
-  // measured while the outgoing page was still in the DOM; re-measure once it is
-  // gone. Hash navigations re-measure in the effect below, before scrolling.
-  useEffect(() => {
-    if (!layoutSettled || location.hash) return;
+    if (!layoutSettled) return;
     ScrollTrigger.refresh();
     lenis?.resize();
-  }, [layoutSettled, location.hash, lenis]);
+    const jumpTo = (y: number) => {
+      if (lenis) lenis.scrollTo(y, { immediate: true, force: true });
+      else window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+    };
 
-  useEffect(() => {
-    if (!location.hash || !layoutSettled) return;
-    ScrollTrigger.refresh();
-    lenis?.resize();
-    const targetId = decodeURIComponent(location.hash.slice(1));
+    // Back from a case study: return to the same place on Home, in the same mode.
+    const restoring = (location.state as { restore?: boolean } | null)?.restore || navigationType === 'POP';
+    if (location.pathname === '/' && restoring) {
+      const y = takeHomeReturn(mode);
+      if (y !== null) {
+        jumpTo(y);
+        return;
+      }
+    }
+
+    if (!location.hash) {
+      jumpTo(0);
+      return;
+    }
+
+    const raw = decodeURIComponent(location.hash.slice(1));
+    const targetId = hashAliases[raw] ?? raw;
     let attempts = 0;
     let retryTimer: ReturnType<typeof setTimeout> | undefined;
     const scrollToTarget = () => {
       const target = document.getElementById(targetId);
       if (target) {
-        if (lenis) {
-          lenis.scrollTo(target, { offset: -64 });
-        } else {
-          target.scrollIntoView({ behavior: 'instant', block: 'start' });
-          if (targetId === 'intro') target.focus({ preventScroll: true });
-        }
+        // Sections set scroll-margin-top for the fixed header; Lenis and scrollIntoView both honour it.
+        if (lenis) lenis.scrollTo(target, { immediate: !motion, force: true });
+        else target.scrollIntoView({ behavior: 'instant', block: 'start' });
+        // Keyboard and screen-reader users continue from the section they asked for.
+        if (target.tabIndex === -1) target.focus({ preventScroll: true });
         return;
       }
       attempts += 1;
@@ -82,7 +87,8 @@ function AppRoutes() {
     };
     scrollToTarget();
     return () => clearTimeout(retryTimer);
-  }, [lenis, location.pathname, location.hash, layoutSettled]);
+    // location.key: clicking the same section link twice scrolls there again.
+  }, [lenis, location.pathname, location.hash, location.key, layoutSettled]);
 
   return (
     <AnimatePresence mode="sync" initial={false} onExitComplete={() => setLayoutSettled(true)}>
@@ -133,16 +139,25 @@ function AppRoutes() {
 }
 
 function SiteLayout() {
-  const pathname = useLocation().pathname;
-  const home = pathname === '/' || pathname === '/intro' || pathname === '/work' || pathname === '/workflow' || pathname === '/who-i-am';
+  const home = useLocation().pathname === '/';
+  const { mode, motion } = useViewMode();
+  const film = home && mode === 'cinematic';
+
+  // Lenis' eased wheel scrolling is motion too: the motion control turns it off.
+  const lenis = useLenis();
+  useEffect(() => {
+    if (lenis) lenis.options.smoothWheel = motion && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, [lenis, motion]);
+
   return (
-    <div className={`site-shell isolate min-h-screen flex flex-col relative ${home ? 'miami-home' : ''}`}>
-      {!home && <Atmosphere />}
-      {/* Home is the flight: its HUD replaces the site nav. */}
-      {!home && <><ScrollProgress /><Navbar /></>}
-      <div className="relative z-[1] flex-1"><AppRoutes /></div>
-      <Footer />
-    </div>
+    <MotionConfig reducedMotion={motion ? 'user' : 'always'}>
+      <div className={`site-shell min-h-screen flex flex-col relative ${film ? 'is-film' : ''}`}>
+        {!home && <ScrollProgress />}
+        <Navbar />
+        <div className="relative z-[1] flex-1"><AppRoutes /></div>
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 }
 
@@ -151,12 +166,11 @@ export default function App() {
     <ThemeProvider>
       <HashRouter>
         <SmoothScroll>
-          <MotionConfig reducedMotion="user">
+          <ViewModeProvider>
             <SiteLayout />
-          </MotionConfig>
+          </ViewModeProvider>
         </SmoothScroll>
       </HashRouter>
     </ThemeProvider>
   );
 }
-

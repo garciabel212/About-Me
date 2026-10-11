@@ -1,93 +1,100 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Mail } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Mail } from 'lucide-react';
 import AssetFrame from '@/components/AssetFrame';
 import { getCaseStudy } from '@/data/caseStudies';
-import { mailto } from '@/data/profile';
 
-const questions = [
-  ['What was the problem?', 'problem'],
-  ['Who needed it?', 'who'],
-  ['What was my role?', 'role'],
-  ['What constraints mattered?', 'constraints'],
-  ['What did I do and why?', 'approach'],
-] as const;
+function CaseActions() {
+  return (
+    <div className="case-actions">
+      {/* Returns to the visitor's place on Home, in the mode they were using. */}
+      <Link to="/#projects" state={{ restore: true }} className="btn btn-secondary">
+        <ArrowLeft size={16} aria-hidden="true" /> Back to Projects
+      </Link>
+      <Link to="/#contact" className="btn btn-primary">
+        <Mail size={16} aria-hidden="true" /> Contact Jose
+      </Link>
+    </div>
+  );
+}
 
+/**
+ * Every case study follows one structure: summary → large screenshot →
+ * role, users, status → problem → important decisions → visual evidence →
+ * current result → next improvement.
+ */
 export default function CaseStudyPage({ slug }: { slug: string }) {
   const study = getCaseStudy(slug);
   if (!study) return null;
   const related = getCaseStudy(study.related);
+  const isLab = study.slug === 'agent-trading-os';
 
   return (
-    <main className="relative z-10 pt-28 pb-24 text-[var(--text-primary)]">
-      <article className="mx-auto max-w-4xl px-6 sm:px-12 space-y-12">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1.5 text-sm text-[var(--accent)] hover:underline"
-        >
-          <ArrowLeft size={14} aria-hidden="true" /> Back to home
-        </Link>
+    <main id="main" tabIndex={-1} className="case">
+      <article className="case__inner">
+        <CaseActions />
 
-        <header className="space-y-3">
-          <p className="font-mono text-xs uppercase tracking-widest text-[var(--accent)]">
-            {study.status} · Updated {study.updated}
-          </p>
-          <h1 className="font-serif text-4xl sm:text-6xl font-bold tracking-tight">{study.title}</h1>
-          <p className="text-lg text-[var(--text-secondary)]">{study.subtitle}</p>
+        <header className="case__head">
+          <p className="eyebrow">{isLab ? 'Lab experiment' : 'Personal project'} · Updated {study.updated}</p>
+          <h1>{study.title}</h1>
+          <p className="case__subtitle">{study.subtitle}</p>
+          <p className="case__summary">{study.summary}</p>
         </header>
 
-        {questions.map(([heading, key]) => (
-          <section key={key} className="space-y-2">
-            <h2 className="font-serif text-2xl font-bold">{heading}</h2>
-            <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">{study[key]}</p>
+        <AssetFrame asset={study.hero} large />
+
+        <dl className="case__facts">
+          <div><dt>My role</dt><dd>{study.role}</dd></div>
+          <div><dt>Users</dt><dd>{study.users}</dd></div>
+          <div><dt>Status</dt><dd><span className="status">{study.status}</span> {study.statusNote}.</dd></div>
+        </dl>
+
+        <section className="case__section" aria-labelledby="problem">
+          <h2 id="problem">The problem</h2>
+          <p>{study.problem}</p>
+        </section>
+
+        <section className="case__section" aria-labelledby="decisions">
+          <h2 id="decisions">Important decisions</h2>
+          <ol className="decisions">
+            {study.decisions.map((d) => (
+              <li key={d.title}>
+                <h3>{d.title}</h3>
+                <p>{d.body}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {study.evidence.length > 0 && (
+          <section className="case__section" aria-labelledby="evidence">
+            <h2 id="evidence">Visual evidence</h2>
+            <div className="evidence">
+              {study.evidence.map((a) => <AssetFrame key={a.caption} asset={a} />)}
+            </div>
           </section>
-        ))}
+        )}
 
-        <section className="space-y-4">
-          <h2 className="font-serif text-2xl font-bold">What can you inspect?</h2>
-          <ul className="list-disc pl-5 space-y-1 text-[var(--text-secondary)]">
-            {study.inspect.map((i) => (
-              <li key={i}>{i}</li>
-            ))}
+        <section className="case__section" aria-labelledby="result">
+          <h2 id="result">Current result</h2>
+          <p>{study.result}</p>
+          {study.note && <p className="case__note">{study.note}</p>}
+        </section>
+
+        <section className="case__section" aria-labelledby="next">
+          <h2 id="next">Next improvement</h2>
+          <ul className="plain-list case__next">
+            {study.next.map((r) => <li key={r}>{r}</li>)}
           </ul>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {study.assets.map((a) => (
-              <AssetFrame key={a.caption} asset={a} />
-            ))}
-          </div>
+          <p className="case__tech">Built with {study.technologies.join(', ')}.</p>
         </section>
 
-        <section className="space-y-2">
-          <h2 className="font-serif text-2xl font-bold">What is the current result?</h2>
-          <p className="text-base sm:text-lg text-[var(--text-secondary)] leading-relaxed">{study.result}</p>
-          {study.note && <p className="text-sm text-[var(--text-muted)]">{study.note}</p>}
-        </section>
-
-        <section className="space-y-2">
-          <h2 className="font-serif text-2xl font-bold">What remains to improve?</h2>
-          <ul className="list-disc pl-5 space-y-1 text-[var(--text-secondary)]">
-            {study.remaining.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
-          </ul>
-        </section>
-
-        <p className="font-mono text-xs text-[var(--text-muted)]">Built with: {study.technologies.join(' · ')}</p>
-
-        <footer className="flex flex-col gap-4 border-t border-[var(--border)] pt-8 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="case__foot">
+          <CaseActions />
           {related && (
-            <Link
-              to={related.slug === 'agent-trading-os' ? '/lab' : `/projects/${related.slug}`}
-              className="font-semibold text-[var(--accent)] hover:underline"
-            >
-              Related: {related.title}
+            <Link to={related.slug === 'agent-trading-os' ? '/lab' : `/projects/${related.slug}`} className="text-link">
+              Next case study: {related.title} <ArrowRight size={14} aria-hidden="true" />
             </Link>
           )}
-          <a
-            href={mailto}
-            className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[var(--accent-hover)]"
-          >
-            <Mail size={16} aria-hidden="true" /> Email Jose
-          </a>
         </footer>
       </article>
     </main>

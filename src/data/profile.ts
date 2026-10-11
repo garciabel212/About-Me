@@ -1,27 +1,19 @@
 /**
- * Single source of truth for contact details, positioning, and the résumé.
+ * Single source of truth for contact details and the résumé.
  * Facts here mirror the master résumé; change them there first, then here.
  */
 export const profile = {
-  title: 'Solutions Engineer',
-  focus: 'Enterprise Software Solutions',
-  /** New public positioning line (see content.ts); the Home still shows title + focus until it is redesigned. */
-  headline: 'Customer Solutions | Implementation | Technical Consulting',
   email: 'garciabel212@gmail.com',
   linkedin: 'https://www.linkedin.com/in/jose-abel-garcia/',
+  github: 'https://github.com/garciabel212',
   resumeFile: 'Jose-Garcia-Resume.pdf',
 } as const;
 
 export const mailto = `mailto:${profile.email}`;
 
-/** Résumé URL that respects Vite's base path (GitHub Pages serves under /About-Me/). */
+/**
+ * Résumé URL that respects Vite's base path (GitHub Pages serves under /About-Me/).
+ * Always render it with a plain <a href>, never a router <Link>: the HashRouter
+ * would turn it into an empty app route (#/About-Me/…pdf).
+ */
 export const resumeUrl = `${import.meta.env.BASE_URL}${profile.resumeFile}`;
-
-/** Headline credentials shown in the hero, in reading order. */
-export const credentials = [
-  'Service Engineer at DLSG / Image Access, Oct 2022 – present',
-  'Previously NOC Engineer at GlobeNet',
-  'B.S. Computer Science & Engineering, FAU',
-  'AWS Certified Cloud Practitioner',
-  'English & Spanish, fluent',
-] as const;

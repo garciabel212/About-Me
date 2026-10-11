@@ -1,157 +1,111 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Menu, X, FileDown } from 'lucide-react';
 import ThemeToggle from './theme/ThemeToggle';
-import { profile, resumeUrl } from '@/data/profile';
+import { MotionToggle, ViewSwitch } from './view/ViewControls';
+import { useViewMode } from './view/ViewMode';
+import { mailto, profile, resumeUrl } from '@/data/profile';
 import { homeSectionLinks } from '@/data/navigation';
+import { useActiveSection } from '@/hooks/useActiveSection';
 
-const navLinks = homeSectionLinks;
-
+/**
+ * Site header on every page: section links (with their Miami stop as a
+ * secondary label), the Cinematic / Read page switch and motion control on
+ * Home, and Email. Over the flight it is a dark bar so it stays readable.
+ */
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const location = useLocation();
+  const { pathname, hash } = useLocation();
+  const { mode } = useViewMode();
+  const home = pathname === '/';
+  const onFilm = home && mode === 'cinematic';
+  const active = useActiveSection(home);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [route, setRoute] = useState(pathname + hash);
+  if (route !== pathname + hash) {
+    setRoute(pathname + hash);
+    setMenuOpen(false);
+  }
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname, location.hash]);
-
-  const isActive = (href: string) => {
-    if (href.startsWith('/#')) {
-      const targetHash = href.replace('/', '');
-      return location.pathname === '/' && (location.hash === targetHash || (!location.hash && targetHash === '#projects'));
-    }
-    return location.pathname === href || location.pathname.startsWith(href + '/');
-  };
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
 
   return (
-    <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? 'nav-translucent shadow-[var(--shadow-low)]'
-            : 'bg-transparent border-b border-transparent'
-        }`}
-      >
-        <div className="section-container">
-          <nav className="flex items-center justify-between h-18 lg:h-22">
-            {/* Identity Brand Mark */}
-            <Link
-              to="/"
-              className="flex items-baseline gap-2.5 group"
-              aria-label="Jose Garcia Portfolio Home"
-            >
-              <span className="font-serif font-bold text-xl sm:text-2xl text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors tracking-tight">
-                Jose Garcia
-              </span>
-              <span className="font-mono text-[10px] tracking-widest text-[var(--text-muted)] uppercase hidden sm:inline-block">
-                SOLUTIONS &middot; SYSTEMS
-              </span>
-            </Link>
+    <header className={`site-header ${onFilm ? 'is-film' : ''}`}>
+      <a className="skip-link" href="#main" onClick={(e) => {
+        e.preventDefault();
+        const main = document.getElementById('main');
+        main?.focus();
+        main?.scrollIntoView();
+      }}>Skip to content</a>
+      <div className="site-header__bar">
+        <Link to="/#overview" className="site-brand">Jose Garcia</Link>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-center gap-1.5">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={`relative px-4 py-2 font-mono text-xs font-semibold tracking-wider transition-colors duration-200 ${
-                    isActive(link.href)
-                      ? 'text-[var(--accent)]'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                  }`}
-                >
-                  {link.label}
-                  {isActive(link.href) && (
-                    <motion.div
-                      layoutId="nav-active-pip"
-                      className="absolute bottom-0 left-4 right-4 h-[2px] bg-[var(--accent)]"
-                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    />
-                  )}
+        <nav className="site-nav" aria-label="Sections">
+          <ul>
+            {homeSectionLinks.map((l) => (
+              <li key={l.id}>
+                <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>
+                  <span className="site-nav__label">{l.label}</span>
+                  <span className="site-nav__place">{l.place}</span>
                 </Link>
-              ))}
-            </div>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-            {/* Right Controls: ThemeToggle, Resume Button */}
-            <div className="hidden md:flex items-center gap-3">
-              <ThemeToggle />
-
-              <a
-                href={resumeUrl}
-                download={profile.resumeFile}
-                title="Download résumé (PDF)"
-                className="btn-secondary px-4 py-2 rounded-xl font-mono text-xs font-semibold tracking-wider inline-flex items-center gap-1.5"
-              >
-                <span>R&Eacute;SUM&Eacute;</span>
-                <ArrowUpRight size={13} className="text-[var(--text-muted)]" />
-              </a>
-            </div>
-
-            {/* Mobile Hamburger & Theme Toggle */}
-            <div className="flex md:hidden items-center gap-2">
-              <ThemeToggle />
-              <button
-                type="button"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                className="p-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)]"
-                aria-label={mobileOpen ? 'Close Menu' : 'Open Menu'}
-              >
-                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </nav>
-        </div>
-      </header>
-
-      {/* Mobile Drawer Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-[72px] z-50 p-6 bg-[var(--surface)] border-b border-[var(--border)] shadow-[var(--shadow-floating)] md:hidden flex flex-col gap-5"
+        <div className="site-header__tools">
+          {home && <ViewSwitch />}
+          {onFilm && <MotionToggle className="hide-below-md" />}
+          {!onFilm && <ThemeToggle className="theme-toggle hide-below-sm" />}
+          <a className="hdr-btn hide-below-sm" href={mailto}>
+            <Mail size={15} aria-hidden="true" />
+            <span>Email</span>
+          </a>
+          <button
+            type="button"
+            className="hdr-btn menu-btn"
+            aria-expanded={menuOpen}
+            aria-controls="site-menu"
+            aria-label="Menu"
+            onClick={() => setMenuOpen((o) => !o)}
           >
-            <div className="flex flex-col divide-y divide-[var(--border-subtle)]">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="py-3 font-mono text-sm font-semibold tracking-wider text-[var(--text-primary)] hover:text-[var(--accent)]"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+            {menuOpen ? <X size={16} aria-hidden="true" /> : <Menu size={16} aria-hidden="true" />}
+            <span>Menu</span>
+          </button>
+        </div>
+      </div>
 
-            <div className="pt-3 flex items-center justify-between border-t border-[var(--border)]">
-              <span className="font-mono text-xs text-[var(--text-muted)]">
-                SOUTH FLORIDA
-              </span>
-              <a
-                href={resumeUrl}
-                download={profile.resumeFile}
-                title="Download résumé (PDF)"
-                className="btn-primary px-4 py-2.5 rounded-xl font-mono text-xs font-bold inline-flex items-center gap-1.5"
-              >
-                <span>DOWNLOAD R&Eacute;SUM&Eacute;</span>
-                <ArrowUpRight size={13} />
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      <div id="site-menu" className="site-menu" hidden={!menuOpen}>
+        <div className="site-menu__actions">
+          <a className="btn btn-primary" href={resumeUrl} download={profile.resumeFile}>
+            <FileDown size={16} aria-hidden="true" /> Download Resume
+          </a>
+          <a className="btn btn-secondary" href={mailto}>
+            <Mail size={16} aria-hidden="true" /> Email Jose
+          </a>
+        </div>
+        <ul className="site-menu__links">
+          {homeSectionLinks.map((l) => (
+            <li key={l.id}>
+              <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>
+                <span>{l.label}</span>
+                <span className="site-nav__place">{l.place}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="site-menu__view">
+          {onFilm && <MotionToggle />}
+          {!onFilm && <ThemeToggle className="theme-toggle" />}
+        </div>
+      </div>
+    </header>
   );
 }

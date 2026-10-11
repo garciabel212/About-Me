@@ -1,91 +1,69 @@
 import { describe, it, expect } from 'vitest';
 import {
-  site, hero, evidenceStrip, capabilities, experience, approach, tools,
-  education, languages, bio, resumeVersions, availableResumes, contact, featuredWork,
+  site, overview, experience, expertise, method, projects, about, education, languages, toolGroups, contact,
 } from '@/data/content';
 
 const STATUSES = ['Personal project', 'Working prototype', 'Demo with sample data', 'Deployed tool'];
+const words = (s: string) => s.trim().split(/\s+/).length;
+const sentences = (s: string) => s.split(/(?<=[.!?])\s+/).filter(Boolean).length;
 
 describe('content', () => {
-  it('uses the brief headline and page title', () => {
-    expect(site.headline).toBe('Customer Solutions | Implementation | Technical Consulting');
-    expect(site.title).toBe('Jose Garcia | Customer Solutions and Implementation');
+  it('opens with the agreed overview copy', () => {
+    expect(site.name).toBe('Jose Garcia');
+    expect(overview.title).toBe('Customer Solutions & Implementation');
+    expect(overview.statement).toBe('I help customers understand technical solutions, get systems running, and use them confidently.');
+    expect(overview.evidence.join(' · ')).toBe('Customer delivery since 2022 · English & Spanish · South Florida');
+    expect([overview.workCta, overview.resumeCta]).toEqual(['View My Work', 'Download Resume']);
   });
 
-  it('has an intro and four detail items', () => {
-    expect(hero.heading).toBe('Helping customers understand, implement, and use technology.');
-    expect(hero.details).toEqual([
-      'South Florida',
-      'English and Spanish',
-      'Open to remote and South Florida opportunities',
-      'Available for up to 40% travel',
-    ]);
-    expect(evidenceStrip).toHaveLength(3);
-  });
-
-  it('has five capabilities that each link somewhere', () => {
-    expect(capabilities).toHaveLength(5);
-    for (const c of capabilities) {
-      expect(c.body.length).toBeGreaterThan(40);
-      expect(c.href).toMatch(/^(#|\/)/);
-    }
-  });
-
-  it('keeps the official title and two roles', () => {
+  it('leads with DLSG / Image Access and keeps the official title and dates', () => {
     expect(experience.map((e) => e.id)).toEqual(['dlsg', 'globenet']);
-    expect(experience[0].title).toBe('Service Engineer');
-    expect(experience[0].bullets).toHaveLength(5);
+    expect(experience[0]).toMatchObject({ title: 'Service Engineer', period: 'October 2022 – Present', weight: 'primary' });
+    expect(experience[0].contributions.map((c) => c.label)).toEqual(['Implementation', 'Customer communication', 'Technical support']);
+    expect(experience[1]).toMatchObject({
+      title: 'Network Operations Center Engineer', period: 'November 2021 – September 2022', weight: 'supporting',
+    });
   });
 
-  it('has five approach steps, at least one tied to an example', () => {
-    expect(approach).toHaveLength(5);
-    expect(approach.some((s) => s.example.length > 0)).toBe(true);
+  it('keeps summaries to two or three short sentences', () => {
+    for (const e of experience) expect(sentences(e.summary)).toBeLessThanOrEqual(3);
+    for (const p of about.bio) expect(sentences(p)).toBeLessThanOrEqual(3);
   });
 
-  it('gives every tool a plain example', () => {
-    for (const t of [...tools.professional, ...tools.project]) {
-      expect(t.name.length).toBeGreaterThan(0);
-      expect(t.example.length).toBeGreaterThan(10);
+  it('has four expertise cards of 20–35 words, each with an evidence link', () => {
+    expect(expertise.map((x) => x.title)).toEqual([
+      'Understand and demonstrate', 'Implement and configure', 'Train and onboard', 'Troubleshoot and support',
+    ]);
+    for (const x of expertise) {
+      expect(words(x.body), x.id).toBeGreaterThanOrEqual(20);
+      expect(words(x.body), x.id).toBeLessThanOrEqual(35);
+      expect(x.href).toMatch(/^\/(#|projects\/)/);
     }
   });
 
-  it('keeps the verified credentials and languages', () => {
-    const names = education.map((e) => e.name);
-    expect(names).toContain('B.S. Computer Science & Engineering');
-    expect(names).toContain('AWS Certified Cloud Practitioner');
+  it('shows the working method once, in order', () => {
+    expect(method).toEqual(['Understand', 'Explain', 'Configure', 'Train', 'Follow up']);
+  });
+
+  it('features Service Map Planner first, then AAC and the garage configurator', () => {
+    expect(projects.map((p) => p.slug)).toEqual(['service-map-planner', 'aac-communication-app', 'scale-garage-studio']);
+    for (const p of projects) {
+      expect(STATUSES).toContain(p.status);
+      expect(p.href).toBe(`/projects/${p.slug}`);
+      expect(p.contribution).toMatch(/AI-assisted/);
+      if (p.image?.kind === 'concept') expect(p.image.caption).toMatch(/concept/i);
+    }
+  });
+
+  it('lists only verified education and the languages', () => {
+    expect(education.map((e) => e.name)).toEqual(['B.S. Computer Science & Engineering', 'Certificate in Data Science & Analytics']);
     expect(languages).toBe('English and Spanish, fluent');
+    expect(toolGroups.length).toBeGreaterThanOrEqual(3);
   });
 
-  it('has a two-paragraph bio', () => {
-    expect(bio).toHaveLength(2);
-  });
-
-  it('lists only resumes that have a file', () => {
-    const list = availableResumes();
-    expect(list.length).toBeGreaterThan(0);
-    expect(list[0].id).toBe('master');
-    for (const r of list) expect(r.file).toMatch(/^[\w-]+\.pdf$/);
-    expect(resumeVersions.length).toBe(4);
-  });
-
-  it('has the contact details from the brief', () => {
-    expect(contact.heading).toBe('Let us talk about your team');
+  it('has the agreed contact copy and verified details', () => {
+    expect(contact.heading).toBe('Let’s talk about your team.');
     expect(contact.email).toBe('garciabel212@gmail.com');
     expect(contact.linkedin).toBe('https://www.linkedin.com/in/jose-abel-garcia/');
-  });
-
-  it('features exactly three work items with valid statuses', () => {
-    expect(featuredWork.map((w) => w.slug)).toEqual([
-      'service-map-planner',
-      'aac-communication-app',
-      'scale-garage-studio',
-    ]);
-    for (const w of featuredWork) {
-      expect(STATUSES).toContain(w.status);
-      expect(w.updated).toMatch(/^[A-Z][a-z]+ 20\d\d$/);
-      expect(w.href).toBe(`/projects/${w.slug}`);
-      expect(typeof w.imageIsConcept).toBe('boolean');
-      if (!w.imageIsConcept) expect(w.image).not.toBe('');
-    }
   });
 });

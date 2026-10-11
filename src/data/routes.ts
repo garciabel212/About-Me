@@ -1,37 +1,40 @@
-/**
- * Section ids on the Home page (the flight), in the brief's page order. Each id
- * is an anchor at its stop (src/flight/stops.ts); navigation.ts builds the site
- * nav from `navLinks`.
- */
-export const sectionIds = [
-  'intro',
-  'capabilities',
-  'projects',
-  'experience',
-  'who-i-am',
-  'about',
-  'resume',
-  'contact',
-] as const;
+import type { StopId } from '@/flight/flightData';
 
-export const navLinks = [
-  { label: 'Work', hash: '#projects' },
-  { label: 'Experience', hash: '#experience' },
-  { label: 'About', hash: '#about' },
-  { label: 'Resume', hash: '#resume' },
-  { label: 'Contact', hash: '#contact' },
-] as const;
+/**
+ * Home sections in page order. Both viewing modes render the same sections in
+ * this order; in Cinematic mode each one holds at its stop on the Miami flight.
+ */
+export const homeSections = [
+  { id: 'overview', label: 'Overview', stop: 'river' },
+  { id: 'experience', label: 'Experience', stop: 'brickell' },
+  { id: 'expertise', label: 'Expertise', stop: 'downtown' },
+  { id: 'projects', label: 'Projects', stop: 'bay' },
+  { id: 'about', label: 'About', stop: 'beach' },
+  { id: 'contact', label: 'Contact', stop: 'sunset' },
+] as const satisfies readonly { id: string; label: string; stop: StopId }[];
+
+export type SectionId = (typeof homeSections)[number]['id'];
+
+export const sectionIds: SectionId[] = homeSections.map((s) => s.id);
+
+/** Old section ids that links elsewhere may still use: old id → current section. */
+export const hashAliases: Record<string, SectionId> = {
+  intro: 'overview',
+  capabilities: 'expertise',
+  'who-i-am': 'expertise',
+  resume: 'contact',
+};
 
 /** Old URLs that must keep working: path → Home section. */
 export const legacyRoutes = [
-  { from: '/intro', hash: 'intro' },
-  { from: '/who-i-am', hash: 'who-i-am' },
+  { from: '/intro', hash: 'overview' },
+  { from: '/who-i-am', hash: 'expertise' },
   { from: '/work', hash: 'projects' },
-  { from: '/workflow', hash: 'who-i-am' },
-  { from: '/capabilities', hash: 'capabilities' },
+  { from: '/workflow', hash: 'expertise' },
+  { from: '/capabilities', hash: 'expertise' },
   { from: '/about', hash: 'about' },
   { from: '/projects', hash: 'projects' },
   { from: '/experience', hash: 'experience' },
   { from: '/contact', hash: 'contact' },
   { from: '/projects/enterprise-deployment', hash: 'experience' },
-] as const;
+] as const satisfies readonly { from: string; hash: SectionId }[];

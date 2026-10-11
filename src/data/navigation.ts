@@ -1,7 +1,13 @@
-import { navLinks } from '@/data/routes';
+import { flight } from '@/flight/flightData';
+import { homeSections } from '@/data/routes';
 
 /**
- * Links from any page to a stop on the flight Home, in the brief's nav order.
- * src/data/__tests__/navigation.test.ts checks them against `navLinks` and `sectionIds`.
+ * Site navigation: a descriptive label for each Home section, with its Miami
+ * stop as a secondary label. src/data/__tests__/navigation.test.ts checks it.
  */
-export const homeSectionLinks = navLinks.map((l) => ({ label: l.label.toUpperCase(), href: `/${l.hash}` }));
+export const homeSectionLinks = homeSections.map((s) => ({
+  id: s.id,
+  label: s.label,
+  place: flight.stops.find((stop) => stop.id === s.stop)!.place,
+  href: `/#${s.id}`,
+}));

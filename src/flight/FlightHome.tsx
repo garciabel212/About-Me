@@ -10,10 +10,11 @@ import { flight } from './flightData';
 import { activeAt, glidePoint, panelHeight, threadPath, type Point } from './flow';
 import { FrameStore } from './FrameStore';
 import { puffLayout } from './mist';
+import { POSTER_FRAME } from './poster';
 import { resumeScroll } from './resumeScroll';
 import StaticFlight from './StaticFlight';
 import StopContent from './StopContent';
-import { beachTabFor, STOP_LABEL, STOP_SECTIONS, type BeachTab } from './stops';
+import { AI_DISCLOSURE, beachTabFor, STOP_LABEL, STOP_SECTIONS, type BeachTab } from './stops';
 import { anchorTop, buildTimeline } from './timeline';
 import { useFlightMode } from './useFlightMode';
 import './flight.css';
@@ -30,9 +31,6 @@ const STOPS = flight.stops;
 const LAST = STOPS.length - 1;
 const PUFFS = puffLayout(9, 7);
 const plan = buildTimeline(STOPS.map((s) => s.frame));
-/** The intro glides over the last SETTLE frames into the River stop; the poster is its first frame. */
-const SETTLE = 24;
-const POSTER_FRAME = Math.max(0, STOPS[0].frame - SETTLE);
 /** The reader's place when a Flight unmounts, so a phone rotating across the breakpoint resumes there. */
 let carried: { start: number; end: number; y: number; at: number } | null = null;
 
@@ -324,7 +322,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
       if (settled || settle) return;
       for (let f = POSTER_FRAME; f <= f0; f += 2) if (!store.get(f)) return;
       settle = gsap.to(st, {
-        frame: f0, duration: 3, ease: 'power2.out', onUpdate: render,
+        frame: f0, duration: 2, ease: 'power2.out', onUpdate: render,
         onComplete: () => { settled = true; gsap.to(hint, { opacity: 1, duration: 0.6 }); },
       });
     }
@@ -394,6 +392,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
           <img className="fl-poster" src={`${base}flight/${set}/f${pad(POSTER_FRAME)}.webp`} alt="" fetchPriority="high" />
           <canvas className="fl-canvas" aria-hidden="true" />
           <div className="fl-veil" aria-hidden="true" />
+          <div className="fl-film" aria-hidden="true" />
           <div className="fl-overlay" aria-hidden="true">
             <svg className="fl-thread">
               <path className="fl-thread-line" />
@@ -460,6 +459,7 @@ function Flight({ phone, beachTab }: { phone: boolean; beachTab?: BeachTab }) {
 
           <div className="fl-hint" aria-hidden="true">Scroll to fly</div>
           <footer className="fl-hud-bottom">
+            <p className="fl-disclosure">{AI_DISCLOSURE}</p>
             <Link to="/?view=page">Read as a page</Link>
           </footer>
         </div>

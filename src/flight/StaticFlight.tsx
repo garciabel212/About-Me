@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { flight } from './flightData';
-import { STOP_LABEL, STOP_SECTIONS, type BeachTab } from './stops';
+import { AI_DISCLOSURE, STOP_LABEL, STOP_SECTIONS, type BeachTab } from './stops';
 import StopContent from './StopContent';
 import './flight.css';
 
@@ -11,12 +11,12 @@ const pad = (n: number) => String(n).padStart(3, '0');
 export default function StaticFlight({ beachTab, canFly }: { beachTab?: BeachTab; canFly: boolean }) {
   return (
     <div className="fl-root fl-static">
-      {canFly && (
-        <div className="fl-static-head">
-          <span>Jose Garcia</span>
-          <Link to="/">Back to the flight</Link>
-        </div>
-      )}
+      {/* Sticky, so the footage is labelled at every scroll position (LTX-2 license). */}
+      <div className="fl-static-head">
+        <span>Jose Garcia</span>
+        <p className="fl-disclosure">{AI_DISCLOSURE}</p>
+        {canFly && <Link to="/">Back to the flight</Link>}
+      </div>
       {flight.stops.map((stop) => {
         const [first, ...rest] = STOP_SECTIONS[stop.id];
         return (

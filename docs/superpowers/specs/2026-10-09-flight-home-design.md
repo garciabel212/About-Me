@@ -19,7 +19,7 @@ Reference implementation: `docs/prototypes/flight-v2/index.html` (published prot
 
 | Decision | Source |
 |---|---|
-| Six stops over Miami, footage as rendered: River · Brickell · Downtown · The Bay · The Beach · Sunset | approved 2026-10-07 |
+| Six stops over Miami, footage as rendered: River · Brickell · Downtown · The Bay · The Beach · Sunset (renamed Sunset Harbour, 2026-10-10) | approved 2026-10-07 |
 | Pin + line + card at each stop, scroll-linked and reversible | approved 2026-10-07 |
 | Cards reveal by **condensing mist**, not a clip-path unfold | approved 2026-10-09 |
 | **Content comes from the Website Content Brief** (2026-10-08) and the content session's spec `2026-10-08-content-brief-design.md`, including its claims register | Jose, 2026-10-09 |
@@ -98,6 +98,47 @@ pipeline (`make_stops.py` v3 prompts → `render_stops.py --only` → `assemble_
 | Sunset | Phone sheet covered the sun's light path | Sun and horizon raised above the sheet |
 
 River, Brickell and The Bay were already clear and are unchanged.
+
+## Footage fixes (2026-10-10)
+
+Two problems with the ending, found after launch, and the fixes. Stops 1–4 are unchanged.
+
+- **Geography.** Miami Beach faces east over the Atlantic, so the old final shot (the sun setting on
+  the ocean) was really a sunrise, and the Beach departure flew toward a sun flare over the ocean.
+- **Time ran backwards.** Stops 1–4 are after sundown (afterglow, lit windows), and then the sun came
+  back at the end.
+
+**Forward-only light rule.** From now on the light only moves forward: afterglow, then twilight, then
+blue hour. After stop 1 there is no sun disk, sun flare or orange glow over the ocean. Stop prompts
+never use the words "sun" or "sunset", because the model paints a sun disk when it sees them.
+
+| Stop | Re-shoot (`make_stops.py` v4 prompts, `render_stops.py --only s5_palms,s6_sunset`) |
+|---|---|
+| The Beach (`s5_palms`) | Blue hour looking north along the shore: the lifeguard tower stays high on the right with palms against a faint peach afterglow in the west, and the ocean on the left under a cool blue and violet sky. The departure now banks right, away from the ocean, over the rooftops toward the bay, and the lit downtown skyline appears across the water. |
+| Final stop (`s6_sunset`) | Renamed **Sunset Harbour** (25.795° N · 80.145° W), a real bayside Miami Beach neighborhood that faces the downtown skyline. It is shot from low over Biscayne Bay looking west at the lit downtown and Brickell towers, with reflections on the water and a thin ember afterglow behind the towers. The pull-back flies away over the bay toward Miami Beach, so the reversed arrival continues the Beach departure. |
+
+Picks: seed 2202 for both stills, pins re-measured on the new stop frames (Beach on the lifeguard cabin,
+Sunset Harbour on the tallest tower). A per-stop speed-ramp softening for the Brickell → Downtown hop was
+tried and dropped: it moved that hop by two frames at most. Before/after:
+`assets/2026-10-10-flight-ending-before-after.jpg`, hop frames: `assets/2026-10-10-flight-ending-hops.jpg`.
+
+The ids `s5_palms` / `s6_sunset` and the site id `sunset` are kept, so file names and code don't
+change. The desktop card now sits on the left at every stop, the last one included (`stop_board.py` draws
+the card zone on all six).
+
+**Disclosure fix.** The "AI-rendered flight · not real footage" label had been moved into the global
+Footer only, which broke the decision above and the LTX-2 license. It is now back in the flight's
+bottom HUD, beside "Read as a page", on every frame at every scroll position, on desktop and phone. It
+is also in the static page's sticky header, and it stays in the Footer. A test checks that the
+label renders in both views.
+
+Smaller changes made at the same time:
+
+- The intro settle is now 12 frames over 2 s, down from 24 frames over 3 s. The poster becomes `f028`,
+  which is sharp; the old `f016` was motion-blurred. `index.html` preloads that frame, and a test keeps
+  the two in step.
+- A film-look layer sits between the footage and the card/HUD: a soft vignette and static grain at
+  about 5% (lighter on phones). Card contrast is unchanged.
 
 ## The condensing mist reveal
 

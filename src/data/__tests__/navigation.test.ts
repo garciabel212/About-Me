@@ -8,6 +8,6 @@ describe('site navigation', () => {
   });
 
   it('keeps the Miami stop names as secondary labels', () => {
-    expect(homeSectionLinks.map((l) => l.place)).toEqual(['River', 'Brickell', 'Downtown', 'The Bay', 'The Beach', 'Sunset']);
+    expect(homeSectionLinks.map((l) => l.place)).toEqual(['River', 'Brickell', 'Downtown', 'The Bay', 'The Beach', 'Sunset Harbour']);
   });
 });

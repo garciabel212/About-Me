@@ -56,20 +56,20 @@ export const flight: { frames: number; width: number; height: number; phoneWidth
     {
       "id": "beach",
       "frame": 338,
-      "x": 0.63,
-      "y": 0.3,
+      "x": 0.585,
+      "y": 0.42,
       "place": "The Beach",
       "coords": "25.790° N · 80.130° W",
-      "phoneX": 0.501
+      "phoneX": 0.5019
     },
     {
       "id": "sunset",
       "frame": 412,
-      "x": 0.505,
-      "y": 0.465,
-      "place": "Sunset",
-      "coords": "25.785° N · 80.100° W",
-      "phoneX": 0.501
+      "x": 0.625,
+      "y": 0.36,
+      "place": "Sunset Harbour",
+      "coords": "25.795° N · 80.145° W",
+      "phoneX": 0.5
     }
   ]
 };

@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { sectionIds } from '@/data/routes';
 import { flight } from './flightData';
 import { FrameStore } from './FrameStore';
+import { AI_DISCLOSURE } from './disclosure';
 import { flightTarget } from './flightTarget';
+import { POSTER_FRAME } from './poster';
 import { coverSource, lerpRect, type Rect } from './windowRect';
 import './flight.css';
 
@@ -16,6 +18,8 @@ const REDUCED = '(prefers-reduced-motion: reduce)';
 const LAG = 0.12;
 /** Corner radius of the film window, in px. */
 const RADIUS = 18;
+/** Height of the fixed site header, in px (--header-h). */
+const HEADER_H = 68;
 
 function useMatches(query: string): boolean {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
@@ -58,6 +62,8 @@ export default function FlightBackdrop({ motion }: { motion: boolean }) {
     const poster = el.querySelector<HTMLImageElement>('.cine-poster')!;
     const veil = el.querySelector<HTMLElement>('.cine-veil')!;
     const hud = el.querySelector<HTMLElement>('.cine-hud')!;
+    const film = el.querySelector<HTMLElement>('.cine-film')!;
+    const tag = el.querySelector<HTMLElement>('.cine-disclosure')!;
     const slot = el.querySelector<HTMLElement>('.cine-window')!;
     const ctx = canvas.getContext('2d')!;
     const srcW = phone ? flight.phoneWidth : flight.width;
@@ -112,6 +118,13 @@ export default function FlightBackdrop({ motion }: { motion: boolean }) {
       // The heads-up line (place, coordinates, route) rides the bottom edge of the film.
       hud.style.transform = `translate3d(${Math.round(r.x)}px, ${Math.round(r.y + r.h)}px, 0) translateY(-100%)`;
       hud.style.width = `${Math.round(r.w)}px`;
+      // The film look and the AI disclosure belong to the footage, so they follow its rect.
+      film.style.transform = `translate3d(${Math.round(r.x)}px, ${Math.round(r.y)}px, 0)`;
+      film.style.width = `${Math.round(r.w)}px`;
+      film.style.height = `${Math.round(r.h)}px`;
+      film.style.borderRadius = `${RADIUS * m}px`;
+      // Top-right corner of the footage, clear of the fixed header.
+      tag.style.transform = `translate3d(${Math.round(r.x + r.w - 14)}px, ${Math.round(Math.max(r.y, HEADER_H) + 12)}px, 0) translateX(-100%)`;
       // On wide screens the opening's quick-facts band owns the bottom edge; the line appears with the window.
       hud.style.opacity = split ? String(m) : '1';
     };
@@ -237,10 +250,12 @@ export default function FlightBackdrop({ motion }: { motion: boolean }) {
   const place = flight.stops[stop];
   return (
     <div ref={root} className="cine-backdrop" aria-hidden="true">
-      <img className="cine-poster" src={`${base}flight/${set}/f${pad(STOP_FRAMES[0])}.webp`} alt="" fetchPriority="high" />
+      <img className="cine-poster" src={`${base}flight/${set}/f${pad(POSTER_FRAME)}.webp`} alt="" fetchPriority="high" />
       <canvas className="cine-canvas" />
+      <div className="cine-film" />
       <div className="cine-veil" />
       <div className="cine-window" />
+      <p className="cine-disclosure">{AI_DISCLOSURE}</p>
       <div className="cine-hud">
         <p className="cine-hud__place">
           <i />

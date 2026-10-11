@@ -330,7 +330,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
 }
 @media (max-width: 767px) {
   .home--cinematic .home-section:not(.home-section--overview) { padding: 56px 16px; }
-  .home--cinematic .home-section--overview { padding: calc(var(--header-h) + 24px) 16px 64px; align-content: end; }
+  .home--cinematic .home-section--overview { padding: calc(var(--header-h) + 52px) 16px 64px; align-content: end; }
   .actions .btn { flex: 1 1 auto; }
 }
 

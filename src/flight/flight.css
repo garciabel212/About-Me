@@ -47,3 +47,23 @@
   .cine-hud__place span { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .cine-hud__route li { transition: none; } }
+/* Film look over the footage only (it follows the film's rect): a soft vignette and static grain. */
+.cine-film {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: hidden;
+  background: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.3) 100%);
+}
+.cine-film::after {
+  content: ""; position: absolute; inset: 0; opacity: 0.05; mix-blend-mode: overlay;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 240px 240px;
+}
+/* The AI-footage label (LTX-2 license): on the footage wherever it shows, lifted off bright frames. */
+.cine-disclosure {
+  position: absolute; left: 0; top: 0; margin: 0; padding: 4px 8px; border-radius: 6px; white-space: nowrap;
+  background: rgba(11, 13, 24, 0.55); color: rgba(244, 239, 230, 0.9);
+  font: 500 11.5px/1.3 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.04em;
+}
+@media (max-width: 767px) {
+  .cine-film { background: radial-gradient(ellipse farthest-corner at 50% 50%, rgba(0, 0, 0, 0) 58%, rgba(0, 0, 0, 0.2) 100%); }
+  .cine-film::after { opacity: 0.03; }
+  .cine-disclosure { font-size: 10.5px; }
+}

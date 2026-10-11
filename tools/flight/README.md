@@ -29,6 +29,5 @@ How the shots connect smoothly:
   so the model's stalls are skipped and its bursts evened out.
 
 `stops_v2.json` holds the per-stop prompts (and a `seed` / `pullback` override where a shot needed a
-re-roll, plus an optional `ramp_power` that softens the speed ramp of the hop arriving at that stop);
-`pins.json` holds each landmark's position in the frame and the label coordinates.
+re-roll); `pins.json` holds each landmark's position in the frame and the label coordinates.
 Older experiments: `heal_chain.py` (burst + heal chaining), `grade_restore.py`, `retime_constant_speed.py`.

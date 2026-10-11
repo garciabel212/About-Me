@@ -66,18 +66,17 @@ def join(tail, head):
     return frames
 
 
-def ramp(seg, power=RAMP_POWER):
+def ramp(seg):
     """Speed-ramps one hop between two stops so the camera eases out, flies at full speed, and eases in.
 
     Measures how much the picture moves per frame, then resamples so the motion follows an ease-in-out profile:
     stalls (the model hovering) are skipped and bursts are spread out. First and last frames are kept exactly.
-    A lower `power` equalises less, for hops past close walls that read as fast at the model's own speed.
     """
     n = len(seg)
     small = [f[::4, ::4].mean(axis=2).astype(np.float32) for f in seg]
     d = np.array([np.abs(small[i + 1] - small[i]).mean() for i in range(n - 1)])
     d = np.convolve(d, np.ones(5) / 5, mode='same')
-    d = np.maximum(d, np.median(d) * 0.15) ** power
+    d = np.maximum(d, np.median(d) * 0.15) ** RAMP_POWER
     cumulative = np.concatenate([[0.0], np.cumsum(d)])
     t = np.linspace(0, 1, n)
     eased = RAMP_FLOOR * t + (1 - RAMP_FLOOR) * (t - np.sin(2 * np.pi * t) / (2 * np.pi))
@@ -107,8 +106,8 @@ def main():
             print(f'joined {route[i]["id"]} -> {route[i + 1]["id"]}', flush=True)
 
     marks = [0] + [s['frame'] for s in stops]
-    for (a, b), stop in zip(zip(marks, marks[1:]), route):
-        film[a:b + 1] = ramp(film[a:b + 1], stop.get('ramp_power', RAMP_POWER))  # a stop may soften the hop into it
+    for a, b in zip(marks, marks[1:]):
+        film[a:b + 1] = ramp(film[a:b + 1])
     print('speed-ramped', len(marks) - 1, 'hops', flush=True)
 
     h, w = film[0].shape[:2]

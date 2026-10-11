@@ -7,8 +7,8 @@ export interface Asset {
   small?: string;
   alt: string;
   caption: string;
-  /** A real interface capture, or conceptual imagery that must be labelled as such. */
-  kind: 'screenshot' | 'concept';
+  /** A real interface capture, a drawn diagram, or conceptual imagery that must be labelled as such. */
+  kind: 'screenshot' | 'concept' | 'diagram';
 }
 
 export interface Decision {
@@ -52,10 +52,9 @@ export const caseStudies: CaseStudy[] = [
     summary:
       'A web app that brings customer sites, equipment, software, maintenance status, and service history into one place, with visits planned on a map. I designed it around how a service engineer prepares for a visit.',
     hero: {
-      src: 'images/service_map_tablet.jpg',
-      kind: 'concept',
-      alt: 'Concept image of a map-based service planner on a tablet, with fictional library locations',
-      caption: 'Concept image, not a screenshot of the app. Real screenshots with fictional data are in progress.',
+      kind: 'diagram',
+      alt: 'Diagram of the Service Map Planner workflow: customer site, installed systems, maintenance status, and visit plan, with replacement requests branching from installed systems',
+      caption: 'The workflow the app supports, drawn for this site. Screenshots with fictional data are in progress.',
     },
     role: `Designer and developer. I defined the records and how they connect, the maintenance views, and the visit-planning workflow. ${AI_ASSISTED}`,
     users: 'Service engineers preparing customer visits and follow-up.',
@@ -69,6 +68,12 @@ export const caseStudies: CaseStudy[] = [
       { title: 'Keep customer data private', body: 'Only approved, signed-in users can open the app, and no real customer data appears on this site.' },
     ],
     evidence: [
+      {
+        src: 'images/service_map_tablet.jpg',
+        kind: 'concept',
+        alt: 'Concept image of a map-based service planner on a tablet, with fictional library locations',
+        caption: 'Concept image of the map view. Not a screenshot of the app.',
+      },
       { alt: 'Customer record showing contacts, equipment, software, and service history for a fictional institution', caption: 'Customer record (screenshot pending, will use fictional data)', kind: 'screenshot' },
       { alt: 'Maintenance view listing follow-up needs and incomplete information for fictional institutions', caption: 'Maintenance view (screenshot pending, will use fictional data)', kind: 'screenshot' },
       { alt: 'Map view with a planned visit between fictional institutions', caption: 'Visit planning on the map (screenshot pending, will use fictional data)', kind: 'screenshot' },

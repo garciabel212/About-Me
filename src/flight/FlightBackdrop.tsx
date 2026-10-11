@@ -112,6 +112,8 @@ export default function FlightBackdrop({ motion }: { motion: boolean }) {
       // The heads-up line (place, coordinates, route) rides the bottom edge of the film.
       hud.style.transform = `translate3d(${Math.round(r.x)}px, ${Math.round(r.y + r.h)}px, 0) translateY(-100%)`;
       hud.style.width = `${Math.round(r.w)}px`;
+      // On wide screens the opening's quick-facts band owns the bottom edge; the line appears with the window.
+      hud.style.opacity = split ? String(m) : '1';
     };
 
     const measure = () => sectionIds.map((id) => {

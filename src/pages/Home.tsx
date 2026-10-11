@@ -3,6 +3,7 @@ import { useLenis } from '@/components/motion/SmoothScroll';
 import { useViewMode } from '@/components/view/ViewMode';
 import { About, Contact, Experience, Expertise, Overview, Projects } from '@/components/home/Sections';
 import { saveHomeReturn } from '@/components/home/homeReturn';
+import EvidenceWindow from '@/components/home/EvidenceWindow';
 import FlightBackdrop from '@/flight/FlightBackdrop';
 import { sectionIds } from '@/data/routes';
 
@@ -77,6 +78,7 @@ export default function Home() {
   return (
     <>
       {cinematic && <FlightBackdrop motion={motion} />}
+      {cinematic && <EvidenceWindow />}
       <main
         id="main"
         tabIndex={-1}

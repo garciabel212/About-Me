@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  site, overview, experience, expertise, method, projects, about, education, languages, toolGroups, contact,
+  site, overview, glance, experience, expertise, method, projects, about, education, languages, toolGroups, contact,
 } from '@/data/content';
 
 const STATUSES = ['Personal project', 'Working prototype', 'Demo with sample data', 'Deployed tool'];
@@ -14,6 +14,10 @@ describe('content', () => {
     expect(overview.statement).toBe('I help customers understand technical solutions, get systems running, and use them confidently.');
     expect(overview.evidence.join(' · ')).toBe('Customer delivery since 2022 · English & Spanish · South Florida');
     expect([overview.workCta, overview.resumeCta]).toEqual(['View My Work', 'Download Resume']);
+  });
+
+  it('gives recruiters four quick facts', () => {
+    expect(glance.map((g) => g.label)).toEqual(['Current role', 'Open to', 'Work setup', 'Travel']);
   });
 
   it('leads with DLSG / Image Access and keeps the official title and dates', () => {
@@ -42,7 +46,12 @@ describe('content', () => {
   });
 
   it('shows the working method once, in order', () => {
-    expect(method).toEqual(['Understand', 'Explain', 'Configure', 'Train', 'Follow up']);
+    expect(method.map((m) => m.step)).toEqual(['Understand', 'Explain', 'Configure', 'Train', 'Follow up']);
+    for (const m of method) {
+      expect(m.work.length, m.step).toBeGreaterThan(0);
+      expect(m.projects.length, m.step).toBeGreaterThan(0);
+      for (const p of [...m.work, ...m.projects]) expect(p.href).toMatch(/^\/(#exp-|projects\/)/);
+    }
   });
 
   it('features Service Map Planner first, then AAC and the garage configurator', () => {

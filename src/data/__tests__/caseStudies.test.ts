@@ -34,7 +34,7 @@ describe('case studies', () => {
       for (const a of [c.hero, ...c.evidence]) {
         expect(a.alt.length).toBeGreaterThan(10);
         if (a.kind === 'concept') expect(a.caption).toMatch(/concept/i);
-        if (!a.src) expect(a.caption).toMatch(/pending/i);
+        if (!a.src && a.kind !== 'diagram') expect(a.caption).toMatch(/pending/i);
       }
     }
   });

@@ -2,17 +2,20 @@ import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowDown, ArrowRight, Check, Copy, ExternalLink, FileDown, Mail } from 'lucide-react';
 import {
-  about, contact, education, experience, expertise, languages, method, overview, projects, site, toolGroups,
+  about, contact, education, experience, expertise, glance, languages, overview, projects, site, toolGroups,
   type Project,
 } from '@/data/content';
 import { mailto, profile, resumeUrl } from '@/data/profile';
 import type { SectionId } from '@/data/routes';
+import CareerTimeline from './CareerTimeline';
+import EvidenceMatrix from './EvidenceMatrix';
+import ServiceWorkflow from './ServiceWorkflow';
 
 const base = import.meta.env.BASE_URL;
 
-function Section({ id, title, lead, children }: { id: SectionId; title: string; lead?: string; children: ReactNode }) {
+function Section({ id, title, lead, evidence, children }: { id: SectionId; title: string; lead?: string; evidence?: string; children: ReactNode }) {
   return (
-    <section id={id} tabIndex={-1} aria-labelledby={`${id}-title`} className={`home-section home-section--${id}`}>
+    <section id={id} tabIndex={-1} aria-labelledby={`${id}-title`} className={`home-section home-section--${id}`} data-evidence={evidence}>
       <div className="panel">
         <header className="section-head">
           <h2 id={`${id}-title`}>{title}</h2>
@@ -40,18 +43,28 @@ export function Overview() {
             <FileDown size={16} aria-hidden="true" /> {overview.resumeCta}
           </a>
         </div>
-        <p className="overview__availability">{overview.availability.join(' · ')}</p>
       </div>
-      <Link to="/#experience" className="next-cue">
-        Next: Experience <ArrowDown size={15} aria-hidden="true" />
-      </Link>
+      <div className="glance">
+        <dl>
+          {glance.map((g) => (
+            <div key={g.label}>
+              <dt>{g.label}</dt>
+              <dd>{g.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <Link to="/#experience" className="next-cue">
+          Next: Experience <ArrowDown size={15} aria-hidden="true" />
+        </Link>
+      </div>
     </section>
   );
 }
 
 export function Experience() {
   return (
-    <Section id="experience" title="Experience" lead="Professional roles, most recent first. Personal projects are listed separately under Projects.">
+    <Section id="experience" title="Experience" evidence="timeline" lead="Professional roles, most recent first. Personal projects are listed separately under Projects.">
+      <div className="inline-evidence"><CareerTimeline /></div>
       <div className="roles">
         {experience.map((e) => (
           <article key={e.id} id={`exp-${e.id}`} tabIndex={-1} className={`role role--${e.weight}`} aria-labelledby={`exp-${e.id}-title`}>
@@ -104,23 +117,24 @@ export function Expertise() {
           </li>
         ))}
       </ul>
-      <div className="method">
-        <h3 id="method-title">How I work</h3>
-        <ol aria-labelledby="method-title">
-          {method.map((step, i) => (
-            <li key={step}>
-              <span className="method__num" aria-hidden="true">{i + 1}</span>
-              <span>{step}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
+      <EvidenceMatrix />
     </Section>
   );
 }
 
 function ProjectFigure({ project, featured }: { project: Project; featured?: boolean }) {
   const image = project.image;
+  if (image?.kind === 'diagram') {
+    return (
+      <figure className={`project__figure project__figure--diagram inline-evidence ${featured ? 'is-featured' : ''}`}>
+        <ServiceWorkflow label={image.alt} />
+        <figcaption>
+          <span className="image-kind image-kind--diagram">Diagram</span>
+          {image.caption}
+        </figcaption>
+      </figure>
+    );
+  }
   if (!image) {
     // Text-led until a real screenshot exists.
     return (
@@ -131,7 +145,7 @@ function ProjectFigure({ project, featured }: { project: Project; featured?: boo
     );
   }
   return (
-    <figure className={`project__figure ${featured ? 'is-featured' : ''}`}>
+    <figure className={`project__figure inline-evidence ${featured ? 'is-featured' : ''}`}>
       <img
         src={`${base}${image.src}`}
         srcSet={image.small ? `${base}${image.small} 800w, ${base}${image.src} 1600w` : undefined}
@@ -163,7 +177,7 @@ export function Projects() {
   const [featured, ...rest] = projects;
   return (
     <Section id="projects" title="Projects" lead="Personal projects I designed and built on my own time, separate from my employment.">
-      <article className="project project--featured" aria-labelledby="project-featured-title">
+      <article className="project project--featured" aria-labelledby="project-featured-title" data-evidence={featured.slug}>
         <ProjectFigure project={featured} featured />
         <div className="project__body">
           <p className="project__focus">{featured.focus}</p>
@@ -176,7 +190,7 @@ export function Projects() {
       </article>
       <div className="project-grid">
         {rest.map((p) => (
-          <article key={p.slug} className="project" aria-labelledby={`project-${p.slug}-title`}>
+          <article key={p.slug} className="project" aria-labelledby={`project-${p.slug}-title`} data-evidence={p.image ? p.slug : undefined}>
             <ProjectFigure project={p} />
             <div className="project__body">
               {p.image && <p className="project__focus">{p.focus}</p>}

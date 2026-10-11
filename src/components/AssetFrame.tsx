@@ -1,13 +1,18 @@
 import type { Asset } from '@/data/caseStudies';
+import ServiceWorkflow from '@/components/home/ServiceWorkflow';
 
 const base = import.meta.env.BASE_URL;
+const LABEL = { screenshot: 'Screenshot', concept: 'Concept', diagram: 'Diagram' } as const;
 
-/** A case-study image with a label that says whether it is a real screenshot or a concept. */
+/** A case-study visual with a label that says whether it is a screenshot, a diagram, or a concept. */
 export default function AssetFrame({ asset, large = false }: { asset: Asset; large?: boolean }) {
-  const label = !asset.src ? 'Screenshot pending' : asset.kind === 'concept' ? 'Concept' : 'Screenshot';
+  const pending = !asset.src && asset.kind !== 'diagram';
+  const label = pending ? 'Screenshot pending' : LABEL[asset.kind];
   return (
     <figure className={`asset ${large ? 'asset--large' : ''}`}>
-      {asset.src ? (
+      {asset.kind === 'diagram' ? (
+        <div className="asset__diagram"><ServiceWorkflow label={asset.alt} /></div>
+      ) : asset.src ? (
         <img
           src={`${base}${asset.src}`}
           srcSet={asset.small ? `${base}${asset.small} 800w, ${base}${asset.src} 1600w` : undefined}
@@ -22,7 +27,7 @@ export default function AssetFrame({ asset, large = false }: { asset: Asset; lar
         </div>
       )}
       <figcaption>
-        <span className={`image-kind image-kind--${asset.src ? asset.kind : 'pending'}`}>{label}</span>
+        <span className={`image-kind image-kind--${pending ? 'pending' : asset.kind}`}>{label}</span>
         {asset.caption}
       </figcaption>
     </figure>

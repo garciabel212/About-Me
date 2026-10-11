@@ -151,7 +151,7 @@ function SiteLayout() {
 
   return (
     <MotionConfig reducedMotion={motion ? 'user' : 'always'}>
-      <div className={`site-shell min-h-screen flex flex-col relative ${film ? 'is-film' : ''}`}>
+      <div className={`site-shell min-h-screen flex flex-col relative ${film ? 'is-film' : ''}`} data-motion={motion ? 'on' : 'off'}>
         {!home && <ScrollProgress />}
         <Navbar />
         <div className="relative z-[1] flex-1"><AppRoutes /></div>

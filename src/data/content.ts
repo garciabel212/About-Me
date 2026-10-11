@@ -20,10 +20,17 @@ export const overview = {
   title: 'Customer Solutions & Implementation',
   statement: 'I help customers understand technical solutions, get systems running, and use them confidently.',
   evidence: ['Customer delivery since 2022', 'English & Spanish', 'South Florida'],
-  availability: ['Open to remote and South Florida roles', 'Up to 40% travel'],
   workCta: 'View My Work',
   resumeCta: 'Download Resume',
 } as const;
+
+/** The recruiter's quick facts, shown as a band under the opening. */
+export const glance = [
+  { label: 'Current role', value: 'Service Engineer, DLSG / Image Access' },
+  { label: 'Open to', value: 'Implementation, solutions, and customer success roles' },
+  { label: 'Work setup', value: 'Remote or South Florida' },
+  { label: 'Travel', value: 'Up to 40%' },
+] as const;
 
 export interface Contribution {
   label: string;
@@ -35,6 +42,9 @@ export interface ExperienceEntry {
   title: string;
   organization: string;
   period: string;
+  /** For the career timeline: year and month the role started and ended (null = present). */
+  start: [number, number];
+  end: [number, number] | null;
   location: string;
   /** Primary role, or earlier work that supports it. */
   weight: 'primary' | 'supporting';
@@ -50,6 +60,8 @@ export const experience: ExperienceEntry[] = [
     title: 'Service Engineer',
     organization: 'Digital Library Systems Group / Image Access',
     period: 'October 2022 – Present',
+    start: [2022, 10],
+    end: null,
     location: 'Boca Raton, Florida',
     weight: 'primary',
     summary:
@@ -82,6 +94,8 @@ export const experience: ExperienceEntry[] = [
     title: 'Network Operations Center Engineer',
     organization: 'Globenet',
     period: 'November 2021 – September 2022',
+    start: [2021, 11],
+    end: [2022, 9],
     location: 'Boca Raton, Florida',
     weight: 'supporting',
     summary:
@@ -136,13 +150,60 @@ export const expertise: Expertise[] = [
   },
 ];
 
-/** How I work, shown once. */
-export const method = ['Understand', 'Explain', 'Configure', 'Train', 'Follow up'] as const;
+export interface Proof {
+  source: string;
+  href: string;
+  text: string;
+}
 
-export type ImageKind = 'screenshot' | 'concept';
+export interface MethodStep {
+  step: 'Understand' | 'Explain' | 'Configure' | 'Train' | 'Follow up';
+  work: Proof[];
+  projects: Proof[];
+}
+
+const DLSG = { source: 'DLSG / Image Access', href: '/#exp-dlsg' };
+const GLOBENET = { source: 'Globenet', href: '/#exp-globenet' };
+const SMP = { source: 'Service Map Planner', href: '/projects/service-map-planner' };
+const AAC = { source: 'AAC app', href: '/projects/aac-communication-app' };
+const GARAGE = { source: 'Garage configurator', href: '/projects/scale-garage-studio' };
+
+/** How I work, shown once: each step with where it shows at work and in my projects. */
+export const method: MethodStep[] = [
+  {
+    step: 'Understand',
+    work: [{ ...DLSG, text: 'Requirements with customer IT, procurement, and operations teams.' }],
+    projects: [{ ...SMP, text: 'Mapped how an engineer prepares a service visit.' }],
+  },
+  {
+    step: 'Explain',
+    work: [{ ...DLSG, text: 'Product demonstrations and technical presentations with Account Executives.' }],
+    projects: [{ ...AAC, text: 'Plain Spanish and English phrases, read aloud by the device.' }],
+  },
+  {
+    step: 'Configure',
+    work: [{ ...DLSG, text: 'Installation, configuration, licensing, and validation in Windows environments.' }],
+    projects: [{ ...GARAGE, text: 'A configuration model with fit and printability checks.' }],
+  },
+  {
+    step: 'Train',
+    work: [{ ...DLSG, text: 'User and administrator training, then handover.' }],
+    projects: [{ ...AAC, text: 'Fixed Sí/No positions and large targets that are quick to learn.' }],
+  },
+  {
+    step: 'Follow up',
+    work: [
+      { ...DLSG, text: 'Troubleshooting, escalations, and service history in Salesforce CRM.' },
+      { ...GLOBENET, text: 'Root-cause analysis and incident follow-through.' },
+    ],
+    projects: [{ ...SMP, text: 'Maintenance views that flag follow-ups and incomplete records.' }],
+  },
+];
+
+export type ImageKind = 'screenshot' | 'concept' | 'diagram';
 
 export interface ProjectImage {
-  /** Path under public/. */
+  /** Path under public/; empty for a drawn diagram. */
   src: string;
   /** Optional 800 px wide copy for small screens. */
   small?: string;
@@ -162,7 +223,7 @@ export interface Project {
   status: WorkStatus;
   statusNote: string;
   href: string;
-  /** Path under public/, or null for a text-led card until a real screenshot exists. */
+  /** Path under public/ (or a drawn diagram), or null for a text-led card until a real screenshot exists. */
   image: ProjectImage | null;
 }
 
@@ -180,10 +241,10 @@ export const projects: Project[] = [
     statusNote: 'Private app; not open to the public',
     href: '/projects/service-map-planner',
     image: {
-      src: 'images/service_map_tablet.jpg',
-      kind: 'concept',
-      alt: 'Concept image of a map-based service planner on a tablet, with fictional library locations',
-      caption: 'Concept image, not a screenshot of the app',
+      src: '',
+      kind: 'diagram',
+      alt: 'Diagram of the Service Map Planner workflow: customer site, installed systems, maintenance status, and visit plan, with replacement requests branching from installed systems',
+      caption: 'Diagram of the workflow the app supports, drawn for this site',
     },
   },
   {

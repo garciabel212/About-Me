@@ -1,7 +1,7 @@
 # Flight v2 video pipeline
 
 Builds the dusk drone flight behind the Home page: six stops (River, Brickell, Downtown, The Bay, The Beach,
-Sunset), each a composed shot with calm space on the left for an info card. Everything runs locally in
+Sunset Harbour), each a composed shot with calm space on the left for an info card. Everything runs locally in
 ComfyUI on an RTX 4080 (LTX-2.5 22B distilled for video, Z-Image-Turbo for stills). The footage is
 AI-generated; the LTX-2 license requires the site to say so ("AI-rendered flight").
 
@@ -23,9 +23,12 @@ How the shots connect smoothly:
 - **Departure** is a forward burst from the same still, so the hover at a stop is seamless.
 - **Joins** sit where both sides move fastest: the outgoing shot pushes in, the incoming one settles out
   of the same push under a radial blur, and the colour is matched across the cut.
+- **Light only moves forward** (afterglow → twilight → blue hour). No sun disk, flare or orange sky over
+  the ocean after stop 1, and never the words "sun" or "sunset" in a prompt (the model paints a sun disk).
 - **Speed ramp** (`assemble_v2.ramp`) resamples each hop to an ease-out / full speed / ease-in profile,
   so the model's stalls are skipped and its bursts evened out.
 
 `stops_v2.json` holds the per-stop prompts (and a `seed` / `pullback` override where a shot needed a
-re-roll); `pins.json` holds each landmark's position in the frame and the label coordinates.
+re-roll, plus an optional `ramp_power` that softens the speed ramp of the hop arriving at that stop);
+`pins.json` holds each landmark's position in the frame and the label coordinates.
 Older experiments: `heal_chain.py` (burst + heal chaining), `grade_restore.py`, `retime_constant_speed.py`.

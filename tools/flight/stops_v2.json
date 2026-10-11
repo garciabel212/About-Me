@@ -23,14 +23,13 @@
   },
   {
     "id": "s5_palms",
-    "arrive": "A pastel pink lifeguard tower with a warm light on a wide empty sand beach at dusk, palm trees behind it on the right, the calm ocean on the left, pink, orange and violet sky.",
-    "depart": "The camera flies forward past the lifeguard tower and out over the beach toward the calm ocean and the setting sun on the horizon."
+    "arrive": "A pastel pink lifeguard tower with a warm glowing light on a wide empty sand beach in the blue hour, palm silhouettes behind it on the right against a faint peach afterglow, the calm ocean on the left under a cool deep blue and violet sky.",
+    "depart": "The camera rises past the lifeguard tower and banks right, turning away from the ocean, flying low over the palm silhouettes and softly lit rooftops toward the calm bay, the glowing lit skyline of downtown Miami appearing across the water under a deep violet sky with a thin ember-orange afterglow on the horizon."
   },
   {
     "id": "s6_sunset",
-    "arrive": "The calm open ocean at sunset, the sun touching the horizon in the center, a glowing orange path of light on the water, soft pink and violet clouds.",
+    "arrive": "The downtown Miami skyline with warm lit windows across the calm dark bay in the deep blue hour, long glowing reflections of the city lights on the water, a thin ember-orange afterglow low on the horizon behind the towers, deep violet sky.",
     "depart": "-",
-    "seed": 7611,
-    "pullback": "Use the provided image as the first frame. FPV drone footage: the camera flies fast backward low over the ocean toward the shore, the water rushes toward the camera, the sun recedes on the horizon, a sandy beach with palm trees appears at the bottom of the frame, smooth continuous motion, no cuts. "
+    "pullback": "Use the provided image as the first frame. FPV drone footage: the camera flies fast backward and upward away from the skyline, out over the dark bay toward Miami Beach, the towers shrink into the distance, softly lit rooftops and palm silhouettes of Miami Beach slide in at the bottom of the frame, smooth continuous motion, no cuts, calm still water, crisp clean architecture. "
   }
 ]

@@ -24,8 +24,7 @@ for r, (stop, files) in enumerate(rows):
     for c, f in enumerate(files[:4]):
         im = Image.open(f).convert('RGB').resize((TW, TH))
         d = ImageDraw.Draw(im)
-        if not stop.startswith('s6'):
-            d.rectangle([int(TW * 0.04), int(TH * 0.25), int(TW * 0.40), int(TH * 0.8)], outline=(255, 255, 255), width=1)
+        d.rectangle([int(TW * 0.04), int(TH * 0.25), int(TW * 0.40), int(TH * 0.8)], outline=(255, 255, 255), width=1)
         d.rectangle([0, 0, 28, 24], fill=(0, 0, 0))
         d.text((9, 5), 'ABCD'[c], fill='white')
         sheet.paste(im, (c * TW, y + 30))

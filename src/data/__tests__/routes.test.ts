@@ -1,18 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { sectionIds, navLinks, legacyRoutes } from '@/data/routes';
+import { sectionIds, homeSections, hashAliases, legacyRoutes } from '@/data/routes';
 
 describe('routes', () => {
-  it('nav links point at real section ids', () => {
-    expect(navLinks.map((l) => l.label)).toEqual(['Work', 'Experience', 'About', 'Resume', 'Contact']);
-    for (const l of navLinks) expect(sectionIds).toContain(l.hash.slice(1));
+  it('orders Home as Overview, Experience, Expertise, Projects, About, Contact', () => {
+    expect(homeSections.map((s) => s.label)).toEqual(['Overview', 'Experience', 'Expertise', 'Projects', 'About', 'Contact']);
   });
 
-  it('legacy routes redirect to real sections', () => {
+  it('gives each section its own flight stop', () => {
+    expect(new Set(homeSections.map((s) => s.stop)).size).toBe(homeSections.length);
+  });
+
+  it('legacy routes and old hashes lead to real sections', () => {
     const paths = legacyRoutes.map((r) => r.from);
     for (const p of ['/about', '/projects', '/experience', '/contact', '/capabilities', '/who-i-am']) {
       expect(paths).toContain(p);
     }
     for (const r of legacyRoutes) expect(sectionIds).toContain(r.hash);
+    for (const id of Object.values(hashAliases)) expect(sectionIds).toContain(id);
+    expect(Object.keys(hashAliases)).toEqual(expect.arrayContaining(['intro', 'capabilities', 'who-i-am', 'resume']));
   });
 
   it('has no duplicate section ids', () => {

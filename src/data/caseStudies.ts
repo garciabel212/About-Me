@@ -3,11 +3,17 @@ import type { WorkStatus } from '@/data/content';
 export interface Asset {
   /** Path under public/, or undefined until the real asset exists. */
   src?: string;
+  /** Optional 800 px wide copy for small screens. */
+  small?: string;
   alt: string;
   caption: string;
-  date: string;
-  kind: 'employer' | 'personal' | 'demonstration';
-  sampleData: boolean;
+  /** A real interface capture, a drawn diagram, or conceptual imagery that must be labelled as such. */
+  kind: 'screenshot' | 'concept' | 'diagram';
+}
+
+export interface Decision {
+  title: string;
+  body: string;
 }
 
 export interface CaseStudy {
@@ -15,142 +21,198 @@ export interface CaseStudy {
   title: string;
   subtitle: string;
   status: WorkStatus | 'Experiment';
+  statusNote: string;
   updated: string;
-  problem: string;
-  who: string;
+  /** Two short sentences: what it is and why it exists. */
+  summary: string;
+  hero: Asset;
   role: string;
-  constraints: string;
-  approach: string;
-  inspect: string[];
+  users: string;
+  problem: string;
+  decisions: Decision[];
+  evidence: Asset[];
   result: string;
-  remaining: string[];
+  next: string[];
   technologies: string[];
-  assets: Asset[];
   related: CaseStudy['slug'];
-  /** Rendered as a short "Note" under the result when present. */
+  /** Rendered as a short note under the result when present. */
   note?: string;
 }
+
+const AI_ASSISTED = 'I built it with AI-assisted development: AI tools wrote much of the code, while the requirements, design decisions, and checks are mine.';
 
 export const caseStudies: CaseStudy[] = [
   {
     slug: 'service-map-planner',
     title: 'Service Map Planner',
-    subtitle: 'Organizing customer records and service planning',
+    subtitle: 'Workflow design for service planning',
     status: 'Working prototype',
+    statusNote: 'Private app with approved sign-in; not open to the public',
     updated: 'October 2026',
+    summary:
+      'A web app that brings customer sites, equipment, software, maintenance status, and service history into one place, with visits planned on a map. I designed it around how a service engineer prepares for a visit.',
+    hero: {
+      kind: 'diagram',
+      alt: 'Diagram of the Service Map Planner workflow: customer site, installed systems, maintenance status, and visit plan, with replacement requests branching from installed systems',
+      caption: 'The workflow the app supports, drawn for this site. Screenshots with fictional data are in progress.',
+    },
+    role: `Designer and developer. I defined the records and how they connect, the maintenance views, and the visit-planning workflow. ${AI_ASSISTED}`,
+    users: 'Service engineers preparing customer visits and follow-up.',
     problem:
-      'Preparing a service visit takes several connected pieces of information: the customer location, contacts, installed systems, software versions, previous work, and maintenance status. Those pieces were hard to see in one place.',
-    who: 'Service engineers preparing customer visits and follow-up.',
-    role:
-      'I defined the records and relationships, the interface, the maintenance views, and the visit-planning workflow. I used AI-assisted development; the requirements, data model decisions, and checks are mine.',
-    constraints:
-      'Customer records are sensitive, so every screen shown here uses fictional institutions and locations. Access is restricted to approved, signed-in users.',
-    approach:
-      'I modelled sites, equipment, software, and service history as connected records, then built maintenance views that surface follow-up needs and incomplete information. The map view sequences nearby stops for a visit and shows driving distance and time.',
-    inspect: [
-      'A customer record connecting contacts, equipment, software, and service history.',
-      'Maintenance views that show follow-up needs and incomplete information.',
-      'A map view and visit-planning sequence using fictional institutions.',
+      'Preparing a service visit means checking a customer’s location, contacts, installed equipment, software versions, maintenance status, and past work. Those details were hard to see in one place.',
+    decisions: [
+      { title: 'Model the relationships, not a list', body: 'Sites, systems, components, and service history are connected records, so one view shows what is installed where and what happened last.' },
+      { title: 'Show what needs follow-up', body: 'Maintenance-status views and data-quality checks flag expiring coverage and incomplete records before a visit, not during it.' },
+      { title: 'Plan visits on a map', body: 'Customer locations sit on a map so nearby stops can be grouped into one trip, with driving distance and time.' },
+      { title: 'Track replacements end to end', body: 'Part replacement requests keep serial numbers, service status, and shipping details together in one workflow.' },
+      { title: 'Keep customer data private', body: 'Only approved, signed-in users can open the app, and no real customer data appears on this site.' },
+    ],
+    evidence: [
+      {
+        src: 'images/service_map_tablet.jpg',
+        kind: 'concept',
+        alt: 'Concept image of a map-based service planner on a tablet, with fictional library locations',
+        caption: 'Concept image of the map view. Not a screenshot of the app.',
+      },
+      { alt: 'Customer record showing contacts, equipment, software, and service history for a fictional institution', caption: 'Customer record (screenshot pending, will use fictional data)', kind: 'screenshot' },
+      { alt: 'Maintenance view listing follow-up needs and incomplete information for fictional institutions', caption: 'Maintenance view (screenshot pending, will use fictional data)', kind: 'screenshot' },
+      { alt: 'Map view with a planned visit between fictional institutions', caption: 'Visit planning on the map (screenshot pending, will use fictional data)', kind: 'screenshot' },
     ],
     result:
-      'The project demonstrates a connected view of customer and asset information with map-based visit planning.',
-    remaining: [
+      'A working private prototype that connects customer and equipment records with maintenance views and map-based visit planning.',
+    next: [
+      'Screenshots of each view, captured from fictional data.',
       'Automated tests for the planning workflow.',
-      'A read-only demo with sample data that anyone can open.',
+      'A read-only demo with fictional data that anyone can open.',
     ],
-    technologies: ['Next.js', 'Firebase'],
-    assets: [
-      { alt: 'Customer record showing contacts, equipment, software, and service history for a fictional institution', caption: 'Customer record (screenshot pending — fictional data)', date: 'October 2026', kind: 'personal', sampleData: true },
-      { alt: 'Maintenance view listing follow-up needs and incomplete information for fictional institutions', caption: 'Maintenance view (screenshot pending — fictional data)', date: 'October 2026', kind: 'personal', sampleData: true },
-      { alt: 'Map view with a sequenced visit plan between fictional institutions', caption: 'Visit planning on the map (screenshot pending — fictional data)', date: 'October 2026', kind: 'personal', sampleData: true },
-    ],
+    technologies: ['Next.js', 'Firebase', 'MapLibre'],
     related: 'aac-communication-app',
   },
   {
     slug: 'aac-communication-app',
     title: 'AAC communication app',
-    subtitle: 'Simple bilingual communication for a touch screen',
+    subtitle: 'Accessible, bilingual interaction on a tablet',
     status: 'Working prototype',
+    statusNote: 'Android tablet app',
     updated: 'October 2026',
+    summary:
+      'A Spanish-first communication app for an Android tablet, with English available. It opens on large question cards and a Yes/No screen that speaks each answer aloud.',
+    hero: {
+      src: 'images/projects/aac-yes-no.webp',
+      small: 'images/projects/aac-yes-no-800.webp',
+      kind: 'screenshot',
+      alt: 'AAC app answer screen: the question “¿Tienes sed?” above a large green Sí button on the left and a large red No button on the right',
+      caption: 'Yes/No answer screen. Captured in a desktop browser without a speech voice, which is why it shows “Sin voz”.',
+    },
+    role: `Designer and developer. I listened to what the user and caregivers needed and turned those limits into interface decisions. ${AI_ASSISTED}`,
+    users: 'An adult who communicates through yes/no answers and simple choices, and the people who support them.',
     problem:
-      'Some adults can answer simple questions but find reading, coordination, and multi-step screens tiring. Communication needs few steps and targets that do not move.',
-    who: 'An adult who communicates through yes/no answers and simple choices, and the people who support them.',
-    role:
-      'I listened to what the user and caregivers needed and turned those limits into interface decisions: fixed Sí/No positions, large buttons, adult-appropriate pictograms, and fewer taps. I used AI-assisted development; the requirements and the decisions to simplify are mine.',
-    constraints:
-      'Large touch targets, low reading effort, Spanish-first presentation with English, and no private family or medical information on this site.',
-    approach:
-      'The app opens on a Yes/No question screen and a two-choice screen, uses predefined Spanish and English phrases (not automatic translation), and speaks through the device’s text-to-speech. Caregiver settings control card size and accidental-touch filtering.',
-    inspect: [
-      'The Yes/No board with fixed positions.',
-      'One choice screen and the language controls.',
+      'Some adults can answer simple questions but find reading, fine movements, and multi-step screens tiring. Communication needs few steps and targets that do not move.',
+    decisions: [
+      { title: 'Answers never move', body: 'Sí is always on the left and No on the right, so the answer can be found without searching.' },
+      { title: 'Large targets, fewer taps', body: 'One tap on a question card opens the answer screen. Large cards and caregiver settings reduce accidental touches.' },
+      { title: 'Spanish first, English available', body: 'Phrases are written in both languages rather than machine-translated, and the device’s text-to-speech reads them aloud.' },
+      { title: 'Pictures carry meaning', body: 'Adult-appropriate pictograms sit next to each question, so reading is not the only way to understand it.' },
     ],
-    result:
-      'A working Android app for large-target Yes/No and choice screens in Spanish and English.',
-    remaining: [
+    evidence: [
+      {
+        src: 'images/projects/aac-question-board.webp',
+        small: 'images/projects/aac-question-board-800.webp',
+        kind: 'screenshot',
+        alt: 'Question board with large picture cards: ¿Tienes dolor? as a large featured card, then ¿Tienes sed?, ¿Estás cansada?, ¿Necesitas ir al baño?, ¿Tienes frío?, ¿Tienes calor?, and ¿Quieres cambiar de posición?',
+        caption: 'The question board the app opens on, with its default questions.',
+      },
+    ],
+    result: 'A working Android tablet app with large-target question, Yes/No, and choice screens in Spanish and English.',
+    next: [
       'A scoped accessibility assessment before making any compliance claim.',
       'Tested behavior with no network connection before making any offline claim.',
       'Exporting answer logs on the device.',
     ],
     technologies: ['React', 'TypeScript', 'Capacitor (Android)'],
-    assets: [
-      { alt: 'Yes and No answer screen with two large buttons', caption: 'Yes/No screen (screenshot pending)', date: 'October 2026', kind: 'personal', sampleData: true },
-      { alt: 'Two-choice screen with large picture cards in Spanish', caption: 'Choice screen (screenshot pending)', date: 'October 2026', kind: 'personal', sampleData: true },
-    ],
     related: 'scale-garage-studio',
     note: 'Pictographic symbols are by Sergio Palao for ARASAAC (arasaac.org), property of the Government of Aragón, under CC BY-NC-SA 4.0. Attribution is shown in the app.',
   },
   {
     slug: 'scale-garage-studio',
     title: 'Miniature Garage Configurator',
-    subtitle: 'Exploring custom designs before fabrication',
+    subtitle: 'Requirements, configuration, and fabrication limits',
     status: 'Working prototype',
+    statusNote: 'Runs locally; pricing uses sample data and checkout is a mock',
     updated: 'October 2026',
+    summary:
+      'A browser-based 3D configurator for custom 1:18 model-car garages. A customer chooses layout, parts, and finishes and sees the result before anything is printed.',
+    hero: {
+      src: 'images/projects/garage-configurator.webp',
+      small: 'images/projects/garage-configurator-800.webp',
+      kind: 'screenshot',
+      alt: 'Garage configurator: preset list on the left and a 3D preview of a glass-and-steel 1:18 garage with a display car, with fit, size, part count, printer, and price shown below',
+      caption: 'The configurator with a sample preset. The status bar shows the car fit, outer size, part count, target printer, and estimate.',
+    },
+    role: `Designer and developer. I designed the configuration model and the 3D preview, and shaped the preview to look like the printed part. ${AI_ASSISTED}`,
+    users: 'Collectors ordering a custom 1:18 model-car garage, and the person who prints it.',
     problem:
-      'Customers choosing a custom miniature garage have to picture how layout and component choices come together before anything is printed.',
-    who: 'Collectors who want a custom 1:18 model-car garage, and the person fabricating it.',
-    role:
-      'I designed the configuration model and the 3D preview, and I am shaping the preview to look like the printed part. I used AI-assisted development; the product decisions and fit checks are mine.',
-    constraints:
-      'The preview must resemble the 3D-printed result, run smoothly in a browser, and stay within what a desktop printer can make.',
-    approach:
-      'A structured design (layout, parts, finishes) drives a real-time 3D preview with a display-car fit check. Pricing and printability checks run over seed data; checkout is a mock.',
-    inspect: ['A real configurator screenshot and a short interaction recording.', 'A photo of a printed part, when available.'],
-    result: 'A working 1:18 configurator preview with fit check, pricing estimates, and printability checks.',
-    remaining: [
+      'A custom miniature garage has to be agreed before it is printed. Customers find it hard to picture how layout and part choices come together.',
+    decisions: [
+      { title: 'Capture requirements as one design', body: 'Layout, parts, and finishes are saved as a single design record that drives the preview, the estimate, and the checks.' },
+      { title: 'Show the printed result, not a showroom', body: 'Materials and lighting aim to look like the printed plastic, so the preview sets honest expectations.' },
+      { title: 'Check fit and fabrication early', body: 'A display-car fit check reports headroom, and the manufacturing view flags parts too large for the printer bed.' },
+      { title: 'Stay smooth in a browser', body: 'The preview only redraws when something changes, so it stays responsive on an ordinary laptop.' },
+    ],
+    evidence: [
+      {
+        src: 'images/projects/garage-manufacturing.webp',
+        small: 'images/projects/garage-manufacturing-800.webp',
+        kind: 'screenshot',
+        alt: 'Manufacturing view of the garage with outer dimensions labelled 350 by 210 by 175 millimetres and a “needs split” warning in the presets panel',
+        caption: 'Manufacturing view: outer dimensions in millimetres, and a “needs split” flag where a part exceeds the printer bed.',
+      },
+      {
+        src: 'images/hero_garage_diorama.jpg',
+        kind: 'concept',
+        alt: 'Rendered concept of a 1:18 miniature garage diorama with a display car',
+        caption: 'Concept render used as the design target. Not a screenshot or a photo of a printed part.',
+      },
+    ],
+    result: 'A working 1:18 configurator preview with a fit check, sample pricing estimates, and printability checks.',
+    next: [
       'Photos of printed parts next to the preview.',
       'Export of print-ready files, once it is built and verified.',
       'Additional scales, once they are supported.',
     ],
-    technologies: ['React Three Fiber', 'Drei', 'Next.js'],
-    assets: [
-      { alt: 'Configurator showing a 1:18 garage with a display car', caption: 'Configurator (concept render until a screenshot is added)', date: 'October 2026', kind: 'personal', sampleData: true },
-    ],
+    technologies: ['Next.js', 'React Three Fiber', 'Drei'],
     related: 'service-map-planner',
   },
   {
     slug: 'agent-trading-os',
     title: 'Agent Trading OS',
-    subtitle: 'An experiment in making agent decisions inspectable',
+    subtitle: 'An experiment in making automated decisions inspectable',
     status: 'Experiment',
+    statusNote: 'Paper trading only; no real money',
     updated: 'October 2026',
+    summary:
+      'A learning project where simple agents propose paper trades and every step is recorded. The goal is to make automated decisions easy to replay and question.',
+    hero: {
+      alt: 'Event timeline listing agent proposals, risk checks, and skipped trades',
+      caption: 'Event timeline (screenshot pending)',
+      kind: 'screenshot',
+    },
+    role: `Designer and developer. I designed the event history, replay, and controlled experiments. ${AI_ASSISTED}`,
+    users: 'Me. It is a learning project, not a service for customers.',
     problem:
       'Automated decision-making is easy to over-trust. I wanted every proposal, risk check, and skipped trade recorded so it can be replayed and questioned.',
-    who: 'Me — a learning project, not a service for customers.',
-    role: 'I designed the event history, replay, and controlled experiments. I used AI-assisted development.',
-    constraints: 'Paper trading only. No real money. No performance claims without a reproducible evaluation.',
-    approach:
-      'Rule-based agents propose paper trades; each proposal, risk check, and skipped trade is logged. Today the agents are fixed rules, not language models; model-driven agents are planned.',
-    inspect: ['The event timeline and replay (screenshot pending).'],
+    decisions: [
+      { title: 'Record everything', body: 'Each proposal, risk check, and skipped trade is logged as an event, so a run can be replayed step by step.' },
+      { title: 'Start with fixed rules', body: 'Today the agents are fixed rules, not language models, so their behavior is predictable while the tooling matures.' },
+      { title: 'No claims without evidence', body: 'Paper trading only, and no performance claims without a reproducible evaluation.' },
+    ],
+    evidence: [],
     result: 'A working paper-trading simulation with an inspectable event history.',
-    remaining: [
+    next: [
       'Scoring computed from settled outcomes rather than fixed values.',
       'A reproducible evaluation against a simple baseline.',
     ],
     technologies: ['React', 'TypeScript', 'Python', 'FastAPI'],
-    assets: [
-      { alt: 'Event timeline listing agent proposals and skipped trades', caption: 'Event timeline (screenshot pending)', date: 'October 2026', kind: 'personal', sampleData: true },
-    ],
     related: 'service-map-planner',
   },
 ];

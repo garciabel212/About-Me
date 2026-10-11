@@ -1,6 +1,8 @@
 import { flight } from './flightData';
 
-/** The intro glides over the last SETTLE frames into the River stop; the poster is its first frame.
- *  index.html preloads this frame (the test checks it), so recompute it there if the River frame moves. */
-export const SETTLE = 12;
-export const POSTER_FRAME = Math.max(0, flight.stops[0].frame - SETTLE);
+/**
+ * The frame the Cinematic backdrop paints first: the River stop itself (the
+ * backdrop holds still at each stop, with no intro glide). index.html
+ * preloads this frame; a test keeps the two in step.
+ */
+export const POSTER_FRAME = flight.stops[0].frame;

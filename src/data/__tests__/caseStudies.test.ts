@@ -11,31 +11,31 @@ describe('case studies', () => {
     ]);
   });
 
-  it('answers all eight questions for every study', () => {
+  it('fills every part of the shared structure', () => {
     for (const c of caseStudies) {
-      for (const key of ['problem', 'who', 'role', 'constraints', 'approach', 'result'] as const) {
-        expect(c[key].length, `${c.slug}.${key}`).toBeGreaterThan(30);
+      for (const key of ['summary', 'role', 'users', 'problem', 'result'] as const) {
+        expect(c[key].length, `${c.slug}.${key}`).toBeGreaterThan(20);
       }
-      expect(c.inspect.length, `${c.slug}.inspect`).toBeGreaterThan(0);
-      expect(c.remaining.length, `${c.slug}.remaining`).toBeGreaterThan(0);
+      expect(c.decisions.length, `${c.slug}.decisions`).toBeGreaterThan(1);
+      expect(c.next.length, `${c.slug}.next`).toBeGreaterThan(0);
     }
+  });
+
+  it('states AI-assisted development in every role', () => {
+    for (const c of caseStudies) expect(c.role).toMatch(/AI-assisted/);
   });
 
   it('links related studies that exist', () => {
     for (const c of caseStudies) expect(getCaseStudy(c.related)).toBeDefined();
   });
 
-  it('gives every asset alt text, a kind, and a sample-data flag', () => {
+  it('gives every image alt text and never passes a concept or placeholder off as a screenshot', () => {
     for (const c of caseStudies) {
-      for (const a of c.assets) {
+      for (const a of [c.hero, ...c.evidence]) {
         expect(a.alt.length).toBeGreaterThan(10);
-        expect(['employer', 'personal', 'demonstration']).toContain(a.kind);
-        expect(typeof a.sampleData).toBe('boolean');
+        if (a.kind === 'concept') expect(a.caption).toMatch(/concept/i);
+        if (!a.src && a.kind !== 'diagram') expect(a.caption).toMatch(/pending/i);
       }
     }
-  });
-
-  it('never calls a placeholder a real screenshot', () => {
-    for (const c of caseStudies) for (const a of c.assets) if (!a.src) expect(a.caption).toMatch(/pending|render|concept/i);
   });
 });

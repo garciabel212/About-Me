@@ -117,6 +117,11 @@ never use the words "sun" or "sunset", because the model paints a sun disk when 
 | The Beach (`s5_palms`) | Blue hour looking north along the shore: the lifeguard tower stays high on the right with palms against a faint peach afterglow in the west, and the ocean on the left under a cool blue and violet sky. The departure now banks right, away from the ocean, over the rooftops toward the bay, and the lit downtown skyline appears across the water. |
 | Final stop (`s6_sunset`) | Renamed **Sunset Harbour** (25.795° N · 80.145° W), a real bayside Miami Beach neighborhood that faces the downtown skyline. It is shot from low over Biscayne Bay looking west at the lit downtown and Brickell towers, with reflections on the water and a thin ember afterglow behind the towers. The pull-back flies away over the bay toward Miami Beach, so the reversed arrival continues the Beach departure. |
 
+Picks: seed 2202 for both stills, pins re-measured on the new stop frames (Beach on the lifeguard cabin,
+Sunset Harbour on the tallest tower). A per-stop speed-ramp softening for the Brickell → Downtown hop was
+tried and dropped: it moved that hop by two frames at most. Before/after:
+`assets/2026-10-10-flight-ending-before-after.jpg`, hop frames: `assets/2026-10-10-flight-ending-hops.jpg`.
+
 The ids `s5_palms` / `s6_sunset` and the site id `sunset` are kept, so file names and code don't
 change. The desktop card now sits on the left at every stop, the last one included (`stop_board.py` draws
 the card zone on all six).

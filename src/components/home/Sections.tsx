@@ -5,22 +5,16 @@ import {
   about, contact, education, experience, expertise, languages, method, overview, projects, site, toolGroups,
   type Project,
 } from '@/data/content';
-import { homeSectionLinks } from '@/data/navigation';
 import { mailto, profile, resumeUrl } from '@/data/profile';
 import type { SectionId } from '@/data/routes';
 
 const base = import.meta.env.BASE_URL;
 
 function Section({ id, title, lead, children }: { id: SectionId; title: string; lead?: string; children: ReactNode }) {
-  const index = homeSectionLinks.findIndex((l) => l.id === id);
   return (
     <section id={id} tabIndex={-1} aria-labelledby={`${id}-title`} className={`home-section home-section--${id}`}>
       <div className="panel">
         <header className="section-head">
-          <p className="eyebrow">
-            <span className="eyebrow__num">{String(index + 1).padStart(2, '0')}</span>
-            {homeSectionLinks[index].place}
-          </p>
           <h2 id={`${id}-title`}>{title}</h2>
           {lead && <p className="section-lead">{lead}</p>}
         </header>
@@ -34,7 +28,6 @@ export function Overview() {
   return (
     <section id="overview" tabIndex={-1} aria-labelledby="overview-title" className="home-section home-section--overview">
       <div className="overview">
-        <p className="eyebrow"><span className="eyebrow__num">01</span>{homeSectionLinks[0].place}</p>
         <h1 id="overview-title">{site.name}</h1>
         <p className="overview__title">{overview.title}</p>
         <p className="overview__statement">{overview.statement}</p>
@@ -100,9 +93,9 @@ export function Experience() {
 export function Expertise() {
   return (
     <Section id="expertise" title="Expertise" lead="What I bring to a customer-facing technical team.">
-      <ul className="cards">
+      <ul className="capabilities">
         {expertise.map((x) => (
-          <li key={x.id} className="card">
+          <li key={x.id} className="capability">
             <h3>{x.title}</h3>
             <p>{x.body}</p>
             <Link to={x.href} className="text-link">
@@ -117,7 +110,7 @@ export function Expertise() {
           {method.map((step, i) => (
             <li key={step}>
               <span className="method__num" aria-hidden="true">{i + 1}</span>
-              {step}
+              <span>{step}</span>
             </li>
           ))}
         </ol>
@@ -190,7 +183,7 @@ export function Projects() {
               <h3 id={`project-${p.slug}-title`}>{p.title}</h3>
               <ProjectFacts project={p} />
               <Link to={p.href} className="btn btn-secondary">
-                Read the case study <ArrowRight size={16} aria-hidden="true" />
+                Read the {p.title} case study <ArrowRight size={16} aria-hidden="true" />
               </Link>
             </div>
           </article>

@@ -34,10 +34,10 @@ export default function CaseStudyPage({ slug }: { slug: string }) {
         <CaseActions />
 
         <header className="case__head">
-          <p className="eyebrow">{isLab ? 'Lab experiment' : 'Personal project'} · Updated {study.updated}</p>
           <h1>{study.title}</h1>
           <p className="case__subtitle">{study.subtitle}</p>
           <p className="case__summary">{study.summary}</p>
+          <p className="case__meta">{isLab ? 'Lab experiment' : 'Personal project'} · Updated {study.updated}</p>
         </header>
 
         <AssetFrame asset={study.hero} large />

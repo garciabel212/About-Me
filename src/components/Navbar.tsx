@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Mail, Menu, X, FileDown } from 'lucide-react';
 import ThemeToggle from './theme/ThemeToggle';
-import { MotionToggle, ViewSwitch } from './view/ViewControls';
+import { ViewSwitch } from './view/ViewControls';
 import { useViewMode } from './view/ViewMode';
 import { mailto, profile, resumeUrl } from '@/data/profile';
 import { homeSectionLinks } from '@/data/navigation';
@@ -51,10 +51,7 @@ export default function Navbar() {
           <ul>
             {homeSectionLinks.map((l) => (
               <li key={l.id}>
-                <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>
-                  <span className="site-nav__label">{l.label}</span>
-                  <span className="site-nav__place">{l.place}</span>
-                </Link>
+                <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>{l.label}</Link>
               </li>
             ))}
           </ul>
@@ -62,7 +59,6 @@ export default function Navbar() {
 
         <div className="site-header__tools">
           {home && <ViewSwitch />}
-          {onFilm && <MotionToggle className="hide-below-md" />}
           {!onFilm && <ThemeToggle className="theme-toggle hide-below-sm" />}
           <a className="hdr-btn hide-below-sm" href={mailto}>
             <Mail size={15} aria-hidden="true" />
@@ -94,15 +90,11 @@ export default function Navbar() {
         <ul className="site-menu__links">
           {homeSectionLinks.map((l) => (
             <li key={l.id}>
-              <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>
-                <span>{l.label}</span>
-                <span className="site-nav__place">{l.place}</span>
-              </Link>
+              <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>{l.label}</Link>
             </li>
           ))}
         </ul>
         <div className="site-menu__view">
-          {onFilm && <MotionToggle />}
           {!onFilm && <ThemeToggle className="theme-toggle" />}
         </div>
       </div>

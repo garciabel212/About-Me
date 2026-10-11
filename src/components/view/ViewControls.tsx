@@ -1,41 +1,36 @@
 import { Film, BookOpen, Pause, Play } from 'lucide-react';
-import { useViewMode, type ViewMode } from './ViewMode';
+import { useViewMode } from './ViewMode';
 
-const MODES: { id: ViewMode; label: string; Icon: typeof Film }[] = [
-  { id: 'cinematic', label: 'Cinematic', Icon: Film },
-  { id: 'read', label: 'Read page', Icon: BookOpen },
-];
-
-/** Cinematic / Read page switch. Both modes show the same content in the same order. */
+/**
+ * Cinematic / Read page switch, with the flight's motion control attached to
+ * Cinematic. Both modes show the same content in the same order.
+ */
 export function ViewSwitch({ className = '' }: { className?: string }) {
-  const { mode, setMode } = useViewMode();
+  const { mode, setMode, motion, setMotion } = useViewMode();
+  const cinematic = mode === 'cinematic';
+  const MotionIcon = motion ? Pause : Play;
   return (
     <div className={`view-switch ${className}`} role="group" aria-label="Viewing mode">
-      {MODES.map(({ id, label, Icon }) => (
-        <button key={id} type="button" aria-pressed={mode === id} onClick={() => setMode(id)}>
-          <Icon size={15} aria-hidden="true" />
-          <span>{label}</span>
+      <button type="button" aria-pressed={cinematic} onClick={() => setMode('cinematic')}>
+        <Film size={15} aria-hidden="true" />
+        <span>Cinematic</span>
+      </button>
+      {cinematic && (
+        <button
+          type="button"
+          className="view-switch__motion"
+          aria-pressed={motion}
+          aria-label="Motion"
+          title={motion ? 'Pause the flight and show still scenes' : 'Play the flight between sections'}
+          onClick={() => setMotion(!motion)}
+        >
+          <MotionIcon size={14} aria-hidden="true" />
         </button>
-      ))}
+      )}
+      <button type="button" aria-pressed={!cinematic} onClick={() => setMode('read')}>
+        <BookOpen size={15} aria-hidden="true" />
+        <span>Read<span className="hide-below-sm"> page</span></span>
+      </button>
     </div>
-  );
-}
-
-/** Pauses or plays the flight. Starts paused when the system asks for reduced motion. */
-export function MotionToggle({ className = '' }: { className?: string }) {
-  const { motion, setMotion } = useViewMode();
-  const Icon = motion ? Pause : Play;
-  return (
-    <button
-      type="button"
-      className={`motion-toggle ${className}`}
-      aria-pressed={motion}
-      onClick={() => setMotion(!motion)}
-      title={motion ? 'Pause the flight; show still scenes' : 'Play the flight between sections'}
-    >
-      <Icon size={15} aria-hidden="true" />
-      <span>Motion</span>
-      <span className="motion-toggle__state" aria-hidden="true">{motion ? 'On' : 'Off'}</span>
-    </button>
   );
 }

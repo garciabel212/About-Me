@@ -91,3 +91,59 @@
   .tb-field:nth-child(2) { border-right: 1px solid var(--rule); }
   .tb-disclosure { padding-bottom: calc(7px + env(safe-area-inset-bottom)); }
 }
+
+/* Sites: tall sections whose frame sticks while the site holds. Gaps are where the camera flies. */
+.site { position: relative; z-index: 3; height: 220vh; height: 220svh; }
+.survey__gap { height: 90vh; height: 90svh; }
+.site__anchor { position: absolute; left: 0; top: calc(120svh * 0.5); width: 1px; height: 1px; scroll-margin-top: 0; }
+.site__frame { position: sticky; top: 0; height: 100vh; height: 100dvh; }
+.site__notes {
+  position: absolute; left: var(--gutter); bottom: calc(var(--tb-h) + 32px);
+  width: min(520px, calc(42vw - var(--gutter)));
+  max-height: calc(100dvh - var(--header-h) - var(--tb-h) - 64px); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 20px;
+  opacity: calc(min(1, var(--ink, 1) * 1.6) * (1 - var(--lift, 0)));
+}
+.survey--still .site { height: auto; min-height: 100vh; min-height: 100dvh; }
+.survey--still .survey__gap { display: none; }
+.survey--still .site__anchor { top: 0; }
+.survey--still .site__notes { opacity: 1; }
+
+.intro__name { margin: 0; font: 800 clamp(48px, 7vw, 104px)/0.95 var(--f-display); font-stretch: 118%; letter-spacing: -0.01em; text-wrap: balance; }
+.intro__role { margin: 14px 0 0; font: 400 15px/1.3 var(--f-note); color: var(--field-2); }
+.intro__statement { margin: 12px 0 0; max-width: 34ch; font: 400 clamp(17px, 1.4vw, 20px)/1.45 var(--f-display); text-wrap: pretty; }
+.intro__next { margin: 18px 0 0; font: 700 13px/1.2 var(--f-note); color: var(--ink-red); }
+
+.site__heading { margin: 0; font: 700 clamp(30px, 3.4vw, 46px)/1.02 var(--f-display); font-stretch: 112%; text-wrap: balance; }
+.note__title { margin: 0; font: 700 clamp(20px, 1.8vw, 26px)/1.1 var(--f-display); font-stretch: 108%; }
+.note__outcome, .note__method { margin: 8px 0 0; max-width: 46ch; font: 400 15px/1.45 var(--f-note); }
+.note__method { color: var(--field); }
+.note__meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin: 10px 0 0; font: 400 13px/1.2 var(--f-note); color: var(--field-2); }
+.note__flip { all: unset; cursor: pointer; color: var(--field); text-decoration: underline; text-underline-offset: 3px; }
+.note__link { color: var(--field); text-underline-offset: 3px; }
+.note__flip:focus-visible, .note__link:focus-visible, .handover a:focus-visible { outline: 2px solid var(--ink-red); outline-offset: 3px; }
+
+.punch { list-style: none; margin: 0; padding: 0 0 0 34px; display: grid; gap: 12px; }
+.punch li { display: grid; gap: 3px; }
+.punch strong { font: 700 19px/1.15 var(--f-display); }
+.punch span { font: 400 14px/1.4 var(--f-note); color: var(--field-2); }
+
+.log { list-style: none; margin: 0; padding: 0; }
+.log li { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 10px 0; }
+.log li + li { border-top: 1px dashed var(--rule); }
+.log strong { font: 700 17px/1.2 var(--f-display); }
+.log span { grid-column: 1; font: 400 14px/1.35 var(--f-note); color: var(--field-2); }
+.log .log__period { grid-column: 2; grid-row: 1; align-self: baseline; font-size: 13px; }
+
+.handover__heading { margin: 0; font: 700 clamp(28px, 3vw, 40px)/1.05 var(--f-display); font-stretch: 112%; text-wrap: balance; }
+.handover__body { margin: 10px 0 0; max-width: 44ch; font: 400 16px/1.5 var(--f-display); }
+.handover__sign { margin: 16px 0 0; font: 400 13px/1.2 var(--f-note); color: var(--field-2); }
+.handover__sign span { display: block; margin-top: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--field); font: italic 700 28px/1.1 var(--f-display); color: var(--field); width: fit-content; }
+.handover__links { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 16px 0 0; padding: 0; font: 600 15px/1.2 var(--f-display); }
+.handover__links a { color: var(--field); text-underline-offset: 3px; }
+.handover__links .tb-email { color: var(--ink-red); text-decoration: none; }
+
+@media (max-width: 767px) {
+  .site__notes { left: 16px; right: 16px; width: auto; bottom: calc(var(--tb-h) + 16px); max-height: calc(100dvh - var(--header-h) - var(--tb-h) - 40px); }
+  .intro__name { font-size: clamp(40px, 12vw, 56px); }
+}

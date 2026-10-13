@@ -129,7 +129,7 @@ describe('leaderPath around other rings', () => {
     const aac = ring('job-aac-communication-app');
     const lab = ring('job-agent-trading-os');
     const pts = pairs(leaderPath({ x: 300, y: noteY }, lab, 'right', [aac]));
-    for (let i = 0; i + 1 < pts.length; i += 1) expect(toSegment(aac.cx, aac.cy, pts[i], pts[i + 1])).toBeGreaterThan(aac.r + 4);
+    for (let i = 0; i + 1 < pts.length; i += 1) expect(toSegment(aac.cx, aac.cy, pts[i], pts[i + 1])).toBeGreaterThan(aac.r * 1.08 + 12); // the drawn ring wobbles up to ~8% past r
     const [ex, ey] = pts[pts.length - 1];
     expect(Math.hypot(ex - lab.cx, ey - lab.cy)).toBeCloseTo(lab.r, 0);
   });

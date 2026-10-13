@@ -85,9 +85,10 @@ function edge(ring: PlacedMark, toward: Point): Point {
 export function leaderPath(from: Point, ring: PlacedMark, dir: 'right' | 'up', avoid: PlacedMark[] = []): string {
   const shoulder = dir === 'right' ? { x: from.x + 28, y: from.y } : { x: from.x, y: from.y - 24 };
   const pts: Point[] = [from, shoulder];
-  const blocker = avoid.find((o) => o !== ring && toSegment(o.cx, o.cy, shoulder, edge(ring, shoulder)) < o.r + 10);
+  // The drawn ring wobbles up to ~8% past its radius (ringPath), so clearances are taken from that outline.
+  const blocker = avoid.find((o) => o !== ring && toSegment(o.cx, o.cy, shoulder, edge(ring, shoulder)) < o.r * 1.08 + 12);
   if (blocker) {
-    const clear = blocker.r + 18;
+    const clear = blocker.r * 1.08 + 16;
     pts.push({ x: blocker.cx, y: shoulder.y >= blocker.cy ? blocker.cy + clear : blocker.cy - clear });
   }
   pts.push(edge(ring, pts[pts.length - 1]));

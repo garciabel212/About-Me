@@ -54,6 +54,22 @@ export default function SurveyLanding({ motion }: { motion: boolean }) {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // Notes sit above the title block, whose height changes with its values (wrapping Status, phone strip).
+  useEffect(() => {
+    const el = root.current!;
+    const block = el.querySelector('.title-block');
+    if (!block) return;
+    const reserve = () => el.style.setProperty('--tb-h', `${Math.ceil(window.innerHeight - block.getBoundingClientRect().top)}px`);
+    reserve();
+    const ro = new ResizeObserver(reserve);
+    ro.observe(block);
+    window.addEventListener('resize', reserve);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', reserve);
+    };
+  }, []);
+
   // Re-measure the current site's note anchors whenever its notes change size (flip, fonts, resize).
   useLayoutEffect(() => {
     const section = document.querySelector(`[data-site="${sites[stop].id}"]`);

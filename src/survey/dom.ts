@@ -31,9 +31,12 @@ export function measureAnchors(section: Element, phone: boolean): Anchors {
   const frame = section.querySelector('.site__frame');
   if (!frame) return {};
   const f = frame.getBoundingClientRect();
+  const view = section.querySelector('.site__notes')?.getBoundingClientRect();
   const out: Anchors = {};
   section.querySelectorAll<HTMLElement>('[data-anchor]').forEach((el) => {
     const r = el.getBoundingClientRect();
+    // A note the column has scrolled out of view gets no leader.
+    if (view && (r.top < view.top - 1 || r.bottom > view.bottom + 1)) return;
     const id = el.dataset.anchor!;
     const midY = r.top - f.top + r.height / 2;
     if (el.dataset.anchorSide === 'left') out[id] = { x: r.left - f.left, y: midY };

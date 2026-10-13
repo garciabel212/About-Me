@@ -50,7 +50,8 @@ describe('placeMark', () => {
 
   it('flags Downtown landmarks that fall outside the phone crop', () => {
     const vp: Viewport = { w: 390, h: 844, phone: true };
-    const [aac, garage, lab] = jobsAt(2).map((j) => placeMark(j.mark, downtown, vp));
+    const at = (id: string) => placeMark(jobsAt(2).find((j) => j.id === id)!.mark, downtown, vp);
+    const [aac, garage, lab] = ['job-aac-communication-app', 'job-miniature-garage', 'job-agent-trading-os'].map(at);
     expect(aac.offscreen).toBe('left');
     expect(garage.offscreen).toBeNull();
     expect(lab.offscreen).toBe('right');

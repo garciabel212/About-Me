@@ -8,8 +8,8 @@ import type { Job, Site } from './sites';
 export function JobNote({ job, initiallyFlipped = false }: { job: Job; initiallyFlipped?: boolean }) {
   const [flipped, setFlipped] = useState(initiallyFlipped);
   return (
-    <article className="note note--job" data-anchor={job.id} aria-labelledby={`${job.id}-title`}>
-      <h3 id={`${job.id}-title`} className="note__title">{job.title}</h3>
+    <article className="note note--job" aria-labelledby={`${job.id}-title`}>
+      <h3 id={`${job.id}-title`} className="note__title" data-anchor={job.id}>{job.title}</h3>
       <p className="note__outcome" hidden={flipped}>{job.outcome}</p>
       <p className="note__method" hidden={!flipped}>{job.method}</p>
       <p className="note__meta">
@@ -41,11 +41,12 @@ export default function SiteSection({ site }: { site: Site }) {
       <div className="site__frame">
         <div className="site__notes">
           {b.kind === 'intro' ? (
-            <div className="note note--intro" data-anchor={site.id}>
+            <div className="note note--intro">
+              {/* The site note sits above the name, so its leader runs through open sky to the towers. */}
+              <p className="intro__next" data-anchor={site.id}>{b.next}</p>
               <h1 id={titleId} className="intro__name">{b.name}</h1>
               <p className="intro__role">{b.role}</p>
               <p className="intro__statement">{b.statement}</p>
-              <p className="intro__next">{b.next}</p>
             </div>
           ) : (
             <>

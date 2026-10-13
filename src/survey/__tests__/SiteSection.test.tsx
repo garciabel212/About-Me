@@ -25,12 +25,14 @@ describe('SiteSection', () => {
   it('opens the River with the name as the page heading', () => {
     const out = render(<SiteSection site={sites[0]} />);
     expect(out).toMatch(/<h1 id="site-river-title"[^>]*>Jose Garcia<\/h1>/);
-    expect(out).toContain('data-anchor="river"');
+    // The leader leaves the "Next site" line, which names what the ring marks.
+    expect(out).toMatch(/<p class="intro__next" data-anchor="river">/);
   });
 
   it('marks every job note as a leader anchor', () => {
     const out = render(<SiteSection site={sites[2]} />);
-    for (let j = 0; j < 3; j += 1) expect(out).toContain(`data-anchor="${job(2, j).id}"`);
+    // Leaders leave the job title, so they start where the words end.
+    for (let j = 0; j < 3; j += 1) expect(out).toMatch(new RegExp(`<h3 [^>]*data-anchor="${job(2, j).id}"`));
   });
 
   it('anchors punch checks on the left of each step', () => {

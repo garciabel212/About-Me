@@ -56,12 +56,14 @@ describe('sites', () => {
     expect(featured.kind === 'jobs' && featured.jobs[0].method).toBe(projects[0].contribution);
   });
 
-  it('shows the three Downtown jobs left to right as they stand in the frame', () => {
+  it('lists the Downtown jobs so their leaders never cross another ring', () => {
     const b = sites[2].body;
     if (b.kind !== 'jobs') throw new Error('Downtown must list jobs');
-    expect(b.jobs.map((j) => j.title)).toEqual(['AAC communication app', 'Miniature Garage Configurator', 'Agent Trading OS']);
-    const xs = b.jobs.map((j) => j.mark.x);
-    expect([...xs].sort((a, c) => a - c)).toEqual(xs);
+    // Notes stack top to bottom in the left column: the tallest tower's job first, then the near tower, then the far building.
+    expect(b.jobs.map((j) => j.title)).toEqual(['Miniature Garage Configurator', 'AAC communication app', 'Agent Trading OS']);
+    const [garage, aac] = b.jobs.map((j) => j.mark);
+    // The near tower's ring sits low enough that the Garage leader passes above it.
+    expect(aac.y - aac.r).toBeGreaterThan(garage.y + 0.08);
   });
 
   it('uses no em or en dashes anywhere', () => {

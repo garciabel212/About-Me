@@ -31,7 +31,9 @@ export default function RedlineLayer({ site, index, anchors, vp, ready }: { site
         const placed = placeMark(mark, stop, vp);
         const at = (a: number, b: number) => slice(i * share + a * share, i * share + b * share);
         if (placed.offscreen) {
-          return <path key={id} className="ink ink--arrow" pathLength={1} d={arrowPath(placed.offscreen, Math.min(vp.h - 140, Math.max(120, placed.cy)), vp)} style={at(0, 1)} />;
+          // Phones stack notes over the lower two thirds, so edge arrows stay in the sky above them.
+          const y = vp.phone ? Math.min(vp.h * 0.34, Math.max(110, placed.cy)) : Math.min(vp.h - 140, Math.max(120, placed.cy));
+          return <path key={id} className="ink ink--arrow" pathLength={1} d={arrowPath(placed.offscreen, y, vp)} style={at(0, 1)} />;
         }
         const anchor = anchors[id];
         return (

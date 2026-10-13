@@ -8,7 +8,7 @@ const phone = { w: 390, h: 844, phone: true };
 
 describe('inkFor', () => {
   it('rings each job on job sites and the site landmark elsewhere', () => {
-    expect(inkFor(sites[2]).map((m) => m.id)).toEqual(['job-aac-communication-app', 'job-miniature-garage', 'job-agent-trading-os']);
+    expect(inkFor(sites[2]).map((m) => m.id)).toEqual(['job-miniature-garage', 'job-aac-communication-app', 'job-agent-trading-os']);
     expect(inkFor(sites[0]).map((m) => m.id)).toEqual(['river']);
   });
 });
@@ -40,6 +40,13 @@ describe('RedlineLayer', () => {
     const out = renderToStaticMarkup(<RedlineLayer site={sites[2]} index={2} anchors={{}} vp={phone} ready />);
     expect(out.match(/ink--arrow/g)).toHaveLength(2);
     expect(out.match(/ink--ring/g)).toHaveLength(1);
+  });
+
+  it('keeps phone edge arrows in the upper third, clear of the notes', () => {
+    const out = renderToStaticMarkup(<RedlineLayer site={sites[2]} index={2} anchors={{}} vp={phone} ready />);
+    const ys = [...out.matchAll(/class="ink ink--arrow"[^>]* d="M[\d.]+ ([\d.]+)/g)].map((m) => Number(m[1]));
+    expect(ys).toHaveLength(2);
+    for (const y of ys) expect(y).toBeLessThanOrEqual(phone.h * 0.34 + 0.1); // paths are written to 0.1px
   });
 
   it('checks off each punch item that has an anchor', () => {

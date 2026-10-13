@@ -104,7 +104,7 @@ const jobs = {
     method: aac.contribution,
     status: aac.status,
     href: aac.href,
-    mark: { x: 0.48, y: 0.5, r: 0.07 },
+    mark: { x: 0.48, y: 0.56, r: 0.06 },
   },
   garage: {
     id: 'job-miniature-garage',
@@ -155,7 +155,8 @@ export const sites: Site[] = [
     status: 'Prototypes and an experiment',
     heading: 'More jobs',
     mark: jobs.garage.mark,
-    body: { kind: 'jobs', jobs: [jobs.aac, jobs.garage, jobs.lab] },
+    // Top to bottom by ring height, so no leader crosses another ring.
+    body: { kind: 'jobs', jobs: [jobs.garage, jobs.aac, jobs.lab] },
   },
   {
     id: 'bay',

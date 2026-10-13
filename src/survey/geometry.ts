@@ -63,13 +63,35 @@ export function ringPath(cx: number, cy: number, r: number): string {
   return d;
 }
 
-/** Leader from a note to the ring: a short shoulder out of the note, then straight to the ring's edge. */
-export function leaderPath(from: Point, ring: PlacedMark, dir: 'right' | 'up'): string {
+/** Shortest distance from (px, py) to the segment a-b. */
+function toSegment(px: number, py: number, a: Point, b: Point): number {
+  const len2 = (b.x - a.x) ** 2 + (b.y - a.y) ** 2 || 1;
+  const t = Math.max(0, Math.min(1, ((px - a.x) * (b.x - a.x) + (py - a.y) * (b.y - a.y)) / len2));
+  return Math.hypot(px - (a.x + t * (b.x - a.x)), py - (a.y + t * (b.y - a.y)));
+}
+
+/** The point on a ring's edge facing `toward`. */
+function edge(ring: PlacedMark, toward: Point): Point {
+  const a = Math.atan2(toward.y - ring.cy, toward.x - ring.cx);
+  return { x: ring.cx + ring.r * Math.cos(a), y: ring.cy + ring.r * Math.sin(a) };
+}
+
+/**
+ * Leader from a note to the ring: a short shoulder out of the note, then a
+ * straight line to the ring's edge. A leader never crosses another callout:
+ * when the line would pass through a ring in `avoid`, it bends around that
+ * ring's near side (below it when the note sits lower, above otherwise).
+ */
+export function leaderPath(from: Point, ring: PlacedMark, dir: 'right' | 'up', avoid: PlacedMark[] = []): string {
   const shoulder = dir === 'right' ? { x: from.x + 28, y: from.y } : { x: from.x, y: from.y - 24 };
-  const a = Math.atan2(shoulder.y - ring.cy, shoulder.x - ring.cx);
-  const ex = ring.cx + ring.r * Math.cos(a);
-  const ey = ring.cy + ring.r * Math.sin(a);
-  return `M${f(from.x)} ${f(from.y)}L${f(shoulder.x)} ${f(shoulder.y)}L${f(ex)} ${f(ey)}`;
+  const pts: Point[] = [from, shoulder];
+  const blocker = avoid.find((o) => o !== ring && toSegment(o.cx, o.cy, shoulder, edge(ring, shoulder)) < o.r + 10);
+  if (blocker) {
+    const clear = blocker.r + 18;
+    pts.push({ x: blocker.cx, y: shoulder.y >= blocker.cy ? blocker.cy + clear : blocker.cy - clear });
+  }
+  pts.push(edge(ring, pts[pts.length - 1]));
+  return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${f(p.x)} ${f(p.y)}`).join('');
 }
 
 /** A check mark in a size x size box whose top-left corner is (x, y). */

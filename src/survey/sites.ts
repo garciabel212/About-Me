@@ -143,7 +143,7 @@ export const sites: Site[] = [
     label: 'Brickell',
     job: smp.title,
     status: smp.status,
-    heading: 'Featured job',
+    heading: 'Planning service visits',
     mark: jobs.smp.mark,
     body: { kind: 'jobs', jobs: [jobs.smp] },
   },
@@ -153,7 +153,7 @@ export const sites: Site[] = [
     label: 'Downtown',
     job: 'Three more jobs',
     status: 'Prototypes and an experiment',
-    heading: 'More jobs',
+    heading: 'Accessibility, 3D, and agents',
     mark: jobs.garage.mark,
     // Top to bottom by ring height, so no leader crosses another ring.
     body: { kind: 'jobs', jobs: [jobs.garage, jobs.aac, jobs.lab] },

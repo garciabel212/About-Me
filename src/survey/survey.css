@@ -37,6 +37,13 @@
   stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p));
 }
 .ink--leader { stroke-width: 1.5; }
+.ink-label {
+  --p: clamp(0, (var(--ink, 1) - var(--from)) / (var(--to) - var(--from)), 1);
+  fill: var(--ink-red); font: 700 13px/1 var(--f-note); letter-spacing: 0.02em;
+  paint-order: stroke; stroke: rgba(11, 13, 24, 0.55); stroke-width: 3px;
+  opacity: var(--p);
+}
+.survey--still .ink-label { opacity: 1; }
 .ink-pulse {
   --p: clamp(0, (var(--ink, 1) - var(--from)) / (var(--to) - var(--from)), 1);
   fill: none; stroke: var(--ink-red); stroke-width: 1.5;
@@ -110,10 +117,9 @@
 .survey--still .site__anchor { top: 0; }
 .survey--still .site__notes { opacity: 1; }
 
-.survey .intro__name { margin: 0; color: var(--field); font: 800 clamp(48px, 7vw, 104px)/0.95 var(--f-display); font-stretch: 118%; letter-spacing: -0.01em; text-wrap: balance; }
+.survey .intro__name { margin: 0; color: var(--field); font: 800 clamp(48px, 7vw, 96px)/0.95 var(--f-display); font-stretch: 118%; letter-spacing: -0.01em; text-wrap: balance; }
 .survey .intro__role { margin: 14px 0 0; font: 400 15px/1.3 var(--f-note); color: var(--field-2); }
 .survey .intro__statement { margin: 12px 0 0; max-width: 34ch; font: 400 clamp(17px, 1.4vw, 20px)/1.45 var(--f-display); text-wrap: pretty; }
-.survey .intro__next { width: fit-content; margin: 0 0 16px; font: 700 13px/1.2 var(--f-note); color: var(--ink-red); }
 
 .survey .site__heading { width: fit-content; margin: 0; color: var(--field); font: 700 clamp(30px, 3.4vw, 46px)/1.02 var(--f-display); font-stretch: 112%; text-wrap: balance; }
 .survey .note__title { width: fit-content; margin: 0; color: var(--field); font: 700 clamp(20px, 1.8vw, 26px)/1.1 var(--f-display); font-stretch: 108%; }

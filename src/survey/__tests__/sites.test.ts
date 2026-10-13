@@ -66,6 +66,11 @@ describe('sites', () => {
     expect(aac.y - aac.r).toBeGreaterThan(garage.y + 0.08);
   });
 
+  it('gives job sites headings that say what they hold, not a category label', () => {
+    expect(sites[1].heading).toBe('Planning service visits');
+    expect(sites[2].heading).toBe('Accessibility, 3D, and agents');
+  });
+
   it('uses no em or en dashes anywhere', () => {
     for (const s of sites) for (const text of strings(s)) expect(text).not.toMatch(/[—–]/);
   });

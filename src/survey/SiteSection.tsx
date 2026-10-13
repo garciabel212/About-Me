@@ -42,11 +42,11 @@ export default function SiteSection({ site }: { site: Site }) {
         <div className="site__notes">
           {b.kind === 'intro' ? (
             <div className="note note--intro">
-              {/* The site note sits above the name, so its leader runs through open sky to the towers. */}
-              <p className="intro__next" data-anchor={site.id}>{b.next}</p>
               <h1 id={titleId} className="intro__name">{b.name}</h1>
               <p className="intro__role">{b.role}</p>
               <p className="intro__statement">{b.statement}</p>
+              {/* Lettered in the ink beside the River ring (RedlineLayer); kept here for screen readers. */}
+              <p className="sr-only">{b.next}</p>
             </div>
           ) : (
             <>

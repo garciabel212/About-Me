@@ -25,8 +25,9 @@ describe('SiteSection', () => {
   it('opens the River with the name as the page heading', () => {
     const out = render(<SiteSection site={sites[0]} />);
     expect(out).toMatch(/<h1 id="site-river-title"[^>]*>Jose Garcia<\/h1>/);
-    // The leader leaves the "Next site" line, which names what the ring marks.
-    expect(out).toMatch(/<p class="intro__next" data-anchor="river">/);
+    // The next-site note is lettered in the ink beside the ring; screen readers get the same words here.
+    expect(out).toContain('<p class="sr-only">Next site: Service Map Planner</p>');
+    expect(out).not.toContain('intro__next');
   });
 
   it('marks every job note as a leader anchor', () => {

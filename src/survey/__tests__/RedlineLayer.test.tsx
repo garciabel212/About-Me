@@ -49,6 +49,24 @@ describe('RedlineLayer', () => {
     for (const y of ys) expect(y).toBeLessThanOrEqual(phone.h * 0.34 + 0.1); // paths are written to 0.1px
   });
 
+  it('letters the River ring with the next site, in the sky beside it', () => {
+    const out = renderToStaticMarkup(<RedlineLayer site={sites[0]} index={0} anchors={{}} vp={desktop} ready />);
+    expect(out).toMatch(/<text class="ink-label"[^>]*>Next site: Service Map Planner<\/text>/);
+    expect(out.match(/ink--leader/g)).toHaveLength(1);
+  });
+
+  it('names the job each phone edge arrow points to', () => {
+    const out = renderToStaticMarkup(<RedlineLayer site={sites[2]} index={2} anchors={{}} vp={phone} ready />);
+    expect(out).toMatch(/<text class="ink-label"[^>]*>AAC communication app<\/text>/);
+    expect(out).toMatch(/<text class="ink-label"[^>]*>Agent Trading OS<\/text>/);
+  });
+
+  it('bends a Downtown leader around a ring in its way', () => {
+    const out = renderToStaticMarkup(<RedlineLayer site={sites[2]} index={2} anchors={{ 'job-agent-trading-os': { x: 300, y: 593 } }} vp={desktop} ready />);
+    const d = out.match(/class="ink ink--leader"[^>]* d="([^"]+)"/)![1];
+    expect(d.match(/L/g)).toHaveLength(3);
+  });
+
   it('checks off each punch item that has an anchor', () => {
     const out = renderToStaticMarkup(
       <RedlineLayer site={sites[3]} index={3} anchors={{ 'punch-1': { x: 60, y: 300 }, 'punch-2': { x: 60, y: 340 } }} vp={desktop} ready />,

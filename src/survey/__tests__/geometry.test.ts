@@ -112,3 +112,30 @@ describe('checkPath and arrowPath', () => {
     expect(Math.min(...left.map(([x]) => x))).toBeLessThan(30);
   });
 });
+
+describe('leaderPath around other rings', () => {
+  /** Shortest distance from a point to a segment. */
+  const toSegment = (px: number, py: number, [ax, ay]: [number, number], [bx, by]: [number, number]) => {
+    const t = Math.max(0, Math.min(1, ((px - ax) * (bx - ax) + (py - ay) * (by - ay)) / ((bx - ax) ** 2 + (by - ay) ** 2 || 1)));
+    return Math.hypot(px - (ax + t * (bx - ax)), py - (ay + t * (by - ay)));
+  };
+
+  it.each([
+    [1440, 900, 593],
+    [1280, 600, 373],
+  ])('keeps the Agent Trading OS leader off the AAC ring at %ix%i', (w, h, noteY) => {
+    const vp: Viewport = { w, h, phone: false };
+    const ring = (id: string) => placeMark(jobsAt(2).find((j) => j.id === id)!.mark, downtown, vp);
+    const aac = ring('job-aac-communication-app');
+    const lab = ring('job-agent-trading-os');
+    const pts = pairs(leaderPath({ x: 300, y: noteY }, lab, 'right', [aac]));
+    for (let i = 0; i + 1 < pts.length; i += 1) expect(toSegment(aac.cx, aac.cy, pts[i], pts[i + 1])).toBeGreaterThan(aac.r + 4);
+    const [ex, ey] = pts[pts.length - 1];
+    expect(Math.hypot(ex - lab.cx, ey - lab.cy)).toBeCloseTo(lab.r, 0);
+  });
+
+  it('stays a straight shoulder-and-line when nothing is in the way', () => {
+    const ring = { cx: 900, cy: 300, r: 60, offscreen: null } as const;
+    expect(pairs(leaderPath({ x: 400, y: 500 }, ring, 'right', []))).toHaveLength(3);
+  });
+});

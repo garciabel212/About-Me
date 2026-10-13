@@ -298,39 +298,14 @@ html { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
   .home--read .project-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
 }
 
-/* ── Cinematic mode ────────────────────────────────────────────────── */
-/* Reading sections sit on solid night, so text never meets the moving film. */
-.home--cinematic .home-section:not(.home-section--overview) {
-  background: var(--night); padding: 72px var(--gutter);
-  -webkit-mask-image: linear-gradient(transparent, #000 56px); mask-image: linear-gradient(transparent, #000 56px);
-}
-.home--cinematic .home-section--overview { min-height: 100vh; min-height: 100svh; padding: calc(var(--header-h) + 40px) var(--gutter) 36px; }
-.home--cinematic .overview, .home--cinematic .next-cue { text-shadow: 0 1px 14px rgba(6, 8, 13, 0.6); }
-.home--cinematic .overview .btn { text-shadow: none; }
-.home--cinematic .overview .btn-secondary { background: rgba(11, 13, 24, 0.45); }
-.home--cinematic .home-section--contact { padding-bottom: 20vh; }
-/* The camera flies only across these gaps; nothing to read here. */
-.cine-gap { height: 40vh; height: 40svh; }
-
-/* Split screen: the reading column on the left, the film window on the right. */
+/* Film pages (Cinematic Home): the footer sits on solid night under the film. */
 @media (min-width: 1024px) {
-  .site-shell.is-film { --col-w: min(620px, calc(52vw - var(--gutter) - 40px)); }
-  .home--cinematic .home-section:not(.home-section--overview),
-  .home--cinematic .cine-gap { width: calc(var(--gutter) * 2 + var(--col-w)); }
-  .home--cinematic .panel { max-width: var(--col-w); margin: 0; }
-  .home--cinematic .about { grid-template-columns: 132px 1fr; gap: 28px; }
-  .home--cinematic .about__portrait { width: 132px; height: 132px; }
-  .home--cinematic .qualifications { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .site-shell.is-film .site-footer { width: calc(var(--gutter) * 2 + var(--col-w)); background: var(--night); }
-  .site-shell.is-film .site-footer__inner, .site-shell.is-film .site-footer__note { margin: 0; padding-left: var(--gutter); padding-right: var(--gutter); }
+  .site-shell.is-film .site-footer { background: var(--night); }
 }
 @media (max-width: 1023px) {
-  .home--cinematic .panel { max-width: 720px; }
   .site-shell.is-film .site-footer { background: var(--night); }
 }
 @media (max-width: 767px) {
-  .home--cinematic .home-section:not(.home-section--overview) { padding: 56px 16px; }
-  .home--cinematic .home-section--overview { padding: calc(var(--header-h) + 52px) 16px 64px; align-content: end; }
   .actions .btn { flex: 1 1 auto; }
 }
 

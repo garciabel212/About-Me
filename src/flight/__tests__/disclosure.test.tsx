@@ -1,23 +1,20 @@
 import { readFileSync } from 'node:fs';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { MemoryRouter } from 'react-router-dom';
+import TitleBlock from '@/survey/TitleBlock';
+import { sites } from '@/survey/sites';
 import { AI_DISCLOSURE } from '../disclosure';
 import { POSTER_FRAME } from '../poster';
 
-// FlightBackdrop reads media queries on first render; give it a desktop window.
-const desktopWindow = { innerHeight: 900, innerWidth: 1440, matchMedia: () => ({ matches: false }) };
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
 describe('AI footage disclosure (LTX-2 license)', () => {
-  it('is drawn on the Cinematic film, beside the footage it labels', async () => {
-    vi.stubGlobal('window', desktopWindow);
-    const { default: FlightBackdrop } = await import('../FlightBackdrop');
-    const out = renderToStaticMarkup(<FlightBackdrop motion />);
-    expect(out).toContain('cine-canvas');
-    expect(out).toContain(`<p class="cine-disclosure">${AI_DISCLOSURE}</p>`);
+  it('is shown in the survey title block, with the film', () => {
+    const out = renderToStaticMarkup(
+      <MemoryRouter>
+        <TitleBlock sites={sites} current={0} />
+      </MemoryRouter>,
+    );
+    expect(out).toContain(`<p class="tb-disclosure">${AI_DISCLOSURE}</p>`);
   });
 
   it('preloads the poster frame the film paints first', () => {

@@ -1,0 +1,55 @@
+/* src/survey/survey.css: the Site Survey landing. Scroll sets --ink, --lift and --focus on .survey. */
+.survey {
+  --ink-red: #ff5b3d;
+  --field: #f3f4f6;
+  --field-2: rgba(243, 244, 246, 0.74);
+  --rule: rgba(243, 244, 246, 0.26);
+  --dusk: #0b0d18;
+  --f-display: "Archivo", system-ui, sans-serif;
+  --f-note: "B612", "Archivo", system-ui, sans-serif;
+  --tb-h: 176px;
+  position: relative;
+  color: var(--field);
+  font-family: var(--f-display);
+}
+
+/* Film: fixed, full-bleed. Racks focus softly behind the ink. */
+.survey-film { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--dusk); pointer-events: none; }
+.survey-film__poster, .survey-film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.survey-film__poster { object-fit: cover; }
+.survey-film__canvas { filter: blur(calc(var(--focus, 0) * 2px)) brightness(calc(1 - var(--focus, 0) * 0.22)); }
+
+/* Readability: dark falloff only where text sits (notes column, title block). */
+.survey__falloff {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(11, 13, 24, 0.8) 0, rgba(11, 13, 24, 0.58) min(560px, 40vw), rgba(11, 13, 24, 0) min(880px, 64vw)),
+    linear-gradient(0deg, rgba(11, 13, 24, 0.66) 0, rgba(11, 13, 24, 0) 42%);
+}
+
+/* Ink. Each stroke draws while --ink crosses its own --from..--to slice. */
+.redline { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity 180ms ease-out; }
+.redline.is-ready { opacity: calc(1 - var(--lift, 0)); }
+.ink {
+  --p: clamp(0, (var(--ink, 1) - var(--from)) / (var(--to) - var(--from)), 1);
+  fill: none; stroke: var(--ink-red); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--p));
+}
+.ink--leader { stroke-width: 1.5; }
+.ink-pulse {
+  --p: clamp(0, (var(--ink, 1) - var(--from)) / (var(--to) - var(--from)), 1);
+  fill: none; stroke: var(--ink-red); stroke-width: 1.5;
+  transform-box: fill-box; transform-origin: center;
+  transform: scale(calc(0.35 + var(--p) * 0.9));
+  opacity: calc(min(1, var(--p) * 6) * (1 - var(--p)));
+}
+
+/* Motion off: whole ink, faded in; no pulse, no blur. */
+.survey--still .ink { stroke-dashoffset: 0; }
+.survey--still .ink-pulse { display: none; }
+.survey--still .redline { transition-duration: 250ms; }
+
+@media (max-width: 767px) {
+  .survey { --tb-h: 92px; }
+  .survey__falloff { background: linear-gradient(0deg, rgba(11, 13, 24, 0.9) 0, rgba(11, 13, 24, 0.62) 46%, rgba(11, 13, 24, 0) 72%); }
+}

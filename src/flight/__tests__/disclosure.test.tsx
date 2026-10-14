@@ -1,20 +1,24 @@
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
-import TitleBlock from '@/survey/TitleBlock';
-import { sites } from '@/survey/sites';
 import { AI_DISCLOSURE } from '../disclosure';
 import { POSTER_FRAME } from '../poster';
 
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 describe('AI footage disclosure (LTX-2 license)', () => {
-  it('is shown in the survey title block, with the film', () => {
+  it('is shown on the landing, with the film', async () => {
+    vi.stubGlobal('window', { innerHeight: 900, innerWidth: 1440, matchMedia: () => ({ matches: false }) });
+    const { default: FlightLanding } = await import('@/landing/FlightLanding');
     const out = renderToStaticMarkup(
       <MemoryRouter>
-        <TitleBlock sites={sites} current={0} />
+        <FlightLanding motion />
       </MemoryRouter>,
     );
-    expect(out).toContain(`<p class="tb-disclosure">${AI_DISCLOSURE}</p>`);
+    expect(out).toContain(`<p class="landing__disclosure">${AI_DISCLOSURE}</p>`);
   });
 
   it('preloads the poster frame the film paints first', () => {

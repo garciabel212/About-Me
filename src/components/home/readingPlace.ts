@@ -1,4 +1,4 @@
-import { sites } from '@/survey/sites';
+import { points } from '@/landing/points';
 
 export interface PlaceRect {
   id: string;
@@ -22,6 +22,6 @@ export function readingPlaceFrom(line: number, rects: PlaceRect[]): { id: string
 /** Selector for the element that holds a place in the given mode. */
 export function placeTarget(id: string, mode: 'cinematic' | 'read'): string {
   if (mode === 'read') return `#${READ_FALLBACK[id] ?? id}`;
-  const owner = sites.find((s) => s.anchors.includes(id));
-  return owner ? `[data-site="${owner.id}"]` : `#${id}`;
+  const owner = points.find((p) => p.anchors.includes(id));
+  return owner ? `[data-point="${owner.id}"]` : `#${id}`;
 }

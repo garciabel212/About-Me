@@ -21,10 +21,10 @@ describe('readingPlaceFrom', () => {
 });
 
 describe('placeTarget', () => {
-  it('finds the survey site that owns a Read section id', () => {
-    expect(placeTarget('projects', 'cinematic')).toBe('[data-site="brickell"]');
-    expect(placeTarget('about', 'cinematic')).toBe('[data-site="river"]');
-    expect(placeTarget('experience', 'cinematic')).toBe('[data-site="beach"]');
+  it('finds the landing point that owns a Read section id', () => {
+    expect(placeTarget('projects', 'cinematic')).toBe('[data-point="bay"]');
+    expect(placeTarget('about', 'cinematic')).toBe('[data-point="sunset"]');
+    expect(placeTarget('experience', 'cinematic')).toBe('[data-point="brickell"]');
   });
 
   it('sends Cinematic-only places to their nearest Read section', () => {

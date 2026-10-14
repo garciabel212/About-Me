@@ -1,5 +1,5 @@
 import { flight } from '@/flight/flightData';
-import { sites } from '@/survey/sites';
+import { points } from '@/landing/points';
 import { homeSections } from '@/data/routes';
 
 /**
@@ -14,9 +14,9 @@ export const homeSectionLinks = homeSections.map((s) => ({
 }));
 
 /**
- * Cinematic mode's links: the survey sheets in route order, each by its
- * primary anchor. Downtown has no Home section of its own and About is part of
- * the River sheet, so the route reads Overview, Projects, Expertise,
- * Experience, Contact.
+ * Cinematic mode's links: the landing points in page order, each by its
+ * primary anchor. "More work" has no Home section of its own and About is part
+ * of the closing point, so the route reads Overview, Experience, Expertise,
+ * Projects, Contact.
  */
-export const cinematicSectionLinks = sites.flatMap((site) => homeSectionLinks.filter((l) => l.id === site.anchors[0]));
+export const cinematicSectionLinks = points.flatMap((point) => homeSectionLinks.filter((l) => l.id === point.anchors[0]));

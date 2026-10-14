@@ -13,8 +13,7 @@ describe('site navigation', () => {
 });
 
 describe('Cinematic navigation', () => {
-  it('follows the survey sheets in route order, with About folded into the River', () => {
-    expect(cinematicSectionLinks.map((l) => l.id)).toEqual(['overview', 'projects', 'expertise', 'experience', 'contact']);
-    expect(cinematicSectionLinks.map((l) => l.href)).toEqual(['/#overview', '/#projects', '/#expertise', '/#experience', '/#contact']);
+  it('follows the points in page order, with About folded into the closing point', () => {
+    expect(cinematicSectionLinks.map((l) => l.id)).toEqual(['overview', 'experience', 'expertise', 'projects', 'contact']);
   });
 });

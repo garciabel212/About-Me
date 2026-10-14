@@ -1,0 +1,96 @@
+/* src/landing/landing.css: the light path landing. LightPath sets the drawn length on its own elements. */
+.landing {
+  --text: #f3f4f6;
+  --text-2: rgba(243, 244, 246, 0.74);
+  --accent: #4aa8ff;
+  --core: #eaf6ff;
+  --dusk: #0b0d18;
+  --f-display: "Bodoni Moda", "Times New Roman", serif;
+  --f-text: "Archivo", system-ui, sans-serif;
+  position: relative;
+  color: var(--text);
+  font-family: var(--f-text);
+}
+
+/* Points: normal flow on a 12-column grid, placed like the reference. */
+.point {
+  position: relative; z-index: 3;
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px;
+  min-height: 110vh; min-height: 110svh;
+  padding: 16svh var(--gutter);
+}
+.point:focus { outline: none; }
+.point__anchor { position: absolute; top: 0; left: 0; width: 1px; height: 1px; scroll-margin-top: calc(var(--header-h) + 8px); }
+.point__body {
+  position: relative; max-width: 560px; align-self: center;
+  padding: 28px 32px; margin: -28px -32px;
+  background: radial-gradient(closest-side, rgba(11, 13, 24, 0.72), rgba(11, 13, 24, 0.5) 70%, rgba(11, 13, 24, 0));
+}
+.point--top-right { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--header-h) + 9svh); }
+.point--top-right .point__body { grid-column: 7 / 13; justify-self: end; align-self: start; }
+.point--left .point__body { grid-column: 1 / 7; }
+.point--center .point__body { grid-column: 4 / 10; justify-self: center; }
+.point--right .point__body { grid-column: 7 / 13; justify-self: end; }
+.point--bottom-left .point__body { grid-column: 1 / 7; align-self: end; }
+.landing__gap { height: 60vh; height: 60svh; }
+
+.point .point__label { margin: 0 0 14px; font: 600 12px/1 var(--f-text); letter-spacing: 0.28em; text-transform: uppercase; }
+.point .point__label span { color: #7cc4ff; letter-spacing: 0.12em; margin-right: 6px; }
+.point .point__name { margin: 0; font: 500 clamp(52px, 6.4vw, 92px)/0.98 var(--f-display); letter-spacing: -0.01em; color: var(--text); }
+.point .point__role { margin: 10px 0 0; font: 400 clamp(19px, 1.6vw, 24px)/1.25 var(--f-display); color: var(--text); }
+.point .point__headline { margin: 0 0 22px; font: 500 clamp(32px, 3.2vw, 46px)/1.08 var(--f-display); color: var(--text); text-wrap: balance; }
+.point .point__lead { margin: 16px 0 0; max-width: 44ch; font: 400 17px/1.55 var(--f-text); color: var(--text); text-wrap: pretty; }
+.point p { margin: 10px 0 0; font: 400 15px/1.55 var(--f-text); color: var(--text-2); }
+.point h3 { margin: 0; font: 500 23px/1.2 var(--f-display); color: var(--text); }
+.point .point__meta { font-size: 13px; letter-spacing: 0.02em; color: var(--text-2); }
+.point strong { color: var(--text); font-weight: 600; }
+.point a { color: var(--text); text-underline-offset: 3px; }
+.point a:focus-visible, .point summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.point .point__actions { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 22px; font: 600 15px/1.2 var(--f-text); }
+.point .point__primary { color: var(--accent); text-decoration: none; border-bottom: 2px solid currentColor; }
+.point .point__link { display: inline-block; margin-top: 12px; font: 600 14px/1.2 var(--f-text); }
+
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 26px 0 0; }
+.facts dt { font: 600 11px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-2); }
+.facts dd { margin: 4px 0 0; font: 400 14px/1.4 var(--f-text); color: var(--text); }
+
+.role-note + .role-note, .work-note + .work-note { margin-top: 34px; }
+.role-note__title { color: var(--text) !important; }
+.role-note__contributions { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 8px; font: 400 15px/1.5 var(--f-text); color: var(--text-2); }
+.role-note__details { margin-top: 12px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
+.role-note__details summary { cursor: pointer; color: var(--text); font-weight: 600; }
+.role-note__details ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 6px; }
+
+.method { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.method__step h3 { font-size: 21px; }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; margin-top: 30px; }
+.tools__group h3 { font: 600 12px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text); }
+.tools__group ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font: 400 14px/1.4 var(--f-text); color: var(--text-2); }
+
+.work-note__shot { margin: 14px 0 0; }
+.work-note__shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(243, 244, 246, 0.16); }
+.work-note__shot figcaption { margin-top: 6px; font: 400 12px/1.4 var(--f-text); color: var(--text-2); }
+.work-note__steps { color: var(--text) !important; }
+
+.connect__about { display: grid; grid-template-columns: 120px 1fr; gap: 20px; align-items: start; }
+.connect__portrait { width: 120px; height: 120px; border-radius: 10px; object-fit: cover; }
+.connect__about p:first-child { margin-top: 0; }
+.connect__details, .connect__education { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 6px; font: 400 14px/1.45 var(--f-text); color: var(--text-2); }
+.connect__education strong { display: block; }
+
+/* Tablets: left and right only; the center point joins the left. */
+@media (max-width: 1023px) {
+  .point--center .point__body { grid-column: 1 / 9; justify-self: start; }
+  .point--left .point__body, .point--bottom-left .point__body { grid-column: 1 / 10; }
+  .point--right .point__body, .point--top-right .point__body { grid-column: 4 / 13; }
+}
+
+/* Phones: one column; the light runs down the left margin. */
+@media (max-width: 767px) {
+  .point { display: block; min-height: 0; padding: 12svh 16px 12svh 52px; }
+  .point--top-right { min-height: 100svh; padding-top: calc(var(--header-h) + 6svh); }
+  .point__body { max-width: none; margin: -20px -16px; padding: 20px 16px; }
+  .landing__gap { height: 40svh; }
+  .facts, .tools { grid-template-columns: 1fr; }
+  .connect__about { grid-template-columns: 1fr; }
+}

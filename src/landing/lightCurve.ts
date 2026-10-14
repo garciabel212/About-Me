@@ -1,3 +1,4 @@
+// The light path's geometry and progress (named apart from LightPath.tsx: Windows paths ignore case).
 export interface Node {
   x: number;
   y: number;

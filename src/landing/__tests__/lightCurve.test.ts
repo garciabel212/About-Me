@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HEAD_LINE, lightFor, pathD, samplePath } from '../lightPath';
+import { HEAD_LINE, lightFor, pathD, samplePath } from '../lightCurve';
 
 const nodes = [
   { x: 1130, y: 120 },

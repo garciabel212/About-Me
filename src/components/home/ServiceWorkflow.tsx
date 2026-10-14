@@ -1,6 +1,6 @@
 import { Building2, ClipboardCheck, HardDrive, MapPinned, PackageCheck } from 'lucide-react';
 
-const STEPS = [
+export const SERVICE_STEPS = [
   { Icon: Building2, title: 'Customer site', fields: ['Location', 'Contacts', 'Service history'] },
   { Icon: HardDrive, title: 'Installed systems', fields: ['Equipment', 'Software versions', 'Serial numbers'] },
   { Icon: ClipboardCheck, title: 'Maintenance status', fields: ['Coverage dates', 'Follow-ups', 'Missing-data flags'] },
@@ -15,7 +15,7 @@ export default function ServiceWorkflow({ label }: { label: string }) {
   return (
     <div className="workflow" role="img" aria-label={label}>
       <ol className="workflow__steps">
-        {STEPS.map(({ Icon, title, fields }, i) => (
+        {SERVICE_STEPS.map(({ Icon, title, fields }, i) => (
           <li key={title} className="workflow__step">
             <span className="workflow__icon"><Icon size={18} aria-hidden="true" /></span>
             <div>

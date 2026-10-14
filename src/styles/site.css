@@ -45,7 +45,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
   --text-primary: #f4efe6; --text-secondary: rgba(244, 239, 230, 0.78); --text-muted: rgba(244, 239, 230, 0.64);
   --border: rgba(244, 239, 230, 0.12); --border-strong: rgba(244, 239, 230, 0.26); --border-subtle: rgba(244, 239, 230, 0.07);
 }
-.site-shell.is-film ::selection { background: rgba(255, 91, 61, 0.35); }
+.site-shell.is-film ::selection { background: rgba(74, 168, 255, 0.35); }
 /* The survey owns the page in Cinematic mode: dark scrollbar, no light gutter. */
 html:has(.site-shell.is-film) { color-scheme: dark; background: #0b0d18; scrollbar-color: rgba(243, 244, 246, 0.3) #0b0d18; }
 
@@ -87,16 +87,17 @@ html:has(.site-shell.is-film) { color-scheme: dark; background: #0b0d18; scrollb
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
-/* Over the survey the header joins the drawing: no glass band, Archivo lettering, one red. */
+/* Over the flight the header stays light: no glass band, the light's blue as the one accent. */
 .site-header.is-film {
   background: linear-gradient(rgba(11, 13, 24, 0.78), rgba(11, 13, 24, 0));
   backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent;
 }
-.site-header.is-film .site-brand { font: 800 20px/1 "Archivo", system-ui, sans-serif; font-stretch: 112%; letter-spacing: 0; }
+.site-header.is-film .site-brand { font: 500 22px/1 "Bodoni Moda", "Times New Roman", serif; letter-spacing: 0; }
 .site-header.is-film .site-nav a, .site-header.is-film .hdr-btn, .site-header.is-film .view-switch button { font-family: "Archivo", system-ui, sans-serif; }
-.site-header.is-film .site-nav a::after { background: #ff5b3d; }
-.site-header.is-film .view-switch button[aria-pressed="true"]:not(.view-switch__motion) { background: transparent; color: #f3f4f6; border-radius: 0; box-shadow: inset 0 -2px 0 #ff5b3d; }
-.site-header.is-film a.hdr-btn[href^="mailto:"] { color: #ff5b3d; border-color: currentColor; font-weight: 700; }
+.site-header.is-film .site-nav a::after { background: #4aa8ff; }
+.site-header.is-film .view-switch button[aria-pressed="true"]:not(.view-switch__motion) { background: transparent; color: #f3f4f6; border-radius: 0; box-shadow: inset 0 -2px 0 #4aa8ff; }
+.site-header.is-film a.hdr-btn[href^="mailto:"] { color: #4aa8ff; border-color: currentColor; font-weight: 700; }
+.site-header.is-film .site-header__bar { max-width: none; }
 .site-header__bar {
   display: flex; align-items: center; gap: 20px; height: var(--header-h);
   max-width: 1520px; margin: 0 auto; padding: 0 var(--gutter);

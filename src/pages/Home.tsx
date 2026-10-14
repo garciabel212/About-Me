@@ -5,8 +5,8 @@ import { About, Contact, Experience, Expertise, Overview, Projects } from '@/com
 import { saveHomeReturn } from '@/components/home/homeReturn';
 import { placeTarget, readingPlaceFrom, type PlaceRect } from '@/components/home/readingPlace';
 import { sectionIds } from '@/data/routes';
-import SurveyLanding from '@/survey/SurveyLanding';
-import { sites } from '@/survey/sites';
+import FlightLanding from '@/landing/FlightLanding';
+import { points } from '@/landing/points';
 
 const SECTIONS = [Overview, Experience, Expertise, Projects, About, Contact];
 /** Where the reader's place is read from when the mode switches: the upper third of the viewport. */
@@ -14,7 +14,7 @@ const READ_LINE = 0.3;
 
 function placeRects(cinematic: boolean): PlaceRect[] {
   const entries = cinematic
-    ? sites.map((s) => ({ id: s.anchors[0], el: document.querySelector(`[data-site="${s.id}"]`) }))
+    ? points.map((p) => ({ id: p.anchors[0], el: document.querySelector(`[data-point="${p.id}"]`) }))
     : sectionIds.map((id) => ({ id, el: document.getElementById(id) }));
   return entries.flatMap(({ id, el }) => {
     const r = el?.getBoundingClientRect();
@@ -75,7 +75,7 @@ export default function Home() {
 
   return (
     <main id="main" tabIndex={-1} className={`home ${cinematic ? 'home--cinematic' : 'home--read'}`} onClickCapture={onClickCapture}>
-      {cinematic ? <SurveyLanding motion={motion} /> : SECTIONS.map((Section, i) => <Section key={sectionIds[i]} />)}
+      {cinematic ? <FlightLanding motion={motion} /> : SECTIONS.map((Section, i) => <Section key={sectionIds[i]} />)}
     </main>
   );
 }

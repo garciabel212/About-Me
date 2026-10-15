@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { contact } from '@/data/content';
 import { mailto, profile, resumeUrl } from '@/data/profile';
@@ -14,24 +15,37 @@ function Contact() {
   );
 }
 
+/** The rest of a point, one tap away: opens in place (and animates open where the browser can). */
+function More({ label, context, children }: { label: string; context?: string; children: ReactNode }) {
+  return (
+    <details className="point-more">
+      <summary>
+        {label}
+        {context && <span className="sr-only">: {context}</span>}
+      </summary>
+      <div className="point-more__body">{children}</div>
+    </details>
+  );
+}
+
 function RoleBlock({ role }: { role: Role }) {
   return (
-    <article className="role-note" aria-labelledby={`role-${role.id}`}>
+    <article className="role-note" id={`exp-${role.id}`} aria-labelledby={`role-${role.id}`}>
       <h3 id={`role-${role.id}`}>{role.organization}</h3>
       <p className="role-note__title">{role.title}</p>
       <p className="point__meta">{role.period}. {role.location}</p>
       <p>{role.summary}</p>
-      <ul className="role-note__contributions">
-        {role.contributions.map((c) => (
-          <li key={c.label}><strong>{c.label}.</strong> {c.text}</li>
-        ))}
-      </ul>
-      <details className="role-note__details">
-        <summary>Full responsibilities from my résumé</summary>
-        <ul>
+      <More label="Contributions and full responsibilities" context={role.organization}>
+        <ul className="role-note__contributions">
+          {role.contributions.map((c) => (
+            <li key={c.label}><strong>{c.label}.</strong> {c.text}</li>
+          ))}
+        </ul>
+        <p className="point__meta">Full responsibilities from my résumé</p>
+        <ul className="role-note__contributions">
           {role.details.map((d) => <li key={d}>{d}</li>)}
         </ul>
-      </details>
+      </More>
     </article>
   );
 }
@@ -47,13 +61,16 @@ function WorkBlock({ item }: { item: WorkItem }) {
           <figcaption>{item.image.caption}</figcaption>
         </figure>
       )}
-      <p>{item.problem}</p>
-      {item.steps && <p className="work-note__steps">Workflow: {item.steps.join(' → ')}</p>}
-      <p><strong>My part.</strong> {item.contribution}</p>
+      <p className="work-note__outcome">{item.outcome}</p>
       <p className="point__meta">{item.status}. {item.statusNote}.</p>
       <Link to={item.href} className="point__link">
         {item.linkLabel}<span className="sr-only">: {item.title}</span>
       </Link>
+      <More label="The problem and my part" context={item.title}>
+        <p>{item.problem}</p>
+        {item.steps && <p className="work-note__steps">Workflow: {item.steps.join(' → ')}</p>}
+        <p><strong>My part.</strong> {item.contribution}</p>
+      </More>
     </article>
   );
 }
@@ -98,23 +115,30 @@ export default function PointSection({ point }: { point: Point }) {
               {b.steps.map((s) => (
                 <li key={s.step} className="point-steps__step">
                   <h3>{s.step}</h3>
-                  {s.work.map((p) => (
-                    <p key={p.text}><span className="point__meta">At work</span> {p.text} <Link to={p.href}>{p.source}</Link></p>
-                  ))}
-                  {s.projects.map((p) => (
-                    <p key={p.text}><span className="point__meta">In a project</span> {p.text} <Link to={p.href}>{p.source}</Link></p>
-                  ))}
+                  <p>{s.work[0].text} <Link to={s.work[0].href}>{s.work[0].source}</Link></p>
                 </li>
               ))}
             </ol>
-            <div className="tools">
-              {b.groups.map((g) => (
-                <div key={g.name} className="tools__group">
-                  <h3>{g.name}</h3>
-                  <ul>{g.items.map((i) => <li key={i}>{i}</li>)}</ul>
-                </div>
-              ))}
-            </div>
+            <More label="Project examples and tools">
+              <ul className="point-steps__more">
+                {b.steps.map((s) => (
+                  <li key={s.step}>
+                    <strong>{s.step}.</strong>
+                    {[...s.work.slice(1), ...s.projects].map((p) => (
+                      <span key={p.text}> {p.text} <Link to={p.href}>{p.source}</Link></span>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+              <div className="tools">
+                {b.groups.map((g) => (
+                  <div key={g.name} className="tools__group">
+                    <h3>{g.name}</h3>
+                    <ul>{g.items.map((i) => <li key={i}>{i}</li>)}</ul>
+                  </div>
+                ))}
+              </div>
+            </More>
           </>
         )}
         {b.kind === 'work' && b.items.map((w) => <WorkBlock key={w.id} item={w} />)}
@@ -122,20 +146,23 @@ export default function PointSection({ point }: { point: Point }) {
           <>
             <div className="connect__about">
               <img className="connect__portrait" src={`${base}${b.portrait.src}`} alt={b.portrait.alt} width={120} height={120} loading="lazy" decoding="async" />
-              <div>{b.bio.map((p) => <p key={p}>{p}</p>)}</div>
+              <p>{b.bio[0]}</p>
             </div>
             <p className="point__lead">{b.body}</p>
-            <ul className="connect__details">{b.details.map((d) => <li key={d}>{d}</li>)}</ul>
-            <ul className="connect__education">
-              {b.education.map((e) => <li key={e.name}><strong>{e.name}</strong> {e.issuer}</li>)}
-              <li><strong>Languages</strong> {b.languages}</li>
-            </ul>
             <p className="point__actions">
               <a className="point__primary" href={mailto}>Email me</a>
               <a href={contact.linkedin}>LinkedIn</a>
               <a href={profile.github}>GitHub</a>
               <a href={resumeUrl} download={profile.resumeFile}>Résumé</a>
             </p>
+            <More label="More about me">
+              {b.bio.slice(1).map((p) => <p key={p}>{p}</p>)}
+              <ul className="connect__details">{b.details.map((d) => <li key={d}>{d}</li>)}</ul>
+              <ul className="connect__education">
+                {b.education.map((e) => <li key={e.name}><strong>{e.name}</strong> {e.issuer}</li>)}
+                <li><strong>Languages</strong> {b.languages}</li>
+              </ul>
+            </More>
           </>
         )}
         <span className="point__node point__node--exit" data-node="exit" aria-hidden="true" />

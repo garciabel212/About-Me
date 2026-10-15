@@ -34,11 +34,26 @@ describe('PointSection', () => {
     expect(all[1]).toContain('<span class="point__rise">Technology. People. Results.</span>');
   });
 
-  it('shows each role in full, with the résumé details on demand', () => {
+  it('shows each role at a glance, with contributions and the résumé details one tap away', () => {
     expect(all[1]).toContain('Digital Library Systems Group / Image Access');
     expect(all[1]).toContain('October 2022 to Present');
-    expect(all[1].match(/<details/g)).toHaveLength(2);
-    expect(all[1]).toContain('Full responsibilities from my résumé');
+    expect(all[1].match(/<details class="point-more"/g)).toHaveLength(2);
+    expect(all[1]).toContain('Contributions and full responsibilities');
+  });
+
+  it('puts each role deep link on the role itself, exactly once (so /#exp-globenet shows Globenet)', () => {
+    for (const id of ['exp-dlsg', 'exp-globenet']) {
+      expect(all.join('').match(new RegExp(`id="${id}"`, 'g'))).toHaveLength(1);
+      expect(all[1]).toMatch(new RegExp(`<article class="role-note" id="${id}"`));
+    }
+  });
+
+  it('keeps each point short until "More" is opened', () => {
+    const visibleWords = (html: string) =>
+      html.replace(/<details[\s\S]*?<\/details>/g, '').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+    points.forEach((p, i) => expect(visibleWords(all[i]), p.id).toBeLessThanOrEqual(125));
+    // Nothing is cut: every point but the intro keeps its full detail behind "More".
+    for (const out of all.slice(1)) expect(out).toContain('<details class="point-more"');
   });
 
   it('shows the five method steps with proof, and the tool groups', () => {

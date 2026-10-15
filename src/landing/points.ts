@@ -20,6 +20,8 @@ export interface WorkItem {
   id: string;
   title: string;
   focus: string;
+  /** One line for the short view: what it does. */
+  outcome: string;
   problem: string;
   contribution: string;
   status: string;
@@ -78,12 +80,13 @@ function shot(p: ReturnType<typeof project>): Shot | undefined {
   return { src: p.image.small, alt: p.image.alt, width: 800, height: 500, caption: p.image.caption };
 }
 
-function work(slug: string, extra: Partial<WorkItem> = {}): WorkItem {
+function work(slug: string, outcome: string, extra: Partial<WorkItem> = {}): WorkItem {
   const p = project(slug);
   return {
     id: `work-${slug}`,
     title: p.title,
     focus: p.focus,
+    outcome,
     problem: p.problem,
     contribution: p.contribution,
     status: p.status,
@@ -116,7 +119,8 @@ export const points: Point[] = [
   },
   {
     id: 'brickell',
-    anchors: ['experience', 'exp-dlsg', 'exp-globenet'],
+    // The exp-* deep links sit on each role (Point.tsx), so /#exp-globenet lands on Globenet itself.
+    anchors: ['experience'],
     number: '01',
     label: 'Experience',
     headline: 'Technology. People. Results.',
@@ -153,7 +157,13 @@ export const points: Point[] = [
     placement: 'right',
     body: {
       kind: 'work',
-      items: [work('service-map-planner', { steps: SERVICE_STEPS.map((s) => s.title), image: undefined }), work('aac-communication-app')],
+      items: [
+        work('service-map-planner', 'One place to prepare a service visit: site, equipment, maintenance, and route.', {
+          steps: SERVICE_STEPS.map((s) => s.title),
+          image: undefined,
+        }),
+        work('aac-communication-app', 'Yes and no answers with buttons that never move, in Spanish and English.'),
+      ],
     },
   },
   {
@@ -166,11 +176,12 @@ export const points: Point[] = [
     body: {
       kind: 'work',
       items: [
-        work('scale-garage-studio'),
+        work('scale-garage-studio', 'A 1:18 model-car garage configured in 3D, with fit and printability checks.'),
         {
           id: 'work-agent-trading-os',
           title: lab.title,
           focus: lab.subtitle,
+          outcome: 'Simple agents propose paper trades, and every step is recorded for replay.',
           problem: lab.summary,
           contribution: lab.role,
           status: 'Experiment',

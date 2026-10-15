@@ -14,6 +14,11 @@ export function measureNodes(root: Element): Node[] {
   });
 }
 
+/** The light's drawing area: the landing's own box. Never scrollHeight, which counts the SVG itself and only ever grows. */
+export function landingSize(root: HTMLElement): { w: number; h: number } {
+  return { w: root.clientWidth, h: root.offsetHeight };
+}
+
 /**
  * The one glowing light that joins the points. It is drawn over the whole
  * landing, so it scrolls with the text; scroll sets how much is lit and where
@@ -33,11 +38,13 @@ export default function LightPath({ motion }: { motion: boolean }) {
     if (!root) return;
     const measure = () => {
       setNodes(measureNodes(root));
-      setSize({ w: root.clientWidth, h: root.scrollHeight });
+      setSize(landingSize(root));
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(root);
+    // A text block can grow (an opened "More") inside a section with spare height, without resizing the landing.
+    root.querySelectorAll('.point__body').forEach((body) => ro.observe(body));
     document.fonts?.ready.then(measure, () => {});
     return () => ro.disconnect();
   }, []);

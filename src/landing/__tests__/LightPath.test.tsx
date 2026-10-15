@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import LightPath, { measureNodes } from '../LightPath';
+import LightPath, { landingSize, measureNodes } from '../LightPath';
 
 type Box = { top: number; left: number; width: number; height: number };
 const rect = (b: Box) => ({ ...b, right: b.left + b.width, bottom: b.top + b.height, x: b.left, y: b.top });
@@ -49,6 +49,13 @@ describe('measureNodes exits', () => {
       { x: 606, y: 106 },
       { x: 606, y: 906, exit: true },
     ]);
+  });
+});
+
+describe('landingSize', () => {
+  it('sizes the light from the landing box, never from its own overflow (which once left blank page below the footer)', () => {
+    const root = { clientWidth: 1440, offsetHeight: 10332, scrollHeight: 15282 } as unknown as HTMLElement;
+    expect(landingSize(root)).toEqual({ w: 1440, h: 10332 });
   });
 });
 

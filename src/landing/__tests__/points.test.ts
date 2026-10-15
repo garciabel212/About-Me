@@ -12,7 +12,7 @@ function strings(p: Point): string[] {
     b.steps.forEach((s) => out.push(s.step, ...[...s.work, ...s.projects].flatMap((p) => [p.source, p.text])));
     b.groups.forEach((g) => out.push(g.name, ...g.items));
   }
-  if (b.kind === 'work') b.items.forEach((w) => out.push(w.title, w.focus, w.problem, w.contribution, w.status, w.statusNote, w.linkLabel, ...(w.steps ?? []), ...(w.image ? [w.image.alt, w.image.caption] : [])));
+  if (b.kind === 'work') b.items.forEach((w) => out.push(w.title, w.focus, w.outcome, w.problem, w.contribution, w.status, w.statusNote, w.linkLabel, ...(w.steps ?? []), ...(w.image ? [w.image.alt, w.image.caption] : [])));
   if (b.kind === 'connect') out.push(...b.bio, b.portrait.alt, b.languages, b.body, ...b.details, ...b.education.flatMap((e) => [e.name, e.issuer]));
   return out;
 }
@@ -31,7 +31,8 @@ describe('points', () => {
   });
 
   it('keeps every existing deep link, each exactly once', () => {
-    const ids = points.flatMap((p) => p.anchors);
+    const roles = points.flatMap((p) => (p.body.kind === 'experience' ? p.body.roles.map((r) => `exp-${r.id}`) : []));
+    const ids = [...points.flatMap((p) => p.anchors), ...roles];
     for (const id of ['overview', 'about', 'projects', 'more-projects', 'expertise', 'experience', 'exp-dlsg', 'exp-globenet', 'contact']) {
       expect(ids.filter((x) => x === id)).toHaveLength(1);
     }
@@ -57,6 +58,14 @@ describe('points', () => {
     expect(work.map((w) => w.image?.src ?? null)).toEqual([null, 'images/projects/aac-yes-no-800.webp', 'images/projects/garage-configurator-800.webp', null]);
     for (const w of work) if (w.image) expect(w.image).toMatchObject({ width: 800, height: 500 });
     expect(work[0].steps).toEqual(['Customer site', 'Installed systems', 'Maintenance status', 'Visit plan']);
+  });
+
+  it('gives every project a one-line outcome for the short view', () => {
+    const work = points.flatMap((p) => (p.body.kind === 'work' ? p.body.items : []));
+    for (const w of work) {
+      expect(w.outcome.length).toBeGreaterThan(20);
+      expect(w.outcome.split(' ').length).toBeLessThanOrEqual(16);
+    }
   });
 
   it('uses the reference headlines', () => {

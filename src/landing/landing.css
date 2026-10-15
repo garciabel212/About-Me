@@ -42,7 +42,8 @@
 .point--center .point__body { grid-column: 4 / 10; justify-self: center; }
 .point--right .point__body { grid-column: 7 / 13; justify-self: end; }
 .point--bottom-left .point__body { grid-column: 1 / 7; align-self: end; }
-.landing__gap { height: 60vh; height: 60svh; }
+/* A third shorter than first built: the flight is a moment between points, not a wait. */
+.landing__gap { height: 40vh; height: 40svh; }
 
 .point .point__label { margin: 0 0 14px; font: 600 12px/1 var(--f-text); letter-spacing: 0.28em; text-transform: uppercase; }
 .point .point__label span { color: #b9e0ff; letter-spacing: 0.12em; margin-right: 6px; }
@@ -67,15 +68,18 @@
 .role-note + .role-note, .work-note + .work-note { margin-top: 34px; }
 .role-note__title { color: var(--text) !important; }
 .role-note__contributions { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 8px; font: 400 15px/1.5 var(--f-text); color: var(--text-2); }
-.role-note__details { margin-top: 12px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
-.role-note__details summary { cursor: pointer; color: var(--text); font-weight: 600; list-style: none; }
-.role-note__details summary::-webkit-details-marker { display: none; }
-.role-note__details summary::before {
+.point-more { margin-top: 14px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
+.point-more summary { cursor: pointer; color: var(--text); font-weight: 600; list-style: none; }
+.point-more summary::-webkit-details-marker { display: none; }
+.point-more summary::before {
   content: ""; display: inline-block; width: 7px; height: 7px; margin: 0 12px 2px 2px;
   border: solid var(--accent); border-width: 0 1.5px 1.5px 0; transform: rotate(-45deg); transition: transform 0.2s ease;
 }
-.role-note__details[open] summary::before { transform: rotate(45deg); }
-.role-note__details ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 6px; }
+.point-more[open] summary::before { transform: rotate(45deg); }
+.point-more__body { padding-top: 6px; }
+.point-steps__more { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
+.point .work-note__outcome { color: var(--text); font-size: 16px; }
+
 
 .point-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
 .point-steps__step h3 { font-size: 21px; }
@@ -108,7 +112,7 @@
   .point__body { max-width: none; }
   .point__body::before { inset: -24px -16px; background: rgba(11, 13, 24, 0.6); }
   .point .point__node--exit { left: -40px !important; right: auto !important; }
-  .landing__gap { height: 40svh; }
+  .landing__gap { height: 28svh; }
   .point-facts, .tools { grid-template-columns: 1fr; }
   .connect__about { grid-template-columns: 1fr; }
 }
@@ -189,10 +193,10 @@
 
 /* "Full responsibilities" grows open instead of jumping (where the browser can animate <details>). */
 @supports (interpolate-size: allow-keywords) {
-  .role-note__details { interpolate-size: allow-keywords; }
-  .role-note__details::details-content {
+  .point-more { interpolate-size: allow-keywords; }
+  .point-more::details-content {
     height: 0; opacity: 0; overflow: clip;
     transition: height 250ms var(--ease-arrive), opacity 250ms var(--ease-arrive), content-visibility 250ms allow-discrete;
   }
-  .role-note__details[open]::details-content { height: auto; opacity: 1; }
+  .point-more[open]::details-content { height: auto; opacity: 1; }
 }

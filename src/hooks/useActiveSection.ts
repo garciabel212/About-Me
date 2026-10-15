@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { sectionIds, type SectionId } from '@/data/routes';
 
-/** The Home section under the upper third of the viewport, for the header's current-location mark. */
 /**
  * The section that most recently passed the probe line: the one with the
  * greatest top at or above it. Works whatever order the ids are listed in
@@ -9,7 +8,8 @@ import { sectionIds, type SectionId } from '@/data/routes';
  */
 export function activeFrom<T extends string>(tops: readonly { id: T; top: number }[], probe: number): T | null {
   let best: { id: T; top: number } | null = null;
-  for (const t of tops) if (t.top <= probe && (!best || t.top > best.top)) best = t;
+  // Ties go to the later id (Cinematic: about and contact share the closing point; Contact is the one in the nav).
+  for (const t of tops) if (t.top <= probe && (!best || t.top >= best.top)) best = t;
   return best?.id ?? tops[0]?.id ?? null;
 }
 

@@ -111,6 +111,8 @@
 @media (max-width: 767px) {
   .point { display: block; min-height: 0; padding: 12svh 16px 12svh 52px; }
   .point--top-right { min-height: 100svh; padding-top: calc(var(--header-h) + 6svh); }
+  /* The closing point keeps its full screen on phones too, so the footer arrives after it. */
+  .point--bottom-left { min-height: 100svh; padding-bottom: 34svh; }
   .point__body { max-width: none; }
   .point__body::before { inset: -24px -16px; background: rgba(11, 13, 24, 0.6); }
   .point .point__node--exit { left: -40px !important; right: auto !important; }

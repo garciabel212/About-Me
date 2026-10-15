@@ -89,8 +89,8 @@ html:has(.site-shell.is-film) { color-scheme: dark; background: #0b0d18; scrollb
 }
 /* Over the flight the header stays light: no glass band, the light's blue as the one accent. */
 .site-header.is-film {
-  /* Dense enough that text scrolling underneath never shows through the brand and nav. */
-  background: linear-gradient(rgba(11, 13, 24, 0.94), rgba(11, 13, 24, 0.8));
+  /* The landing's own top fade sits under the bar, so the header itself carries no band. */
+  background: transparent;
   backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent;
 }
 .site-header.is-film .site-brand { font: 500 22px/1 "Bodoni Moda", "Times New Roman", serif; letter-spacing: 0; }

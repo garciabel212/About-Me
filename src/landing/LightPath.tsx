@@ -48,7 +48,8 @@ export default function LightPath({ motion }: { motion: boolean }) {
     if (!el || nodes.length < 2) return;
     const core = el.querySelector<SVGPathElement>('.light-path__core');
     const glow = el.querySelector<SVGPathElement>('.light-path__glow');
-    const head = el.querySelector<SVGCircleElement>('.light-path__head');
+    const halo = el.querySelector<SVGPathElement>('.light-path__halo');
+    const head = el.querySelector<SVGGElement>('.light-path__head');
     const dots = [...el.querySelectorAll<SVGCircleElement>('.light-path__node')];
     const update = () => {
       const top = (el.parentElement?.getBoundingClientRect().top ?? 0) + window.scrollY;
@@ -56,8 +57,8 @@ export default function LightPath({ motion }: { motion: boolean }) {
       const l = lightFor(samples, nodes, { scrollY: window.scrollY, vh: window.innerHeight, maxScroll, top, motion });
       core?.setAttribute('stroke-dashoffset', String(1 - l.fraction));
       glow?.setAttribute('stroke-dashoffset', String(1 - l.fraction));
-      head?.setAttribute('cx', l.head.x.toFixed(1));
-      head?.setAttribute('cy', l.head.y.toFixed(1));
+      halo?.setAttribute('stroke-dashoffset', String(1 - l.fraction));
+      head?.setAttribute('transform', `translate(${l.head.x.toFixed(1)} ${l.head.y.toFixed(1)})`);
       // A dot lights once the head has reached it (all of them when the light is complete).
       dots.forEach((dot, i) => dot.toggleAttribute('data-lit', l.fraction >= 1 || stops[i].y <= l.head.y + 0.5));
     };
@@ -70,13 +71,26 @@ export default function LightPath({ motion }: { motion: boolean }) {
     <svg ref={svg} className="light-path" aria-hidden="true" width={size.w} height={size.h} viewBox={`0 0 ${size.w || 1} ${size.h || 1}`}>
       {d && (
         <>
+          <defs>
+            <radialGradient id="light-path-bloom">
+              <stop offset="0" stopColor="#eaf6ff" stopOpacity="0.95" />
+              <stop offset="0.35" stopColor="#4aa8ff" stopOpacity="0.45" />
+              <stop offset="1" stopColor="#4aa8ff" stopOpacity="0" />
+            </radialGradient>
+          </defs>
           <path className="light-path__route" d={d} />
+          <path className="light-path__halo" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
           <path className="light-path__glow" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
           <path className="light-path__core" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
           {stops.map((n, i) => (
             <circle key={i} className="light-path__node" cx={n.x} cy={n.y} r={6} />
           ))}
-          {motion && <circle className="light-path__head" cx={nodes[0].x} cy={nodes[0].y} r={5} />}
+          {motion && (
+            <g className="light-path__head" transform={`translate(${nodes[0].x} ${nodes[0].y})`}>
+              <circle className="light-path__head-bloom" r={22} />
+              <circle className="light-path__head-core" r={3.5} />
+            </g>
+          )}
         </>
       )}
     </svg>

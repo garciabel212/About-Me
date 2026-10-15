@@ -23,10 +23,16 @@
 .point__anchor { position: absolute; top: 0; left: 0; width: 1px; height: 1px; scroll-margin-top: calc(var(--header-h) + 8px); }
 .point__body {
   position: relative; max-width: 560px; align-self: center;
-  padding: 28px 32px; margin: -28px -32px;
-  background: radial-gradient(closest-side, rgba(11, 13, 24, 0.8), rgba(11, 13, 24, 0.64) 72%, rgba(11, 13, 24, 0));
+  isolation: isolate;
   /* Bright skies (Bay, Sunset) need a touch more separation behind small text. */
   text-shadow: 0 1px 14px rgba(11, 13, 24, 0.7);
+}
+/* Backing behind the text: feathered on every side (no readable edge), even down a tall block. */
+.point__body::before {
+  content: ""; position: absolute; inset: -56px -96px; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.66) 26%, rgba(11, 13, 24, 0.66) 74%, rgba(11, 13, 24, 0));
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 140px, #000 calc(100% - 140px), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 140px, #000 calc(100% - 140px), rgba(0, 0, 0, 0));
 }
 .point--top-right { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--header-h) + 9svh); }
 .point--top-right .point__body { grid-column: 7 / 13; justify-self: end; align-self: start; }
@@ -37,14 +43,14 @@
 .landing__gap { height: 60vh; height: 60svh; }
 
 .point .point__label { margin: 0 0 14px; font: 600 12px/1 var(--f-text); letter-spacing: 0.28em; text-transform: uppercase; }
-.point .point__label span { color: #7cc4ff; letter-spacing: 0.12em; margin-right: 6px; }
+.point .point__label span { color: #b9e0ff; letter-spacing: 0.12em; margin-right: 6px; }
 .point .point__name { margin: 0; font: 500 clamp(52px, 6.4vw, 92px)/0.98 var(--f-display); letter-spacing: -0.01em; color: var(--text); }
 .point .point__role { margin: 10px 0 0; font: 400 clamp(19px, 1.6vw, 24px)/1.25 var(--f-display); color: var(--text); }
 .point .point__headline { margin: 0 0 22px; font: 500 clamp(32px, 3.2vw, 46px)/1.08 var(--f-display); color: var(--text); text-wrap: balance; }
 .point .point__lead { margin: 16px 0 0; max-width: 44ch; font: 400 17px/1.55 var(--f-text); color: var(--text); text-wrap: pretty; }
 .point p { margin: 10px 0 0; font: 400 15px/1.55 var(--f-text); color: var(--text-2); }
 .point h3 { margin: 0; font: 500 23px/1.2 var(--f-display); color: var(--text); }
-.point .point__meta { font-size: 13px; letter-spacing: 0.02em; color: var(--text-2); }
+.point .point__meta { font-size: 14px; font-weight: 500; letter-spacing: 0.02em; color: rgba(243, 244, 246, 0.92); }
 .point strong { color: var(--text); font-weight: 600; }
 .point a { color: var(--text); text-underline-offset: 3px; }
 .point a:focus-visible, .point summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -60,7 +66,13 @@
 .role-note__title { color: var(--text) !important; }
 .role-note__contributions { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 8px; font: 400 15px/1.5 var(--f-text); color: var(--text-2); }
 .role-note__details { margin-top: 12px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
-.role-note__details summary { cursor: pointer; color: var(--text); font-weight: 600; }
+.role-note__details summary { cursor: pointer; color: var(--text); font-weight: 600; list-style: none; }
+.role-note__details summary::-webkit-details-marker { display: none; }
+.role-note__details summary::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin: 0 12px 2px 2px;
+  border: solid var(--accent); border-width: 0 1.5px 1.5px 0; transform: rotate(-45deg); transition: transform 0.2s ease;
+}
+.role-note__details[open] summary::before { transform: rotate(45deg); }
 .role-note__details ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 6px; }
 
 .point-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
@@ -91,7 +103,9 @@
 @media (max-width: 767px) {
   .point { display: block; min-height: 0; padding: 12svh 16px 12svh 52px; }
   .point--top-right { min-height: 100svh; padding-top: calc(var(--header-h) + 6svh); }
-  .point__body { max-width: none; margin: -20px -16px; padding: 20px 16px; }
+  .point__body { max-width: none; }
+  .point__body::before { inset: -24px -16px; background: rgba(11, 13, 24, 0.6); }
+  .point .point__node--exit { left: -40px !important; right: auto !important; }
   .landing__gap { height: 40svh; }
   .point-facts, .tools { grid-template-columns: 1fr; }
   .connect__about { grid-template-columns: 1fr; }
@@ -102,26 +116,36 @@
 .film__poster, .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .film__poster { object-fit: cover; }
 /* Header legibility: a soft dark band under the fixed header only. */
-.landing__veil { position: fixed; inset: 0 0 auto; height: 160px; z-index: 1; pointer-events: none; background: linear-gradient(rgba(11, 13, 24, 0.7), rgba(11, 13, 24, 0)); }
-.landing__disclosure { position: fixed; right: 16px; bottom: 12px; z-index: 4; margin: 0; font: 400 11px/1.2 var(--f-text); letter-spacing: 0.04em; color: var(--text-2); pointer-events: none; }
+.landing__veil, .landing__veil--bottom { position: fixed; left: 0; right: 0; z-index: 5; pointer-events: none; }
+/* Top: scrolling text and light fade out before they reach the header (solid only behind the bar itself). */
+.landing__veil { top: 0; height: calc(var(--header-h) + 64px); background: linear-gradient(rgba(11, 13, 24, 0.96), rgba(11, 13, 24, 0.96) calc(var(--header-h) - 8px), rgba(11, 13, 24, 0)); }
+/* Bottom: the same fade, so the AI disclosure never shares pixels with text or screenshots. */
+.landing__veil--bottom { bottom: 0; height: 96px; background: linear-gradient(rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.95) 62%); }
+.landing__disclosure { position: fixed; right: 16px; bottom: 12px; z-index: 6; margin: 0; font: 400 11px/1.2 var(--f-text); letter-spacing: 0.04em; color: var(--text-2); pointer-events: none; }
 
 /* The light-path: a dim full route, a soft glow, and a bright core drawn to the head. */
 .light-path { position: absolute; inset: 0 auto auto 0; z-index: 2; pointer-events: none; overflow: visible; }
 .light-path path { fill: none; stroke-linecap: round; }
 .light-path__route { stroke: rgba(74, 168, 255, 0.14); stroke-width: 1.5; }
-.light-path__glow { stroke: rgba(74, 168, 255, 0.35); stroke-width: 9; }
+.light-path__halo { stroke: rgba(74, 168, 255, 0.1); stroke-width: 28; }
+.light-path__glow { stroke: rgba(74, 168, 255, 0.32); stroke-width: 9; }
 .light-path__core { stroke: var(--core); stroke-width: 1.8; }
 .light-path__node { fill: rgba(74, 168, 255, 0.25); stroke: rgba(234, 246, 255, 0.4); stroke-width: 1; transition: fill 0.4s ease, r 0.4s ease; }
-.light-path__node[data-lit] { fill: var(--core); r: 7px; }
-.light-path__head { fill: var(--core); }
+/* Arrival: the node flares as the light reaches it. */
+.light-path__node[data-lit] { fill: var(--core); r: 7px; stroke: rgba(74, 168, 255, 0.5); stroke-width: 10px; transition: fill 0.4s ease, r 0.4s ease, stroke-width 0.6s ease; }
+.light-path__head-bloom { fill: url(#light-path-bloom); }
+.light-path__head-core { fill: var(--core); }
 .landing--still .light-path__head { display: none; }
 
 /* Node marks inside each point: where the light-path passes (the side facing the middle of the page). */
 .point__node { position: absolute; top: 34px; width: 12px; height: 12px; }
-.point--left .point__node, .point--bottom-left .point__node { right: -6px; }
-.point--top-right .point__node, .point--center .point__node, .point--right .point__node { left: -6px; }
+.point--left .point__node, .point--bottom-left .point__node { right: -22px; }
+.point--top-right .point__node, .point--center .point__node, .point--right .point__node { left: -22px; }
 .point--top-right .point__node { top: 52px; }
+/* Exit nodes sit out in the open film (away from the text), so the light arcs across the footage while a point is read. */
 .point .point__node--exit { top: auto; bottom: 8px; }
+.point--left .point__node--exit, .point--bottom-left .point__node--exit { right: calc(-1 * clamp(140px, 18vw, 320px)); }
+.point--top-right .point__node--exit, .point--center .point__node--exit, .point--right .point__node--exit { left: calc(-1 * clamp(140px, 18vw, 320px)); }
 @media (max-width: 767px) {
   .point__node { left: -30px !important; right: auto !important; top: 24px; }
   .point:nth-of-type(even) .point__node { left: -18px !important; }

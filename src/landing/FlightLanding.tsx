@@ -24,6 +24,7 @@ export default function FlightLanding({ motion }: { motion: boolean }) {
           <PointSection point={p} />
         </Fragment>
       ))}
+      <div className="landing__veil--bottom" aria-hidden="true" />
       <p className="landing__disclosure">{AI_DISCLOSURE}</p>
     </div>
   );

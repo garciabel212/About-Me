@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HEAD_LINE, lightFor, pathD, samplePath } from '../lightCurve';
+import { HEAD_LINE, lightFor, pathD, reached, samplePath } from '../lightCurve';
 
 const nodes = [
   { x: 1130, y: 120 },
@@ -71,5 +71,17 @@ describe('lightFor', () => {
   it('measures from the landing top, not the document top', () => {
     const shifted = lightFor(samples, nodes, { ...view(1068), top: 68 });
     expect(shifted.head.y).toBeCloseTo(lightFor(samples, nodes, view(1000)).head.y, 0);
+  });
+});
+
+describe('reached', () => {
+  const stops = [{ x: 0, y: 100 }, { x: 0, y: 1400 }, { x: 0, y: 2700 }];
+
+  it('marks every point the light head has arrived at, in order', () => {
+    expect(reached(stops, { fraction: 0.3, head: { x: 0, y: 1500 }, lit: 2 })).toEqual([true, true, false]);
+  });
+
+  it('marks all of them once the light is complete (bottom of the page, or motion off)', () => {
+    expect(reached(stops, { fraction: 1, head: { x: 0, y: 0 }, lit: 3 })).toEqual([true, true, true]);
   });
 });

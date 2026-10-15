@@ -84,3 +84,8 @@ export function lightFor(samples: Sample[], nodes: Node[], view: { scrollY: numb
   const head = { x: a.x + (b.x - a.x) * t, y };
   return { fraction: (a.len + (b.len - a.len) * t) / total, head, lit: Math.max(1, lit) };
 }
+
+/** Which stops (points' entry nodes) the light has reached: all of them once it is complete. */
+export function reached(stops: Node[], light: Light): boolean[] {
+  return stops.map((n) => light.fraction >= 1 || n.y <= light.head.y + 0.5);
+}

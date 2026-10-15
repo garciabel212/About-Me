@@ -22,7 +22,8 @@ describe('PointSection', () => {
 
   it('makes the intro name the only h1, with contact actions on the first screen', () => {
     expect(all.join('').match(/<h1/g)).toHaveLength(1);
-    expect(all[0]).toMatch(/<h1 id="point-river-title" class="point__name">Jose Garcia<\/h1>/);
+    // The name rises from behind its own line, so the text sits in a span the heading clips.
+    expect(all[0]).toMatch(/<h1 id="point-river-title" class="point__name"><span class="point__rise">Jose Garcia<\/span><\/h1>/);
     expect(all[0]).toContain('>Email me<');
     expect(all[0]).toContain('>Résumé<');
     expect(all[0]).not.toContain('point__label');
@@ -30,7 +31,7 @@ describe('PointSection', () => {
 
   it('labels numbered points like the reference', () => {
     expect(all[1]).toContain('<p class="point__label"><span>01 /</span> Experience</p>');
-    expect(all[1]).toContain('Technology. People. Results.');
+    expect(all[1]).toContain('<span class="point__rise">Technology. People. Results.</span>');
   });
 
   it('shows each role in full, with the résumé details on demand', () => {

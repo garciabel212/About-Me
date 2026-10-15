@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { lightFor, pathD, samplePath, type Node } from './lightCurve';
+import { lightFor, pathD, reached, samplePath, type Node } from './lightCurve';
 
 /** Centers of the points' light nodes, relative to the landing's top-left. */
 export function measureNodes(root: Element): Node[] {
@@ -51,6 +51,11 @@ export default function LightPath({ motion }: { motion: boolean }) {
     const halo = el.querySelector<SVGPathElement>('.light-path__halo');
     const head = el.querySelector<SVGGElement>('.light-path__head');
     const dots = [...el.querySelectorAll<SVGCircleElement>('.light-path__node')];
+    const root = el.parentElement;
+    // Each point's section, in the same order as its entry node: text arrives when the light does.
+    const sections = [...(root?.querySelectorAll('[data-node="true"]') ?? [])].map((n) => n.closest('[data-point]'));
+    // Points wait for the light only once it is measured and running; without JS nothing is hidden.
+    root?.setAttribute('data-arrive', motion ? 'on' : 'fade');
     const update = () => {
       const top = (el.parentElement?.getBoundingClientRect().top ?? 0) + window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -59,12 +64,19 @@ export default function LightPath({ motion }: { motion: boolean }) {
       glow?.setAttribute('stroke-dashoffset', String(1 - l.fraction));
       halo?.setAttribute('stroke-dashoffset', String(1 - l.fraction));
       head?.setAttribute('transform', `translate(${l.head.x.toFixed(1)} ${l.head.y.toFixed(1)})`);
-      // A dot lights once the head has reached it (all of them when the light is complete).
-      dots.forEach((dot, i) => dot.toggleAttribute('data-lit', l.fraction >= 1 || stops[i].y <= l.head.y + 0.5));
+      const hit = reached(stops, l);
+      dots.forEach((dot, i) => dot.toggleAttribute('data-lit', hit[i]));
+      // Arrival is one-way: text that has arrived stays put when the reader scrolls back up.
+      sections.forEach((section, i) => {
+        if (hit[i]) section?.setAttribute('data-arrived', '');
+      });
     };
     const trigger = ScrollTrigger.create({ start: 0, end: 'max', onUpdate: update, onRefresh: update });
     update();
-    return () => trigger.kill();
+    return () => {
+      trigger.kill();
+      root?.removeAttribute('data-arrive');
+    };
   }, [nodes, samples, stops, motion]);
 
   return (

@@ -7,6 +7,8 @@
   --dusk: #0b0d18;
   --f-display: "Bodoni Moda", "Times New Roman", serif;
   --f-text: "Archivo", system-ui, sans-serif;
+  /* The site's existing entrance curve (site.css), shared by every landing entrance. */
+  --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   color: var(--text);
   font-family: var(--f-text);
@@ -149,4 +151,48 @@
 @media (max-width: 767px) {
   .point__node { left: -30px !important; right: auto !important; top: 24px; }
   .point:nth-of-type(even) .point__node { left: -18px !important; }
+}
+
+/* ── Entrances ─────────────────────────────────────────────────────────
+   Text arrives when the light reaches its point (LightPath sets data-arrived, once).
+   Nothing is hidden until LightPath has measured the light (data-arrive on the landing). */
+.landing[data-arrive] .point__body > :not(.point__node) {
+  transition: opacity 600ms var(--ease-arrive), transform 600ms var(--ease-arrive);
+}
+.landing[data-arrive="on"] .point:not([data-arrived]) .point__body > :not(.point__node, h1, h2) { opacity: 0; transform: translateY(14px); }
+/* Read top to bottom: first element, then the next, then the rest (node span is child 1). */
+.point__body > :nth-child(3) { transition-delay: 70ms; }
+.point__body > :nth-child(4) { transition-delay: 140ms; }
+.point__body > :nth-child(n + 5) { transition-delay: 210ms; }
+
+/* Headlines and the name rise from behind their own baseline, like a title card. */
+.point__name, .point__headline { clip-path: inset(0 -0.1em -0.25em -0.1em); }
+.point__rise { display: inline-block; transition: transform 750ms var(--ease-arrive), opacity 300ms var(--ease-arrive); transition-delay: inherit; }
+.point__body > :is(h1, h2) { transition-delay: 70ms; }
+.point__body > h1 { transition-delay: 0ms; }
+.landing[data-arrive="on"] .point:not([data-arrived]) .point__rise { opacity: 0; transform: translateY(105%); }
+
+/* Motion off or reduced motion: a short fade only, nothing moves. */
+.landing[data-arrive="fade"] .point__body > :not(.point__node) { transition: opacity 200ms ease; transition-delay: 0ms; }
+.landing[data-arrive="fade"] .point:not([data-arrived]) .point__body > :not(.point__node) { opacity: 0; }
+
+/* Screenshots settle in as they scroll into view (scroll-linked, so it never runs off-screen). */
+@keyframes shot-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .landing:not(.landing--still) .work-note__shot img {
+      animation: shot-in linear both; animation-timeline: view(); animation-range: entry 5% entry 60%;
+      animation-timing-function: var(--ease-arrive);
+    }
+  }
+}
+
+/* "Full responsibilities" grows open instead of jumping (where the browser can animate <details>). */
+@supports (interpolate-size: allow-keywords) {
+  .role-note__details { interpolate-size: allow-keywords; }
+  .role-note__details::details-content {
+    height: 0; opacity: 0; overflow: clip;
+    transition: height 250ms var(--ease-arrive), opacity 250ms var(--ease-arrive), content-visibility 250ms allow-discrete;
+  }
+  .role-note__details[open]::details-content { height: auto; opacity: 1; }
 }

@@ -78,7 +78,7 @@ export default function PointSection({ point }: { point: Point }) {
         )}
         {b.kind === 'intro' ? (
           <>
-            <h1 id={titleId} className="point__name">{b.name}</h1>
+            <h1 id={titleId} className="point__name"><span className="point__rise">{b.name}</span></h1>
             <p className="point__role">{b.role}</p>
             <p className="point__lead">{b.statement}</p>
             <Contact />
@@ -89,7 +89,7 @@ export default function PointSection({ point }: { point: Point }) {
             </dl>
           </>
         ) : (
-          <h2 id={titleId} className="point__headline">{point.headline}</h2>
+          <h2 id={titleId} className="point__headline"><span className="point__rise">{point.headline}</span></h2>
         )}
         {b.kind === 'experience' && b.roles.map((r) => <RoleBlock key={r.id} role={r} />)}
         {b.kind === 'expertise' && (

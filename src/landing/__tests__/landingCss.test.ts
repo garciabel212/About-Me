@@ -18,4 +18,13 @@ describe('landing class names', () => {
     const shared = [...landing].filter((c) => global.has(c) && c !== 'sr-only');
     expect(shared).toEqual([]);
   });
+
+  it('drifts a label with its headline, never toward it, by less than the gap below the headline', () => {
+    const css = readFileSync('src/landing/landing.css', 'utf8');
+    expect(css).not.toContain('depth-far');
+    expect(css).toMatch(/:is\(\.point__headline, \.point__name, \.point__label\) \{ animation: depth-near/);
+    const drift = Number(/@keyframes depth-near \{ from \{ translate: 0 (\d+)px/.exec(css)?.[1]);
+    const gap = Number(/\.point \.point__headline \{ margin: 0 0 (\d+)px/.exec(css)?.[1]);
+    expect(drift).toBeLessThan(gap);
+  });
 });

@@ -66,3 +66,15 @@ describe('LightPath', () => {
     expect(out).not.toContain('<path');
   });
 });
+
+describe('measureNodes origin', () => {
+  it('measures nodes against the light layer itself, so a camera sway that moves both cancels out', () => {
+    const root = {
+      getBoundingClientRect: () => rect({ top: 0, left: 0, width: 1440, height: 8000 }),
+      querySelectorAll: () => [{ getBoundingClientRect: () => rect({ top: 105, left: 607, width: 12, height: 12 }) }],
+    } as unknown as Element;
+    // The text and the light layer are both shifted by the same sway (7px, 5px).
+    const origin = { getBoundingClientRect: () => rect({ top: 5, left: 7, width: 1440, height: 8000 }) } as unknown as Element;
+    expect(measureNodes(root, origin)).toEqual([{ x: 606, y: 106 }]);
+  });
+});

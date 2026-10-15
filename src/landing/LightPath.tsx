@@ -4,8 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { lightFor, pathD, reached, samplePath, type Node } from './lightCurve';
 
 /** Centers of the points' light nodes, relative to the landing's top-left. */
-export function measureNodes(root: Element): Node[] {
-  const r = root.getBoundingClientRect();
+export function measureNodes(root: Element, origin: Element = root): Node[] {
+  // Measured against the light layer itself: a camera sway that moves text and light together cancels out.
+  const r = origin.getBoundingClientRect();
   return [...root.querySelectorAll('[data-node]')].map((el) => {
     const b = el.getBoundingClientRect();
     const node: Node = { x: b.left - r.left + b.width / 2, y: b.top - r.top + b.height / 2 };
@@ -37,7 +38,7 @@ export default function LightPath({ motion }: { motion: boolean }) {
     const root = svg.current?.parentElement;
     if (!root) return;
     const measure = () => {
-      setNodes(measureNodes(root));
+      setNodes(measureNodes(root, svg.current ?? root));
       setSize(landingSize(root));
     };
     measure();

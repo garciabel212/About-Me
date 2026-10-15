@@ -208,3 +208,24 @@
   }
   .point-more[open]::details-content { height: auto; opacity: 1; }
 }
+
+/* ── Depth ─────────────────────────────────────────────────────────────
+   Layered drift: headlines sit nearer (they move a little faster than the
+   text as they pass), labels sit farther (a little slower). Scroll-linked,
+   so it never runs off-screen; off with reduced motion or motion off. */
+@keyframes depth-near { from { translate: 0 34px; } to { translate: 0 -34px; } }
+@keyframes depth-far { from { translate: 0 -12px; } to { translate: 0 12px; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .landing:not(.landing--still) :is(.point__headline, .point__name) { animation: depth-near linear both; animation-timeline: view(); animation-range: cover; }
+    .landing:not(.landing--still) .point__label { animation: depth-far linear both; animation-timeline: view(); animation-range: cover; }
+  }
+}
+
+/* Atmosphere: a dusk haze lifting off the bottom of the film and a soft falloff at its edges, so the eye reads distance. */
+.film::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 95% at 50% 42%, rgba(11, 13, 24, 0) 58%, rgba(11, 13, 24, 0.42) 100%),
+    linear-gradient(0deg, rgba(128, 108, 168, 0.2), rgba(128, 108, 168, 0) 36%);
+}

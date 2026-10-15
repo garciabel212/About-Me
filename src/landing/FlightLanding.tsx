@@ -1,9 +1,10 @@
-import { Fragment } from 'react';
+import { Fragment, useRef } from 'react';
 import { AI_DISCLOSURE } from '@/flight/disclosure';
 import Film from './Film';
 import LightPath from './LightPath';
 import PointSection from './Point';
 import { points } from './points';
+import { useCameraSway } from './sway';
 import './landing.css';
 
 const POINT_IDS = points.map((p) => p.id);
@@ -13,8 +14,10 @@ const POINT_IDS = points.map((p) => p.id);
  * laid out in a zig-zag, and one light joins them, drawing ahead of the reader.
  */
 export default function FlightLanding({ motion }: { motion: boolean }) {
+  const root = useRef<HTMLDivElement>(null);
+  useCameraSway(root, motion);
   return (
-    <div className={`landing${motion ? '' : ' landing--still'}`}>
+    <div ref={root} className={`landing${motion ? '' : ' landing--still'}`}>
       <Film motion={motion} pointIds={POINT_IDS} />
       <div className="landing__veil" aria-hidden="true" />
       <LightPath motion={motion} />

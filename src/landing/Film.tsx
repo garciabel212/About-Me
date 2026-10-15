@@ -14,6 +14,14 @@ const PHONE = '(max-width: 767px)';
 /** Seconds for the drawn frame to catch up with the scroll position. */
 const LAG = 0.12;
 
+/**
+ * Which stop the film is holding at, from the frame on screen: -1 while flying. A frame
+ * of slack covers the eased catch-up landing one frame short of the stop.
+ */
+export function heldStop(frame: number, stopFrames: number[]): number {
+  return frame < 0 ? -1 : stopFrames.findIndex((f) => Math.abs(frame - f) <= 1);
+}
+
 function useMatches(query: string): boolean {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
   useEffect(() => {
@@ -55,6 +63,8 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
     const el = root.current!;
     const canvas = el.querySelector('canvas')!;
     const poster = el.querySelector('img')!;
+    // Building cut-outs, one per stop, in their own layer over the light (see landing.css).
+    const cutouts = [...(el.parentElement?.querySelectorAll<HTMLImageElement>('.film__occluder') ?? [])];
     const ctx = canvas.getContext('2d')!;
     const srcW = phone ? flight.phoneWidth : flight.width;
     const srcH = flight.height;
@@ -75,6 +85,9 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
       ctx.drawImage(img, r.dx, r.dy, r.dw, r.dh);
       poster.style.visibility = 'hidden';
       painted = frame;
+      // While the camera holds at a stop, that stop's buildings stand in front of the light.
+      const held = heldStop(frame, STOP_FRAMES);
+      cutouts.forEach((c, i) => c.toggleAttribute('data-on', i === held));
     };
 
     const store = motion
@@ -164,9 +177,16 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
   }, [phone, set, motion, pointIds]);
 
   return (
-    <div ref={root} className="film" aria-hidden="true">
-      <img className="film__poster" src={`${base}flight/${set}/f${pad(POSTER_FRAME)}.webp`} alt="" fetchPriority="high" />
-      <canvas className="film__canvas" />
-    </div>
+    <>
+      <div ref={root} className="film" aria-hidden="true">
+        <img className="film__poster" src={`${base}flight/${set}/f${pad(POSTER_FRAME)}.webp`} alt="" fetchPriority="high" />
+        <canvas className="film__canvas" />
+      </div>
+      <div className="film-occluders" aria-hidden="true">
+        {flight.stops.map((s) => (
+          <img key={s.id} className="film__occluder" src={`${base}flight/occluders/${set}/${s.id}.webp`} alt="" decoding="async" />
+        ))}
+      </div>
+    </>
   );
 }

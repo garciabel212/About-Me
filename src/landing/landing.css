@@ -125,6 +125,13 @@
 .film { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--dusk); pointer-events: none; }
 .film__poster, .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .film__poster { object-fit: cover; }
+/* Building cut-outs: the stop frame with alpha only on its towers, laid over the light so the
+   light passes behind buildings and comes out the other side. Covers the screen exactly as the
+   canvas does (centred cover). Shown only while the camera holds at that stop; it leaves faster
+   than it arrives so a stale cut-out never lingers over a moving camera. */
+.film-occluders { position: fixed; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+.film__occluder { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 80ms linear; }
+.film__occluder[data-on] { opacity: 1; transition-duration: 200ms; }
 /* Header legibility: a soft dark band under the fixed header only. */
 .landing__veil, .landing__veil--bottom { position: fixed; left: 0; right: 0; z-index: 5; pointer-events: none; }
 /* Top: an opaque bar exactly the header's height (nothing ghosts behind the nav), then a short 24px fade into the film. */
@@ -138,7 +145,7 @@
 .landing__disclosure { position: fixed; right: 16px; bottom: 12px; z-index: 6; margin: 0; font: 400 11px/1.2 var(--f-text); letter-spacing: 0.04em; color: var(--text-2); pointer-events: none; }
 
 /* The light-path: a dim full route, a soft glow, and a bright core drawn to the head. */
-.light-path { position: absolute; inset: 0 auto auto 0; z-index: 2; pointer-events: none; overflow: visible; }
+.light-path { position: absolute; inset: 0 auto auto 0; z-index: 1; pointer-events: none; overflow: visible; }
 .light-path path { fill: none; stroke-linecap: round; }
 .light-path__route { stroke: rgba(74, 168, 255, 0.14); stroke-width: 1.5; }
 .light-path__halo { stroke: rgba(74, 168, 255, 0.1); stroke-width: 28; }
@@ -210,15 +217,14 @@
 }
 
 /* ── Depth ─────────────────────────────────────────────────────────────
-   Layered drift: headlines sit nearer (they move a little faster than the
-   text as they pass), labels sit farther (a little slower). Scroll-linked,
-   so it never runs off-screen; off with reduced motion or motion off. */
-@keyframes depth-near { from { translate: 0 34px; } to { translate: 0 -34px; } }
-@keyframes depth-far { from { translate: 0 -12px; } to { translate: 0 12px; } }
+   Layered drift: each headline and its label sit nearer than the text (they
+   move a little faster as they pass). They drift together, never toward each
+   other, and by less than the gap below the headline, so nothing collides.
+   Scroll-linked, so it never runs off-screen; off with reduced motion or motion off. */
+@keyframes depth-near { from { translate: 0 16px; } to { translate: 0 -16px; } }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .landing:not(.landing--still) :is(.point__headline, .point__name) { animation: depth-near linear both; animation-timeline: view(); animation-range: cover; }
-    .landing:not(.landing--still) .point__label { animation: depth-far linear both; animation-timeline: view(); animation-range: cover; }
+    .landing:not(.landing--still) :is(.point__headline, .point__name, .point__label) { animation: depth-near linear both; animation-timeline: view(); animation-range: cover; }
   }
 }
 

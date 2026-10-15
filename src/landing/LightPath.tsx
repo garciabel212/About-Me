@@ -43,10 +43,10 @@ export default function LightPath({ motion }: { motion: boolean }) {
     gsap.registerPlugin(ScrollTrigger);
     const el = svg.current;
     if (!el || nodes.length < 2) return;
-    const core = el.querySelector<SVGPathElement>('.light__core');
-    const glow = el.querySelector<SVGPathElement>('.light__glow');
-    const head = el.querySelector<SVGCircleElement>('.light__head');
-    const dots = [...el.querySelectorAll<SVGCircleElement>('.light__node')];
+    const core = el.querySelector<SVGPathElement>('.light-path__core');
+    const glow = el.querySelector<SVGPathElement>('.light-path__glow');
+    const head = el.querySelector<SVGCircleElement>('.light-path__head');
+    const dots = [...el.querySelectorAll<SVGCircleElement>('.light-path__node')];
     const update = () => {
       const top = (el.parentElement?.getBoundingClientRect().top ?? 0) + window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -63,16 +63,16 @@ export default function LightPath({ motion }: { motion: boolean }) {
   }, [nodes, samples, motion]);
 
   return (
-    <svg ref={svg} className="light" aria-hidden="true" width={size.w} height={size.h} viewBox={`0 0 ${size.w || 1} ${size.h || 1}`}>
+    <svg ref={svg} className="light-path" aria-hidden="true" width={size.w} height={size.h} viewBox={`0 0 ${size.w || 1} ${size.h || 1}`}>
       {d && (
         <>
-          <path className="light__route" d={d} />
-          <path className="light__glow" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
-          <path className="light__core" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
+          <path className="light-path__route" d={d} />
+          <path className="light-path__glow" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
+          <path className="light-path__core" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
           {nodes.map((n, i) => (
-            <circle key={i} className="light__node" cx={n.x} cy={n.y} r={6} />
+            <circle key={i} className="light-path__node" cx={n.x} cy={n.y} r={6} />
           ))}
-          {motion && <circle className="light__head" cx={nodes[0].x} cy={nodes[0].y} r={5} />}
+          {motion && <circle className="light-path__head" cx={nodes[0].x} cy={nodes[0].y} r={5} />}
         </>
       )}
     </svg>

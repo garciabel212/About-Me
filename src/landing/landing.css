@@ -1,4 +1,4 @@
-/* src/landing/landing.css: the light path landing. LightPath sets the drawn length on its own elements. */
+/* src/landing/landing.css: the light-path path landing. LightPath sets the drawn length on its own elements. */
 .landing {
   --text: #f3f4f6;
   --text-2: rgba(243, 244, 246, 0.74);
@@ -85,7 +85,7 @@
   .point--right .point__body, .point--top-right .point__body { grid-column: 4 / 13; }
 }
 
-/* Phones: one column; the light runs down the left margin. */
+/* Phones: one column; the light-path runs down the left margin. */
 @media (max-width: 767px) {
   .point { display: block; min-height: 0; padding: 12svh 16px 12svh 52px; }
   .point--top-right { min-height: 100svh; padding-top: calc(var(--header-h) + 6svh); }
@@ -103,18 +103,18 @@
 .landing__veil { position: fixed; inset: 0 0 auto; height: 160px; z-index: 1; pointer-events: none; background: linear-gradient(rgba(11, 13, 24, 0.7), rgba(11, 13, 24, 0)); }
 .landing__disclosure { position: fixed; right: 16px; bottom: 12px; z-index: 4; margin: 0; font: 400 11px/1.2 var(--f-text); letter-spacing: 0.04em; color: var(--text-2); pointer-events: none; }
 
-/* The light: a dim full route, a soft glow, and a bright core drawn to the head. */
-.light { position: absolute; inset: 0 auto auto 0; z-index: 2; pointer-events: none; overflow: visible; }
-.light path { fill: none; stroke-linecap: round; }
-.light__route { stroke: rgba(74, 168, 255, 0.14); stroke-width: 1.5; }
-.light__glow { stroke: rgba(74, 168, 255, 0.35); stroke-width: 9; }
-.light__core { stroke: var(--core); stroke-width: 1.8; }
-.light__node { fill: rgba(74, 168, 255, 0.25); stroke: rgba(234, 246, 255, 0.4); stroke-width: 1; transition: fill 0.4s ease, r 0.4s ease; }
-.light__node[data-lit] { fill: var(--core); r: 7px; }
-.light__head { fill: var(--core); }
-.landing--still .light__head { display: none; }
+/* The light-path: a dim full route, a soft glow, and a bright core drawn to the head. */
+.light-path { position: absolute; inset: 0 auto auto 0; z-index: 2; pointer-events: none; overflow: visible; }
+.light-path path { fill: none; stroke-linecap: round; }
+.light-path__route { stroke: rgba(74, 168, 255, 0.14); stroke-width: 1.5; }
+.light-path__glow { stroke: rgba(74, 168, 255, 0.35); stroke-width: 9; }
+.light-path__core { stroke: var(--core); stroke-width: 1.8; }
+.light-path__node { fill: rgba(74, 168, 255, 0.25); stroke: rgba(234, 246, 255, 0.4); stroke-width: 1; transition: fill 0.4s ease, r 0.4s ease; }
+.light-path__node[data-lit] { fill: var(--core); r: 7px; }
+.light-path__head { fill: var(--core); }
+.landing--still .light-path__head { display: none; }
 
-/* Node marks inside each point: where the light passes (the side facing the middle of the page). */
+/* Node marks inside each point: where the light-path passes (the side facing the middle of the page). */
 .point__node { position: absolute; top: 34px; width: 12px; height: 12px; }
 .point--left .point__node, .point--bottom-left .point__node { right: -6px; }
 .point--top-right .point__node, .point--center .point__node, .point--right .point__node { left: -6px; }

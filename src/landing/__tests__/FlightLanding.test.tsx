@@ -22,7 +22,7 @@ describe('FlightLanding', () => {
     const out = await render(true);
     expect(out).toContain('<div class="landing">');
     expect(out).toContain('class="film"');
-    expect(out).toContain('class="light"');
+    expect(out).toContain('class="light-path"');
     expect(out.match(/data-point="/g)).toHaveLength(6);
     expect(out.match(/class="landing__gap"/g)).toHaveLength(5);
   });

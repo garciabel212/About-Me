@@ -39,7 +39,7 @@ describe('measureNodes', () => {
 describe('LightPath', () => {
   it('is decorative to assistive tech and renders nothing to draw before nodes are measured', () => {
     const out = renderToStaticMarkup(<LightPath motion />);
-    expect(out).toMatch(/^<svg class="light" aria-hidden="true"/);
+    expect(out).toMatch(/^<svg class="light-path" aria-hidden="true"/);
     expect(out).not.toContain('<path');
   });
 });

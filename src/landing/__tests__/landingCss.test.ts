@@ -7,3 +7,15 @@ describe('landing.css', () => {
     expect(css).not.toMatch(/(^|[\s,}>~+(])\.(light|dark)(?![\w-])/m);
   });
 });
+
+describe('landing class names', () => {
+  it('are not also styled by the global stylesheets (Read mode once restyled .method and .facts here)', () => {
+    const strip = (f: string) => readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const classes = (css: string) => new Set([...css.matchAll(/\.([a-z][\w-]*)/gi)].map((m) => m[1]));
+    const landing = classes(strip('src/landing/landing.css'));
+    const global = classes(['src/styles/site.css', 'src/styles/evidence.css', 'src/index.css'].map(strip).join('\n'));
+    // Shared on purpose: the site-wide screen-reader helper.
+    const shared = [...landing].filter((c) => global.has(c) && c !== 'sr-only');
+    expect(shared).toEqual([]);
+  });
+});

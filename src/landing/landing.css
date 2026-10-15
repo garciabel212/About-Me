@@ -1,7 +1,7 @@
 /* src/landing/landing.css: the light-path path landing. LightPath sets the drawn length on its own elements. */
 .landing {
   --text: #f3f4f6;
-  --text-2: rgba(243, 244, 246, 0.74);
+  --text-2: rgba(243, 244, 246, 0.84);
   --accent: #4aa8ff;
   --core: #eaf6ff;
   --dusk: #0b0d18;
@@ -24,7 +24,9 @@
 .point__body {
   position: relative; max-width: 560px; align-self: center;
   padding: 28px 32px; margin: -28px -32px;
-  background: radial-gradient(closest-side, rgba(11, 13, 24, 0.72), rgba(11, 13, 24, 0.5) 70%, rgba(11, 13, 24, 0));
+  background: radial-gradient(closest-side, rgba(11, 13, 24, 0.8), rgba(11, 13, 24, 0.64) 72%, rgba(11, 13, 24, 0));
+  /* Bright skies (Bay, Sunset) need a touch more separation behind small text. */
+  text-shadow: 0 1px 14px rgba(11, 13, 24, 0.7);
 }
 .point--top-right { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--header-h) + 9svh); }
 .point--top-right .point__body { grid-column: 7 / 13; justify-self: end; align-self: start; }
@@ -50,9 +52,9 @@
 .point .point__primary { color: var(--accent); text-decoration: none; border-bottom: 2px solid currentColor; }
 .point .point__link { display: inline-block; margin-top: 12px; font: 600 14px/1.2 var(--f-text); }
 
-.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 26px 0 0; }
-.facts dt { font: 600 11px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-2); }
-.facts dd { margin: 4px 0 0; font: 400 14px/1.4 var(--f-text); color: var(--text); }
+.point-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 26px 0 0; }
+.point-facts dt { font: 600 11px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-2); }
+.point-facts dd { margin: 4px 0 0; font: 400 14px/1.4 var(--f-text); color: var(--text); }
 
 .role-note + .role-note, .work-note + .work-note { margin-top: 34px; }
 .role-note__title { color: var(--text) !important; }
@@ -61,8 +63,8 @@
 .role-note__details summary { cursor: pointer; color: var(--text); font-weight: 600; }
 .role-note__details ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 6px; }
 
-.method { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
-.method__step h3 { font-size: 21px; }
+.point-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.point-steps__step h3 { font-size: 21px; }
 .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; margin-top: 30px; }
 .tools__group h3 { font: 600 12px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text); }
 .tools__group ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font: 400 14px/1.4 var(--f-text); color: var(--text-2); }
@@ -91,7 +93,7 @@
   .point--top-right { min-height: 100svh; padding-top: calc(var(--header-h) + 6svh); }
   .point__body { max-width: none; margin: -20px -16px; padding: 20px 16px; }
   .landing__gap { height: 40svh; }
-  .facts, .tools { grid-template-columns: 1fr; }
+  .point-facts, .tools { grid-template-columns: 1fr; }
   .connect__about { grid-template-columns: 1fr; }
 }
 
@@ -119,6 +121,7 @@
 .point--left .point__node, .point--bottom-left .point__node { right: -6px; }
 .point--top-right .point__node, .point--center .point__node, .point--right .point__node { left: -6px; }
 .point--top-right .point__node { top: 52px; }
+.point .point__node--exit { top: auto; bottom: 8px; }
 @media (max-width: 767px) {
   .point__node { left: -30px !important; right: auto !important; top: 24px; }
   .point:nth-of-type(even) .point__node { left: -18px !important; }

@@ -15,6 +15,8 @@ describe('PointSection', () => {
       expect(out).toMatch(new RegExp(`<section class="point point--${p.placement}" data-point="${p.id}" tabindex="-1" aria-labelledby="point-${p.id}-title">`));
       for (const a of p.anchors) expect(out).toContain(`<span class="point__anchor" id="${a}"></span>`);
       expect(out.match(/data-node="true"/g)).toHaveLength(1);
+      // A second, invisible node at the bottom keeps the light beside the text instead of crossing it.
+      expect(out.match(/data-node="exit"/g)).toHaveLength(1);
     });
   });
 
@@ -39,7 +41,7 @@ describe('PointSection', () => {
   });
 
   it('shows the five method steps with proof, and the tool groups', () => {
-    expect(all[2].match(/class="method__step"/g)).toHaveLength(5);
+    expect(all[2].match(/class="point-steps__step"/g)).toHaveLength(5);
     expect(all[2].match(/class="tools__group"/g)).toHaveLength(4);
   });
 

@@ -82,7 +82,7 @@ export default function PointSection({ point }: { point: Point }) {
             <p className="point__role">{b.role}</p>
             <p className="point__lead">{b.statement}</p>
             <Contact />
-            <dl className="facts">
+            <dl className="point-facts">
               {b.facts.map((f) => (
                 <div key={f.label}><dt>{f.label}</dt><dd>{f.value}</dd></div>
               ))}
@@ -94,9 +94,9 @@ export default function PointSection({ point }: { point: Point }) {
         {b.kind === 'experience' && b.roles.map((r) => <RoleBlock key={r.id} role={r} />)}
         {b.kind === 'expertise' && (
           <>
-            <ol className="method">
+            <ol className="point-steps">
               {b.steps.map((s) => (
-                <li key={s.step} className="method__step">
+                <li key={s.step} className="point-steps__step">
                   <h3>{s.step}</h3>
                   {s.work.map((p) => (
                     <p key={p.text}><span className="point__meta">At work</span> {p.text} <Link to={p.href}>{p.source}</Link></p>
@@ -138,6 +138,7 @@ export default function PointSection({ point }: { point: Point }) {
             </p>
           </>
         )}
+        <span className="point__node point__node--exit" data-node="exit" aria-hidden="true" />
       </div>
     </section>
   );

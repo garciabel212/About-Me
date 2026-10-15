@@ -8,7 +8,9 @@ export function measureNodes(root: Element): Node[] {
   const r = root.getBoundingClientRect();
   return [...root.querySelectorAll('[data-node]')].map((el) => {
     const b = el.getBoundingClientRect();
-    return { x: b.left - r.left + b.width / 2, y: b.top - r.top + b.height / 2 };
+    const node: Node = { x: b.left - r.left + b.width / 2, y: b.top - r.top + b.height / 2 };
+    if (el.getAttribute?.('data-node') === 'exit') node.exit = true;
+    return node;
   });
 }
 
@@ -23,6 +25,7 @@ export default function LightPath({ motion }: { motion: boolean }) {
   const [size, setSize] = useState({ w: 0, h: 0 });
   const d = useMemo(() => pathD(nodes), [nodes]);
   const samples = useMemo(() => samplePath(nodes), [nodes]);
+  const stops = useMemo(() => nodes.filter((n) => !n.exit), [nodes]);
 
   // Measure the nodes now and whenever the landing changes size (fonts, images, opened details, resize).
   useLayoutEffect(() => {
@@ -55,12 +58,13 @@ export default function LightPath({ motion }: { motion: boolean }) {
       glow?.setAttribute('stroke-dashoffset', String(1 - l.fraction));
       head?.setAttribute('cx', l.head.x.toFixed(1));
       head?.setAttribute('cy', l.head.y.toFixed(1));
-      dots.forEach((dot, i) => dot.toggleAttribute('data-lit', i < l.lit));
+      // A dot lights once the head has reached it (all of them when the light is complete).
+      dots.forEach((dot, i) => dot.toggleAttribute('data-lit', l.fraction >= 1 || stops[i].y <= l.head.y + 0.5));
     };
     const trigger = ScrollTrigger.create({ start: 0, end: 'max', onUpdate: update, onRefresh: update });
     update();
     return () => trigger.kill();
-  }, [nodes, samples, motion]);
+  }, [nodes, samples, stops, motion]);
 
   return (
     <svg ref={svg} className="light-path" aria-hidden="true" width={size.w} height={size.h} viewBox={`0 0 ${size.w || 1} ${size.h || 1}`}>
@@ -69,7 +73,7 @@ export default function LightPath({ motion }: { motion: boolean }) {
           <path className="light-path__route" d={d} />
           <path className="light-path__glow" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
           <path className="light-path__core" d={d} pathLength={1} strokeDasharray="1 1" strokeDashoffset={motion ? 1 : 0} />
-          {nodes.map((n, i) => (
+          {stops.map((n, i) => (
             <circle key={i} className="light-path__node" cx={n.x} cy={n.y} r={6} />
           ))}
           {motion && <circle className="light-path__head" cx={nodes[0].x} cy={nodes[0].y} r={5} />}

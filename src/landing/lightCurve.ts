@@ -2,6 +2,8 @@
 export interface Node {
   x: number;
   y: number;
+  /** The bottom of a point's text: shapes the path (the light runs beside the text) but draws no dot. */
+  exit?: boolean;
 }
 
 export interface Sample {

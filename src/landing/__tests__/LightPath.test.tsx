@@ -36,6 +36,22 @@ describe('measureNodes', () => {
   });
 });
 
+describe('measureNodes exits', () => {
+  it('marks the bottom node of each point as an exit, so it shapes the path without a dot', () => {
+    const root = {
+      getBoundingClientRect: () => rect({ top: 0, left: 0, width: 1440, height: 8000 }),
+      querySelectorAll: () => [
+        { getAttribute: () => 'true', getBoundingClientRect: () => rect({ top: 100, left: 600, width: 12, height: 12 }) },
+        { getAttribute: () => 'exit', getBoundingClientRect: () => rect({ top: 900, left: 600, width: 12, height: 12 }) },
+      ],
+    } as unknown as Element;
+    expect(measureNodes(root)).toEqual([
+      { x: 606, y: 106 },
+      { x: 606, y: 906, exit: true },
+    ]);
+  });
+});
+
 describe('LightPath', () => {
   it('is decorative to assistive tech and renders nothing to draw before nodes are measured', () => {
     const out = renderToStaticMarkup(<LightPath motion />);

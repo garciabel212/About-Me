@@ -14,6 +14,7 @@ import matte_core  # noqa: E402
 import retime  # noqa: E402
 import assemble_v3  # noqa: E402
 import grade  # noqa: E402
+import upscale_hd  # noqa: E402
 import zones  # noqa: E402
 
 
@@ -110,6 +111,20 @@ class Assemble(unittest.TestCase):
         self.assertEqual(len(film), retime.MASTER_FRAMES)
         for k, f in enumerate(retime.MASTER_STOPS):
             self.assertTrue(np.array_equal(film[f], flat(200 + k)), f'stop {k} at frame {f}')
+
+
+class Chunks(unittest.TestCase):
+    def test_chunks_cover_every_frame_once(self):
+        kept = []
+        for start, end, skip in upscale_hd.chunks(825, size=99, lead=8):
+            self.assertLessEqual(end - start, 99 + 8)
+            kept.extend(range(start + skip, end))
+        self.assertEqual(kept, list(range(825)))
+
+    def test_chunks_lead_in_except_first(self):
+        spans = upscale_hd.chunks(300, size=99, lead=8)
+        self.assertEqual(spans[0], (0, 99, 0))
+        self.assertEqual(spans[1], (91, 198, 8))
 
 
 if __name__ == '__main__':

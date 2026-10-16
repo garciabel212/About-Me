@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import matte_core  # noqa: E402
 import retime  # noqa: E402
+import grade  # noqa: E402
 import zones  # noqa: E402
 
 
@@ -71,6 +72,26 @@ class Matte(unittest.TestCase):
         out = matte_core.drop_specks(m)
         self.assertEqual(out[6, 6], 0)
         self.assertEqual(out[60, 60], 1)
+
+
+class Grade(unittest.TestCase):
+    def gray(self, v):
+        return np.full((40, 40, 3), v, np.uint8)
+
+    def test_grade_to_hits_target(self):
+        out, k = grade.grade_to(self.gray(120), 100)
+        self.assertGreaterEqual(k, 0.6)
+        self.assertAlmostEqual(zones.sky_level(out, np.zeros((40, 40), np.uint8)), 100, delta=1)
+
+    def test_grade_to_never_stronger_than_floor(self):
+        out, k = grade.grade_to(self.gray(120), 30)
+        self.assertAlmostEqual(k, 0.6, places=3)
+        self.assertGreater(zones.sky_level(out, np.zeros((40, 40), np.uint8)), 30)
+
+    def test_grade_to_never_brightens(self):
+        out, k = grade.grade_to(self.gray(120), 200)
+        self.assertEqual(k, 1.0)
+        self.assertTrue(np.array_equal(out, self.gray(120)))
 
 
 if __name__ == '__main__':

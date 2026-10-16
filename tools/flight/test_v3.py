@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import matte_core  # noqa: E402
 import retime  # noqa: E402
+import assemble_v3  # noqa: E402
 import grade  # noqa: E402
 import zones  # noqa: E402
 
@@ -92,6 +93,23 @@ class Grade(unittest.TestCase):
         out, k = grade.grade_to(self.gray(120), 200)
         self.assertEqual(k, 1.0)
         self.assertTrue(np.array_equal(out, self.gray(120)))
+
+
+class Assemble(unittest.TestCase):
+    def test_assemble_marks(self):
+        lengths = [100, 160, 90, 170, 140, 160]
+        hops, prev = [], None
+        for k, n in enumerate(lengths):
+            seg = [flat((i * 7) % 180) for i in range(n)]
+            if prev is not None:
+                seg[0] = prev  # consecutive hops share the stop frame between them
+            seg[-1] = flat(200 + k)  # each stop frame is marked
+            prev = seg[-1]
+            hops.append(seg)
+        film = assemble_v3.place(hops)
+        self.assertEqual(len(film), retime.MASTER_FRAMES)
+        for k, f in enumerate(retime.MASTER_STOPS):
+            self.assertTrue(np.array_equal(film[f], flat(200 + k)), f'stop {k} at frame {f}')
 
 
 if __name__ == '__main__':

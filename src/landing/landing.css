@@ -1,0 +1,237 @@
+/* src/landing/landing.css: the light-path path landing. LightPath sets the drawn length on its own elements. */
+.landing {
+  --text: #f3f4f6;
+  --text-2: rgba(243, 244, 246, 0.84);
+  --accent: #4aa8ff;
+  --core: #eaf6ff;
+  --dusk: #0b0d18;
+  --f-display: "Bodoni Moda", "Times New Roman", serif;
+  --f-text: "Archivo", system-ui, sans-serif;
+  /* The site's existing entrance curve (site.css), shared by every landing entrance. */
+  --ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  color: var(--text);
+  font-family: var(--f-text);
+}
+
+/* Points: normal flow on a 12-column grid, placed like the reference. */
+.point {
+  position: relative; z-index: 3;
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px;
+  min-height: 110vh; min-height: 110svh;
+  padding: 16svh var(--gutter);
+}
+.point:focus { outline: none; }
+.point__anchor { position: absolute; top: 0; left: 0; width: 1px; height: 1px; scroll-margin-top: calc(var(--header-h) + 8px); }
+.point__body {
+  position: relative; max-width: 560px; align-self: center;
+  isolation: isolate;
+  /* Bright skies (Bay, Sunset) need a touch more separation behind small text. */
+  text-shadow: 0 1px 14px rgba(11, 13, 24, 0.7);
+}
+/* Backing behind the text: feathered on every side (no readable edge), even down a tall block. */
+.point__body::before {
+  content: ""; position: absolute; inset: -56px -96px; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.66) 26%, rgba(11, 13, 24, 0.66) 74%, rgba(11, 13, 24, 0));
+  -webkit-mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 140px, #000 calc(100% - 140px), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 140px, #000 calc(100% - 140px), rgba(0, 0, 0, 0));
+}
+.point--top-right { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--header-h) + 9svh); }
+.point--top-right .point__body { grid-column: 7 / 13; justify-self: end; align-self: start; }
+.point--left .point__body { grid-column: 1 / 7; }
+.point--center .point__body { grid-column: 4 / 10; justify-self: center; }
+.point--right .point__body { grid-column: 7 / 13; justify-self: end; }
+.point--bottom-left .point__body { grid-column: 1 / 7; align-self: end; }
+/* The closing point keeps a full screen of room, so the site footer only arrives after it has been read. */
+.point--bottom-left { min-height: 100vh; min-height: 100svh; padding-bottom: 34svh; }
+/* A third shorter than first built: the flight is a moment between points, not a wait. */
+.landing__gap { height: 40vh; height: 40svh; }
+
+.point .point__label { margin: 0 0 14px; font: 600 12px/1 var(--f-text); letter-spacing: 0.28em; text-transform: uppercase; }
+.point .point__label span { color: #b9e0ff; letter-spacing: 0.12em; margin-right: 6px; }
+.point .point__name { margin: 0; font: 500 clamp(52px, 6.4vw, 92px)/0.98 var(--f-display); letter-spacing: -0.01em; color: var(--text); }
+.point .point__role { margin: 10px 0 0; font: 400 clamp(19px, 1.6vw, 24px)/1.25 var(--f-display); color: var(--text); }
+.point .point__headline { margin: 0 0 22px; font: 500 clamp(32px, 3.2vw, 46px)/1.08 var(--f-display); color: var(--text); text-wrap: balance; }
+.point .point__lead { margin: 16px 0 0; max-width: 44ch; font: 400 17px/1.55 var(--f-text); color: var(--text); text-wrap: pretty; }
+.point p { margin: 10px 0 0; font: 400 15px/1.55 var(--f-text); color: var(--text-2); }
+.point h3 { margin: 0; font: 500 23px/1.2 var(--f-display); color: var(--text); }
+.point .point__meta { font-size: 14px; font-weight: 500; letter-spacing: 0.02em; color: rgba(243, 244, 246, 0.92); }
+.point strong { color: var(--text); font-weight: 600; }
+.point a { color: var(--text); text-underline-offset: 3px; }
+.point a:focus-visible, .point summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.point .point__actions { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 22px; font: 600 15px/1.2 var(--f-text); }
+.point .point__primary { color: var(--accent); text-decoration: none; border-bottom: 2px solid currentColor; }
+.point .point__link { display: inline-block; margin-top: 12px; font: 600 14px/1.2 var(--f-text); }
+
+.point-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 26px 0 0; }
+.point-facts dt { font: 600 11px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-2); }
+.point-facts dd { margin: 4px 0 0; font: 400 14px/1.4 var(--f-text); color: var(--text); }
+
+.role-note + .role-note, .work-note + .work-note { margin-top: 34px; }
+.role-note__title { color: var(--text) !important; }
+.role-note__contributions { margin: 12px 0 0; padding-left: 18px; display: grid; gap: 8px; font: 400 15px/1.5 var(--f-text); color: var(--text-2); }
+.point-more { margin-top: 14px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
+.point-more summary { cursor: pointer; color: var(--text); font-weight: 600; list-style: none; }
+.point-more summary::-webkit-details-marker { display: none; }
+.point-more summary::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; margin: 0 12px 2px 2px;
+  border: solid var(--accent); border-width: 0 1.5px 1.5px 0; transform: rotate(-45deg); transition: transform 0.2s ease;
+}
+.point-more[open] summary::before { transform: rotate(45deg); }
+.point-more__body { padding-top: 6px; }
+.point-steps__more { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; font: 400 14px/1.5 var(--f-text); color: var(--text-2); }
+.point .work-note__outcome { color: var(--text); font-size: 16px; }
+
+
+.point-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.point-steps__step h3 { font-size: 21px; }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; margin-top: 30px; }
+.tools__group h3 { font: 600 12px/1.2 var(--f-text); letter-spacing: 0.16em; text-transform: uppercase; color: var(--text); }
+.tools__group ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font: 400 14px/1.4 var(--f-text); color: var(--text-2); }
+
+.work-note__shot { margin: 14px 0 0; }
+.work-note__shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid rgba(243, 244, 246, 0.16); }
+.work-note__shot figcaption { margin-top: 6px; font: 400 12px/1.4 var(--f-text); color: var(--text-2); }
+.work-note__steps { color: var(--text) !important; }
+
+.connect__about { display: grid; grid-template-columns: 120px 1fr; gap: 20px; align-items: start; }
+.connect__portrait { width: 120px; height: 120px; border-radius: 10px; object-fit: cover; }
+.connect__about p:first-child { margin-top: 0; }
+.connect__details, .connect__education { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 6px; font: 400 14px/1.45 var(--f-text); color: var(--text-2); }
+.connect__education strong { display: block; }
+
+/* Tablets: left and right only; the center point joins the left. */
+@media (max-width: 1023px) {
+  .point--center .point__body { grid-column: 1 / 9; justify-self: start; }
+  .point--left .point__body, .point--bottom-left .point__body { grid-column: 1 / 10; }
+  .point--right .point__body, .point--top-right .point__body { grid-column: 4 / 13; }
+}
+
+/* Phones: one column; the light-path runs down the left margin. */
+@media (max-width: 767px) {
+  .point { display: block; min-height: 0; padding: 12svh 16px 12svh 52px; }
+  .point--top-right { min-height: 100svh; padding-top: calc(var(--header-h) + 6svh); }
+  /* The closing point keeps its full screen on phones too, so the footer arrives after it. */
+  .point--bottom-left { min-height: 100svh; padding-bottom: 34svh; }
+  .point__body { max-width: none; }
+  .point__body::before { inset: -24px -16px; background: rgba(11, 13, 24, 0.6); }
+  .point .point__node--exit { left: -40px !important; right: auto !important; }
+  .landing__gap { height: 28svh; }
+  .point-facts, .tools { grid-template-columns: 1fr; }
+  .connect__about { grid-template-columns: 1fr; }
+}
+
+/* Film: fixed, full-bleed, clean. */
+.film { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--dusk); pointer-events: none; }
+.film__poster, .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.film__poster { object-fit: cover; }
+/* Building cut-outs: the stop frame with alpha only on its towers, laid over the light so the
+   light passes behind buildings and comes out the other side. Covers the screen exactly as the
+   canvas does (centred cover). Shown only while the camera holds at that stop; it leaves faster
+   than it arrives so a stale cut-out never lingers over a moving camera. */
+.film-occluders { position: fixed; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+.film__occluder { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 80ms linear; }
+.film__occluder[data-on] { opacity: 1; transition-duration: 200ms; }
+/* Header legibility: a soft dark band under the fixed header only. */
+.landing__veil, .landing__veil--bottom { position: fixed; left: 0; right: 0; z-index: 5; pointer-events: none; }
+/* Top: an opaque bar exactly the header's height (nothing ghosts behind the nav), then a short 24px fade into the film. */
+.landing__veil { top: 0; height: calc(var(--header-h) + 24px); background: linear-gradient(#0b0d18, #0b0d18 var(--header-h), rgba(11, 13, 24, 0)); }
+/* Bottom: only a soft patch behind the AI disclosure, so the film is not framed in bands. */
+.landing__veil--bottom { left: auto; bottom: 0; width: min(420px, 100%); height: 64px; background: radial-gradient(ellipse 100% 100% at 100% 100%, rgba(11, 13, 24, 0.92), rgba(11, 13, 24, 0.6) 50%, rgba(11, 13, 24, 0) 78%); }
+/* Phones run text edge to edge, so the disclosure gets a short full-width fade instead of a corner patch. */
+@media (max-width: 767px) {
+  .landing__veil--bottom { left: 0; width: auto; height: 64px; background: linear-gradient(rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.94) 55%); }
+}
+.landing__disclosure { position: fixed; right: 16px; bottom: 12px; z-index: 6; margin: 0; font: 400 11px/1.2 var(--f-text); letter-spacing: 0.04em; color: var(--text-2); pointer-events: none; }
+
+/* The light-path: a dim full route, a soft glow, and a bright core drawn to the head. */
+.light-path { position: absolute; inset: 0 auto auto 0; z-index: 1; pointer-events: none; overflow: visible; }
+.light-path path { fill: none; stroke-linecap: round; }
+.light-path__route { stroke: rgba(74, 168, 255, 0.14); stroke-width: 1.5; }
+.light-path__halo { stroke: rgba(74, 168, 255, 0.1); stroke-width: 28; }
+.light-path__glow { stroke: rgba(74, 168, 255, 0.32); stroke-width: 9; }
+.light-path__core { stroke: var(--core); stroke-width: 1.8; }
+.light-path__node { fill: rgba(74, 168, 255, 0.25); stroke: rgba(234, 246, 255, 0.4); stroke-width: 1; transition: fill 0.4s ease, r 0.4s ease; }
+/* Arrival: the node flares as the light reaches it. */
+.light-path__node[data-lit] { fill: var(--core); r: 7px; stroke: rgba(74, 168, 255, 0.5); stroke-width: 10px; transition: fill 0.4s ease, r 0.4s ease, stroke-width 0.6s ease; }
+.light-path__head-bloom { fill: url(#light-path-bloom); }
+.light-path__head-core { fill: var(--core); }
+.landing--still .light-path__head { display: none; }
+
+/* Node marks inside each point: where the light-path passes (the side facing the middle of the page). */
+.point__node { position: absolute; top: 34px; width: 12px; height: 12px; }
+.point--left .point__node, .point--bottom-left .point__node { right: -22px; }
+.point--top-right .point__node, .point--center .point__node, .point--right .point__node { left: -22px; }
+.point--top-right .point__node { top: 52px; }
+/* Exit nodes sit out in the open film (away from the text), so the light arcs across the footage while a point is read. */
+.point .point__node--exit { top: auto; bottom: 8px; }
+.point--left .point__node--exit, .point--bottom-left .point__node--exit { right: calc(-1 * clamp(140px, 18vw, 320px)); }
+.point--top-right .point__node--exit, .point--center .point__node--exit, .point--right .point__node--exit { left: calc(-1 * clamp(140px, 18vw, 320px)); }
+@media (max-width: 767px) {
+  .point__node { left: -30px !important; right: auto !important; top: 24px; }
+  .point:nth-of-type(even) .point__node { left: -18px !important; }
+}
+
+/* ── Entrances ─────────────────────────────────────────────────────────
+   Text arrives when the light reaches its point (LightPath sets data-arrived, once).
+   Nothing is hidden until LightPath has measured the light (data-arrive on the landing). */
+.landing[data-arrive] .point__body > :not(.point__node) {
+  transition: opacity 600ms var(--ease-arrive), transform 600ms var(--ease-arrive);
+}
+.landing[data-arrive="on"] .point:not([data-arrived]) .point__body > :not(.point__node, h1, h2) { opacity: 0; transform: translateY(14px); }
+/* Read top to bottom: first element, then the next, then the rest (node span is child 1). */
+.point__body > :nth-child(3) { transition-delay: 70ms; }
+.point__body > :nth-child(4) { transition-delay: 140ms; }
+.point__body > :nth-child(n + 5) { transition-delay: 210ms; }
+
+/* Headlines and the name rise from behind their own baseline, like a title card. */
+.point__name, .point__headline { clip-path: inset(0 -0.1em -0.25em -0.1em); }
+.point__rise { display: inline-block; transition: transform 750ms var(--ease-arrive), opacity 300ms var(--ease-arrive); transition-delay: inherit; }
+.point__body > :is(h1, h2) { transition-delay: 70ms; }
+.point__body > h1 { transition-delay: 0ms; }
+.landing[data-arrive="on"] .point:not([data-arrived]) .point__rise { opacity: 0; transform: translateY(105%); }
+
+/* Motion off or reduced motion: a short fade only, nothing moves. */
+.landing[data-arrive="fade"] .point__body > :not(.point__node) { transition: opacity 200ms ease; transition-delay: 0ms; }
+.landing[data-arrive="fade"] .point:not([data-arrived]) .point__body > :not(.point__node) { opacity: 0; }
+
+/* Screenshots settle in as they scroll into view (scroll-linked, so it never runs off-screen). */
+@keyframes shot-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .landing:not(.landing--still) .work-note__shot img {
+      animation: shot-in linear both; animation-timeline: view(); animation-range: entry 5% entry 60%;
+      animation-timing-function: var(--ease-arrive);
+    }
+  }
+}
+
+/* "Full responsibilities" grows open instead of jumping (where the browser can animate <details>). */
+@supports (interpolate-size: allow-keywords) {
+  .point-more { interpolate-size: allow-keywords; }
+  .point-more::details-content {
+    height: 0; opacity: 0; overflow: clip;
+    transition: height 250ms var(--ease-arrive), opacity 250ms var(--ease-arrive), content-visibility 250ms allow-discrete;
+  }
+  .point-more[open]::details-content { height: auto; opacity: 1; }
+}
+
+/* ── Depth ─────────────────────────────────────────────────────────────
+   Layered drift: each headline and its label sit nearer than the text (they
+   move a little faster as they pass). They drift together, never toward each
+   other, and by less than the gap below the headline, so nothing collides.
+   Scroll-linked, so it never runs off-screen; off with reduced motion or motion off. */
+@keyframes depth-near { from { translate: 0 16px; } to { translate: 0 -16px; } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .landing:not(.landing--still) :is(.point__headline, .point__name, .point__label) { animation: depth-near linear both; animation-timeline: view(); animation-range: cover; }
+  }
+}
+
+/* Atmosphere: a dusk haze lifting off the bottom of the film and a soft falloff at its edges, so the eye reads distance. */
+.film::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 95% at 50% 42%, rgba(11, 13, 24, 0) 58%, rgba(11, 13, 24, 0.42) 100%),
+    linear-gradient(0deg, rgba(128, 108, 168, 0.2), rgba(128, 108, 168, 0) 36%);
+}

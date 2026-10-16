@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T00:00:00Z",
+  "title": "Design System: Jose Garcia, Cinematic",
+  "extensions": {
+    "colorMeta": {
+      "accent": { "role": "primary", "displayName": "Flight Blue", "canonical": "#4aa8ff", "tonalRamp": ["#0a2340", "#10375f", "#174c80", "#1f62a3", "#2b7cc9", "#4aa8ff", "#8cc8ff", "#d4ebff"] },
+      "core": { "role": "primary", "displayName": "Light Core", "canonical": "#eaf6ff", "tonalRamp": ["#1d2a33", "#334957", "#4d687c", "#6c8aa0", "#91afc4", "#b8d3e6", "#d6e9f6", "#eaf6ff"] },
+      "text": { "role": "neutral", "displayName": "Ivory Ink", "canonical": "#f3f4f6", "tonalRamp": ["#1f2023", "#3a3c40", "#5a5d63", "#7d8088", "#a2a5ac", "#c6c8cd", "#e3e5e8", "#f3f4f6"] },
+      "text-2": { "role": "neutral", "displayName": "Soft Ivory", "canonical": "rgba(243, 244, 246, 0.84)" },
+      "text-meta": { "role": "neutral", "displayName": "Meta Ivory", "canonical": "rgba(243, 244, 246, 0.92)" },
+      "dusk": { "role": "neutral", "displayName": "Dusk", "canonical": "#0b0d18", "tonalRamp": ["#05060c", "#0b0d18", "#1a1e33", "#2b304d", "#424867", "#636985", "#9195ad", "#d0d2de"] },
+      "falloff": { "role": "neutral", "displayName": "Dusk Falloff", "canonical": "rgba(11, 13, 24, 0.66)" },
+      "falloff-phone": { "role": "neutral", "displayName": "Dusk Falloff (phone)", "canonical": "rgba(11, 13, 24, 0.6)" },
+      "veil-corner": { "role": "neutral", "displayName": "Disclosure Veil", "canonical": "rgba(11, 13, 24, 0.92)" },
+      "veil-phone": { "role": "neutral", "displayName": "Disclosure Veil (phone)", "canonical": "rgba(11, 13, 24, 0.94)" },
+      "text-halo": { "role": "neutral", "displayName": "Text Halo", "canonical": "rgba(11, 13, 24, 0.7)" },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(243, 244, 246, 0.16)" },
+      "route": { "role": "primary", "displayName": "Dim Route", "canonical": "rgba(74, 168, 255, 0.14)" },
+      "halo": { "role": "primary", "displayName": "Light Halo", "canonical": "rgba(74, 168, 255, 0.1)" },
+      "glow": { "role": "primary", "displayName": "Light Glow", "canonical": "rgba(74, 168, 255, 0.32)" },
+      "node-fill": { "role": "primary", "displayName": "Node (unlit)", "canonical": "rgba(74, 168, 255, 0.25)" },
+      "node-stroke": { "role": "primary", "displayName": "Node Edge", "canonical": "rgba(234, 246, 255, 0.4)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The name on the first point only; rises from its baseline." },
+      "headline": { "displayName": "Headline", "purpose": "Each later point's headline; balanced; rises from its baseline." },
+      "role": { "displayName": "Role", "purpose": "The role line under the name." },
+      "title": { "displayName": "Title", "purpose": "Organizations, project titles, method steps (21px)." },
+      "brand": { "displayName": "Brand", "purpose": "Site name in the header over the film." },
+      "body-lead": { "displayName": "Body Lead", "purpose": "Intro statement and closing invitation, max 44ch." },
+      "body": { "displayName": "Body", "purpose": "Summaries and paragraphs in Soft Ivory." },
+      "body-sm": { "displayName": "Body Small", "purpose": "Lists, tools, details content." },
+      "meta": { "displayName": "Meta", "purpose": "Dates, places, status lines." },
+      "action": { "displayName": "Action", "purpose": "Email me, Résumé, LinkedIn, GitHub." },
+      "label": { "displayName": "Label", "purpose": "Quick-fact terms only." },
+      "caption": { "displayName": "Caption", "purpose": "Screenshot captions." },
+      "disclosure": { "displayName": "Disclosure", "purpose": "The AI disclosure." }
+    },
+    "shadows": [
+      { "name": "text-halo", "value": "text-shadow: 0 1px 14px rgba(11, 13, 24, 0.7)", "purpose": "Separation behind small text on bright skies (Bay, Sunset)." },
+      { "name": "falloff", "value": "background: linear-gradient(90deg, rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.66) 26%, rgba(11, 13, 24, 0.66) 74%, rgba(11, 13, 24, 0)); mask-image: linear-gradient(rgba(0, 0, 0, 0), #000 140px, #000 calc(100% - 140px), rgba(0, 0, 0, 0)); inset: -56px -96px", "purpose": "Feathered backing behind every text block; no readable edge. Phones: flat rgba(11, 13, 24, 0.6), inset -24px -16px." },
+      { "name": "veil-top", "value": "height: calc(var(--header-h) + 24px); background: linear-gradient(#0b0d18, #0b0d18 var(--header-h), rgba(11, 13, 24, 0))", "purpose": "Opaque bar the header's height, then a 24px fade into the film." },
+      { "name": "veil-bottom", "value": "width: min(420px, 100%); height: 64px; background: radial-gradient(ellipse 100% 100% at 100% 100%, rgba(11, 13, 24, 0.92), rgba(11, 13, 24, 0.6) 50%, rgba(11, 13, 24, 0) 78%)", "purpose": "Corner patch behind the AI disclosure only. Phones: full width, linear-gradient(rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.94) 55%)." },
+      { "name": "light-head-bloom", "value": "radialGradient r=22: #eaf6ff 0.95 at 0, #4aa8ff 0.45 at 0.35, #4aa8ff 0 at 1; core r=3.5 #eaf6ff", "purpose": "The light's running head, held at 65% of viewport height." },
+      { "name": "light-strokes", "value": "route 1.5px rgba(74,168,255,0.14); halo 28px rgba(74,168,255,0.1); glow 9px rgba(74,168,255,0.32); core 1.8px #eaf6ff; round caps", "purpose": "The light path layers, drawn to the head by dash offset." },
+      { "name": "node-lit", "value": "r 6 fill rgba(74,168,255,0.25) stroke rgba(234,246,255,0.4) 1px; lit: r 7px fill #eaf6ff stroke rgba(74,168,255,0.5) 10px", "purpose": "A node flares when the light reaches it." }
+    ],
+    "motion": [
+      { "name": "ease-arrive", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Every landing entrance, the screenshot settle, details open, and the header nav underline." },
+      { "name": "arrive", "value": "opacity and transform 600ms ease-arrive; from translateY(14px)", "purpose": "A point's children arrive when the light reaches its node, once." },
+      { "name": "arrive-stagger", "value": "70ms, 140ms, 210ms", "purpose": "Delays for the second, third, and remaining children of a block, read top to bottom." },
+      { "name": "rise", "value": "transform 750ms ease-arrive, opacity 300ms; from translateY(105%) under clip-path inset(0 -0.1em -0.25em -0.1em)", "purpose": "Name and headlines rise from behind their own baseline; h1 at 0ms, h2 at 70ms." },
+      { "name": "reduced-fade", "value": "opacity 200ms ease, no delay, no transform", "purpose": "Motion off or prefers-reduced-motion: a short fade only." },
+      { "name": "node-flare", "value": "fill 0.4s ease, r 0.4s ease, stroke-width 0.6s ease", "purpose": "Node lighting on arrival." },
+      { "name": "shot-in", "value": "opacity 0 to 1, scale 0.97 to 1; animation-timeline view(); range entry 5% to entry 60%; ease-arrive", "purpose": "Work screenshots settle in, scroll-linked, only with prefers-reduced-motion: no-preference." },
+      { "name": "details-open", "value": "height and opacity 250ms ease-arrive (interpolate-size: allow-keywords); caret rotate 0.2s ease", "purpose": "More content grows open in place." },
+      { "name": "nav-underline", "value": "transform scaleX 0.3s cubic-bezier(.16, 1, .3, 1)", "purpose": "Current place underline in the header." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "max-width: 767px" },
+      { "name": "tablet", "value": "max-width: 1023px" },
+      { "name": "nav", "value": "min-width: 1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Link (Email me)",
+      "kind": "button",
+      "refersTo": "link-primary",
+      "description": "The primary action: a Flight Blue text link with its own 2px underline.",
+      "html": "<p class=\"ds-actions\"><a class=\"ds-link-primary\" href=\"#\">Email me</a><a class=\"ds-link\" href=\"#\">Résumé</a></p>",
+      "css": ".ds-actions { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 0; padding: 24px; background: #0b0d18; font: 600 15px/1.2 Archivo, system-ui, sans-serif; } .ds-link-primary { color: #4aa8ff; text-decoration: none; border-bottom: 2px solid currentColor; } .ds-link { color: #f3f4f6; text-underline-offset: 3px; } .ds-link-primary:focus-visible, .ds-link:focus-visible { outline: 2px solid #4aa8ff; outline-offset: 3px; } .ds-link-primary:hover { color: #eaf6ff; }"
+    },
+    {
+      "name": "Header Email Button",
+      "kind": "button",
+      "refersTo": "header-email",
+      "description": "The header's outlined Email action over the film.",
+      "html": "<div class=\"ds-hdr\"><span class=\"ds-brand\">Jose Garcia</span><a class=\"ds-hdr-email\" href=\"#\">Email</a></div>",
+      "css": ".ds-hdr { display: flex; align-items: center; justify-content: space-between; height: 68px; padding: 0 clamp(16px, 4vw, 56px); background: #0b0d18; color: #f3f4f6; } .ds-brand { font: 500 22px/1 'Bodoni Moda', 'Times New Roman', serif; } .ds-hdr-email { display: inline-flex; align-items: center; height: 38px; padding: 0 12px; border-radius: 9px; border: 1px solid currentColor; color: #4aa8ff; font: 700 14px/1 Archivo, system-ui, sans-serif; text-decoration: none; } .ds-hdr-email:focus-visible { outline: 2px solid #4aa8ff; outline-offset: 3px; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "description": "Nav over the film; the current place gets a Flight Blue underline.",
+      "html": "<nav class=\"ds-nav\"><a aria-current=\"location\" href=\"#\">Overview</a><a href=\"#\">Experience</a><a href=\"#\">Projects</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 4px; padding: 16px; background: #0b0d18; } .ds-nav a { position: relative; padding: 8px 12px; color: rgba(243, 244, 246, 0.84); text-decoration: none; font: 500 15px/1.2 Archivo, system-ui, sans-serif; transition: color .2s; } .ds-nav a:hover, .ds-nav a[aria-current] { color: #f3f4f6; } .ds-nav a::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 2px; border-radius: 2px; background: #4aa8ff; transform: scaleX(0); transition: transform .3s cubic-bezier(.16, 1, .3, 1); } .ds-nav a[aria-current]::after, .ds-nav a:hover::after { transform: scaleX(1); } .ds-nav a:focus-visible { outline: 2px solid #4aa8ff; outline-offset: 3px; }"
+    },
+    {
+      "name": "Point Block",
+      "kind": "card",
+      "refersTo": "point-block",
+      "description": "The repeated text unit on the film: headline and content on a feathered dusk falloff, no edges.",
+      "html": "<div class=\"ds-film\"><div class=\"ds-point\"><h2 class=\"ds-headline\">Built for real needs.</h2><p class=\"ds-lead\">I help customers understand technical solutions, get systems running, and use them confidently.</p><p class=\"ds-meta\">October 2022 to Present. Miami, FL</p></div></div>",
+      "css": ".ds-film { padding: 64px 112px; background: linear-gradient(160deg, #3a2f4f, #0b0d18 70%); } .ds-point { position: relative; max-width: 560px; isolation: isolate; color: #f3f4f6; text-shadow: 0 1px 14px rgba(11, 13, 24, 0.7); } .ds-point::before { content: ''; position: absolute; inset: -56px -96px; z-index: -1; background: linear-gradient(90deg, rgba(11, 13, 24, 0), rgba(11, 13, 24, 0.66) 26%, rgba(11, 13, 24, 0.66) 74%, rgba(11, 13, 24, 0)); -webkit-mask-image: linear-gradient(rgba(0,0,0,0), #000 140px, #000 calc(100% - 140px), rgba(0,0,0,0)); mask-image: linear-gradient(rgba(0,0,0,0), #000 140px, #000 calc(100% - 140px), rgba(0,0,0,0)); } .ds-headline { margin: 0 0 22px; font: 500 clamp(32px, 3.2vw, 46px)/1.08 'Bodoni Moda', 'Times New Roman', serif; text-wrap: balance; } .ds-lead { margin: 16px 0 0; max-width: 44ch; font: 400 17px/1.55 Archivo, system-ui, sans-serif; } .ds-meta { margin: 10px 0 0; font: 500 14px/1.55 Archivo, system-ui, sans-serif; letter-spacing: 0.02em; color: rgba(243, 244, 246, 0.92); }"
+    },
+    {
+      "name": "Light Path",
+      "kind": "custom",
+      "description": "The signature: one glowing line through the nodes, dim route, halo, glow, core, flared node, and running head.",
+      "html": "<svg class=\"ds-light\" viewBox=\"0 0 320 200\" width=\"320\" height=\"200\"><defs><radialGradient id=\"ds-bloom\"><stop offset=\"0\" stop-color=\"#eaf6ff\" stop-opacity=\"0.95\"/><stop offset=\"0.35\" stop-color=\"#4aa8ff\" stop-opacity=\"0.45\"/><stop offset=\"1\" stop-color=\"#4aa8ff\" stop-opacity=\"0\"/></radialGradient></defs><path class=\"ds-route\" d=\"M40 30 C40 100 280 100 280 170\"/><path class=\"ds-halo\" d=\"M40 30 C40 100 160 100 160 100\"/><path class=\"ds-glow\" d=\"M40 30 C40 100 160 100 160 100\"/><path class=\"ds-core\" d=\"M40 30 C40 100 160 100 160 100\"/><circle class=\"ds-node ds-node--lit\" cx=\"40\" cy=\"30\" r=\"7\"/><circle class=\"ds-node\" cx=\"280\" cy=\"170\" r=\"6\"/><circle cx=\"160\" cy=\"100\" r=\"22\" fill=\"url(#ds-bloom)\"/><circle cx=\"160\" cy=\"100\" r=\"3.5\" fill=\"#eaf6ff\"/></svg>",
+      "css": ".ds-light { display: block; background: #0b0d18; overflow: visible; } .ds-light path { fill: none; stroke-linecap: round; } .ds-route { stroke: rgba(74, 168, 255, 0.14); stroke-width: 1.5; } .ds-halo { stroke: rgba(74, 168, 255, 0.1); stroke-width: 28; } .ds-glow { stroke: rgba(74, 168, 255, 0.32); stroke-width: 9; } .ds-core { stroke: #eaf6ff; stroke-width: 1.8; } .ds-node { fill: rgba(74, 168, 255, 0.25); stroke: rgba(234, 246, 255, 0.4); stroke-width: 1; transition: fill 0.4s ease; } .ds-node--lit { fill: #eaf6ff; stroke: rgba(74, 168, 255, 0.5); stroke-width: 10px; }"
+    },
+    {
+      "name": "Quick Facts",
+      "kind": "custom",
+      "description": "Two-column definition list: uppercase Label terms, Ivory values.",
+      "html": "<dl class=\"ds-facts\"><div><dt>Current role</dt><dd>Service Engineer</dd></div><div><dt>Travel</dt><dd>Up to 40%</dd></div></dl>",
+      "css": ".ds-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 0; padding: 24px; background: #0b0d18; } .ds-facts dt { font: 600 11px/1.2 Archivo, system-ui, sans-serif; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(243, 244, 246, 0.84); } .ds-facts dd { margin: 4px 0 0; font: 400 14px/1.4 Archivo, system-ui, sans-serif; color: #f3f4f6; }"
+    },
+    {
+      "name": "More Details",
+      "kind": "custom",
+      "description": "Opens in place with a Flight Blue caret; grows open where supported.",
+      "html": "<details class=\"ds-more\"><summary>Contributions and full responsibilities</summary><div class=\"ds-more__body\">Deployed and supported access control systems across client sites.</div></details>",
+      "css": ".ds-more { padding: 24px; background: #0b0d18; font: 400 14px/1.5 Archivo, system-ui, sans-serif; color: rgba(243, 244, 246, 0.84); interpolate-size: allow-keywords; } .ds-more summary { cursor: pointer; color: #f3f4f6; font-weight: 600; list-style: none; } .ds-more summary::-webkit-details-marker { display: none; } .ds-more summary::before { content: ''; display: inline-block; width: 7px; height: 7px; margin: 0 12px 2px 2px; border: solid #4aa8ff; border-width: 0 1.5px 1.5px 0; transform: rotate(-45deg); transition: transform 0.2s ease; } .ds-more[open] summary::before { transform: rotate(45deg); } .ds-more summary:focus-visible { outline: 2px solid #4aa8ff; outline-offset: 3px; } .ds-more__body { padding-top: 6px; }"
+    },
+    {
+      "name": "Work Screenshot",
+      "kind": "card",
+      "refersTo": "work-shot",
+      "description": "A real project capture, gently rounded with a hairline edge and a small caption.",
+      "html": "<figure class=\"ds-shot\"><div class=\"ds-shot__img\"></div><figcaption>Route planner, day view.</figcaption></figure>",
+      "css": ".ds-shot { margin: 0; padding: 24px; background: #0b0d18; } .ds-shot__img { width: 100%; aspect-ratio: 8 / 5; border-radius: 10px; border: 1px solid rgba(243, 244, 246, 0.16); background: linear-gradient(135deg, #1a1e33, #2b304d); } .ds-shot figcaption { margin-top: 6px; font: 400 12px/1.4 Archivo, system-ui, sans-serif; color: rgba(243, 244, 246, 0.84); }"
+    },
+    {
+      "name": "AI Disclosure",
+      "kind": "custom",
+      "refersTo": "ai-disclosure",
+      "description": "Always visible with the film, bottom right on its corner veil.",
+      "html": "<div class=\"ds-disc-wrap\"><p class=\"ds-disc\">AI-rendered flight · not real footage</p></div>",
+      "css": ".ds-disc-wrap { position: relative; height: 96px; background: linear-gradient(160deg, #3a2f4f, #1a1e33); } .ds-disc-wrap::before { content: ''; position: absolute; right: 0; bottom: 0; width: min(420px, 100%); height: 64px; background: radial-gradient(ellipse 100% 100% at 100% 100%, rgba(11, 13, 24, 0.92), rgba(11, 13, 24, 0.6) 50%, rgba(11, 13, 24, 0) 78%); } .ds-disc { position: absolute; right: 16px; bottom: 12px; margin: 0; font: 400 11px/1.2 Archivo, system-ui, sans-serif; letter-spacing: 0.04em; color: rgba(243, 244, 246, 0.84); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Light Ahead",
+    "overview": "The ground is a clean, full-bleed aerial of Miami at dusk, fixed behind everything and never framed. Detailed text points sit on it in a zig-zag down the page, and a single glowing line of light joins them, its bright head running ahead of the reader to the next point. The light is the only thing drawn on the footage; the film is not annotated, ringed, boxed, or tinted.\n\nType does the structural work that panels would do elsewhere. A high-contrast Bodoni Moda display carries names and headlines like title cards; Archivo carries every reading line and action. Legibility comes from a feathered dusk falloff that sits behind each text block with no readable edge, plus a soft text halo, so the film stays continuous right up to the letters.\n\nMotion is tied to the light: a point's text arrives when the light reaches its node, once, and stays. With motion off the film shows one still per point, the light is fully drawn, and text only fades.",
+    "keyCharacteristics": [
+      "Full-bleed dusk footage as the only ground; no panels, cards, glass, rings, or red.",
+      "One blue (accent) for the light, its nodes, focus rings, links, and Email me.",
+      "Bodoni Moda display over Archivo text, ivory-white on dusk.",
+      "Points placed on a 12-column grid in a zig-zag, each a 560px reading block.",
+      "Text arrives with the light; reduced motion gets a fade only.",
+      "The AI disclosure is always on screen with the film."
+    ],
+    "rules": [
+      { "name": "The One Blue Rule", "body": "Flight Blue and its core belong to the light and to the things the light points at (Email me, links in focus, the current place). No second accent, and never red.", "section": "colors" },
+      { "name": "The Feathered Falloff Rule", "body": "Text never sits on a shape with an edge. Its backing is a horizontal dusk gradient (0 to 66% to 66% to 0) masked by a 140px vertical feather; on phones it collapses to a flat 60% dusk.", "section": "colors" },
+      { "name": "The Title Card Rule", "body": "The name and each headline rise from behind their own baseline (clipped, translateY 105% to 0 over 750ms); no other type moves that way.", "section": "typography" },
+      { "name": "The Plain Words Rule", "body": "No em dashes in copy. Date ranges and separators read as words (\"October 2022 to Present\"); the landing converts dashes with `plain()`.", "section": "typography" },
+      { "name": "The Only Ink Is Light Rule", "body": "Nothing is drawn on the film except the light path: its dim route, glow, core, nodes, and head. No rings, callouts, markup, panels, cards, or glass over the footage.", "section": "elevation" },
+      { "name": "The Veil Is Not a Band Rule", "body": "The top veil is an opaque dusk bar exactly the header's height plus a 24px fade; the bottom veil is only a corner patch (min(420px, 100%) by 64px) behind the disclosure, full-width 64px fade on phones. The film is never framed in bands.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the film full-bleed, fixed, and clean, with dusk (#0b0d18) behind it.",
+      "Do put every text block on the feathered falloff with a 140px feather and no visible edge.",
+      "Do reserve Flight Blue for the light, nodes, focus, the current place, and Email me.",
+      "Do set names and headlines in Bodoni Moda 500 and everything else in Archivo.",
+      "Do keep reading blocks to 560px on the 12-column grid, separated by 40svh of open film (28svh on phones).",
+      "Do place exit nodes out in the film by clamp(140px, 18vw, 320px) so the light crosses the footage.",
+      "Do let text arrive with the light on ease-arrive, and fall back to a 200ms fade for reduced motion.",
+      "Do keep the AI disclosure visible whenever the film is on screen.",
+      "Do write date ranges and separators as words."
+    ],
+    "donts": [
+      "Don't draw anything on the film but the light: no rings, markup, callouts, or redlines.",
+      "Don't put text in panels, cards, or glass, and don't add box shadows.",
+      "Don't introduce red or a second accent color.",
+      "Don't frame the film in solid bands top and bottom; only the header bar and the disclosure patch are veiled.",
+      "Don't use em dashes in copy.",
+      "Don't hide or shrink away the AI disclosure.",
+      "Don't add eyebrow or kicker labels above headlines on new points; the headline leads."
+    ]
+  }
+}

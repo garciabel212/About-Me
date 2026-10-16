@@ -1,23 +1,24 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { AI_DISCLOSURE } from '../disclosure';
 import { POSTER_FRAME } from '../poster';
-
-// FlightBackdrop reads media queries on first render; give it a desktop window.
-const desktopWindow = { innerHeight: 900, innerWidth: 1440, matchMedia: () => ({ matches: false }) };
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
 describe('AI footage disclosure (LTX-2 license)', () => {
-  it('is drawn on the Cinematic film, beside the footage it labels', async () => {
-    vi.stubGlobal('window', desktopWindow);
-    const { default: FlightBackdrop } = await import('../FlightBackdrop');
-    const out = renderToStaticMarkup(<FlightBackdrop motion />);
-    expect(out).toContain('cine-canvas');
-    expect(out).toContain(`<p class="cine-disclosure">${AI_DISCLOSURE}</p>`);
+  it('is shown on the landing, with the film', async () => {
+    vi.stubGlobal('window', { innerHeight: 900, innerWidth: 1440, matchMedia: () => ({ matches: false }) });
+    const { default: FlightLanding } = await import('@/landing/FlightLanding');
+    const out = renderToStaticMarkup(
+      <MemoryRouter>
+        <FlightLanding motion />
+      </MemoryRouter>,
+    );
+    expect(out).toContain(`<p class="landing__disclosure">${AI_DISCLOSURE}</p>`);
   });
 
   it('preloads the poster frame the film paints first', () => {

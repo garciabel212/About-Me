@@ -1,6 +1,5 @@
 /* Home evidence: the recruiter's quick facts, the Service Map Planner workflow,
-   the career timeline, the "how I work" matrix, the Cinematic evidence window,
-   and the scroll-linked in/out motion. */
+   the career timeline, and the "how I work" matrix. */
 
 /* ── At a glance: the recruiter's quick facts under the opening ─────── */
 .glance { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 40px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); }
@@ -9,15 +8,7 @@
 .glance dd { margin: 2px 0 0; max-width: 26ch; font-size: 15.5px; line-height: 1.45; color: var(--ink); }
 .glance .next-cue { margin-top: 0; }
 .home--read .glance { max-width: 1120px; width: 100%; margin: 40px auto 0; }
-.home--cinematic .home-section--overview { grid-template-rows: 1fr auto; }
-.home--cinematic .overview { align-self: center; }
-.home--cinematic .glance {
-  margin: 32px calc(-1 * var(--gutter)) -36px; padding: 18px var(--gutter) 20px; border-top-color: rgba(244, 239, 230, 0.14);
-  background: rgba(11, 13, 24, 0.84); text-shadow: none;
-}
-.home--cinematic .glance dt { color: rgba(244, 239, 230, 0.72); }
 @media (max-width: 1023px) { .glance dl { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 767px) { .home--cinematic .glance { margin: 28px -16px -64px; padding: 16px 16px 64px; } }
 
 /* ── Service Map Planner workflow diagram ──────────────────────────── */
 .workflow { padding: 24px; border-radius: 14px; border: 1px solid var(--line); background: color-mix(in srgb, var(--ink) 3%, transparent); }
@@ -25,7 +16,6 @@
 .workflow__steps::before { content: ""; position: absolute; left: 17px; top: 18px; bottom: 18px; width: 1px; background: var(--line); }
 .workflow__step { position: relative; display: grid; grid-template-columns: 36px 1fr; gap: 4px 14px; align-items: start; }
 .workflow__icon { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; color: var(--link); background: var(--bg); border: 1px solid var(--line); }
-.home--cinematic .workflow__icon, .evidence-window .workflow__icon { background: #0b0d18; }
 .workflow__icon--small { width: 30px; height: 30px; border-radius: 8px; }
 .workflow__title { display: flex; align-items: baseline; gap: 8px; margin: 6px 0 6px !important; font: 650 16px/1.3 var(--font-sans); color: var(--ink); }
 .workflow__title span { font-size: 12.5px; font-weight: 600; color: var(--ink-muted); font-variant-numeric: tabular-nums; }
@@ -75,70 +65,4 @@
   .matrix tbody th { padding: 0 0 8px; }
   .matrix td { padding: 6px 0 0; }
   .matrix td::before { content: attr(data-label); display: block; margin-bottom: 4px; font-size: 13px; font-weight: 650; color: var(--ink-muted); }
-}
-
-/* ── Cinematic split screen: evidence in the film window, Expertise full width ── */
-.evidence-window { display: none; }
-@media (min-width: 1024px) {
-  .evidence-window {
-    display: block; position: fixed; z-index: 1; pointer-events: none; border-radius: 18px; overflow: hidden;
-    top: calc(var(--header-h) + 20px); bottom: 20px; right: var(--gutter); left: calc(var(--gutter) * 2 + var(--col-w) + 8px);
-  }
-  .evidence-window::before {
-    content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .5s ease;
-    background: radial-gradient(120% 80% at 50% 30%, #161b33 0%, #0b0d18 70%);
-    box-shadow: 0 0 0 1px rgba(244, 239, 230, 0.14) inset;
-  }
-  .evidence-window.is-showing::before { opacity: 1; }
-  .evidence-window__item {
-    position: absolute; inset: 0; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; justify-items: center; gap: 14px; padding: 48px 40px;
-    opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(6px);
-    transition: opacity .45s ease, transform .7s cubic-bezier(.16, 1, .3, 1), filter .45s ease;
-  }
-  .evidence-window__item.is-active { opacity: 1; transform: none; filter: none; transition-delay: .08s; }
-  .evidence-window__item img {
-    display: block; max-width: 100%; max-height: calc(100vh - var(--header-h) - 200px); object-fit: contain;
-    border-radius: 12px; border: 1px solid rgba(244, 239, 230, 0.16); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8);
-  }
-  .evidence-window__item figcaption { display: flex; align-items: baseline; gap: 10px; font-size: 14px; color: rgba(244, 239, 230, 0.78); }
-  .evidence-window .workflow { width: 100%; max-width: 520px; }
-  .evidence-window .timeline { width: 100%; max-width: 560px; margin: 0; padding: 30px 30px 24px; }
-  .evidence-window .timeline__heading { font-size: 24px; }
-  .evidence-window .timeline__track { height: 124px; margin-top: 48px; }
-  .evidence-window .timeline__role b { font-size: 16px; }
-  .evidence-window .timeline__role span:not(.timeline__bar) { font-size: 14px; }
-  .evidence-window .image-kind--screenshot { color: #7fd3a0; }
-  .evidence-window .image-kind--diagram { color: #a9d2ff; }
-  /* The column keeps its evidence for screen readers; sighted readers see it in the window. */
-  .home--cinematic .inline-evidence { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  /* Expertise takes the whole screen: it slides over the film window, which returns in the next gap. */
-  .home--cinematic .home-section.home-section--expertise { width: auto; }
-  .home--cinematic .home-section--expertise .panel { max-width: 1240px; margin: 0 auto; }
-  .home--cinematic .home-section--expertise .capabilities { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (min-width: 1280px) {
-  .home--cinematic .home-section--expertise .capabilities { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 32px; }
-}
-
-/* ── In and out: blocks ease in as they enter and fade as they leave ─── */
-/* Scroll-linked (never on a timer), wide Cinematic screens only, off with Motion off or reduced motion. */
-@keyframes rv-in { from { opacity: 0; transform: translateY(28px); filter: blur(5px); } }
-@keyframes rv-out { to { opacity: 0.1; transform: translateY(-12px); } }
-@supports (animation-timeline: view()) {
-  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-    .site-shell[data-motion="on"] .home--cinematic :is(
-      .section-head, .role__row, .role__summary, .role__contributions li, .role__details,
-      .capability, .matrix h3, .matrix tbody tr, .project__body > *, .about, .qualifications > div,
-      .contact__body, .contact__email, .home-section--contact .actions, .contact__details
-    ) {
-      animation: rv-in linear both, rv-out linear both;
-      animation-timeline: view(), view();
-      animation-range: entry 0 entry 180px, exit calc(100% - 140px) exit 100%;
-    }
-  }
-}
-.site-shell[data-motion="off"] .evidence-window::before,
-.site-shell[data-motion="off"] .evidence-window__item { transition: none; }
-@media (prefers-reduced-motion: reduce) {
-  .evidence-window::before, .evidence-window__item { transition: none; }
 }

@@ -11,6 +11,7 @@ import { ViewModeProvider, useViewMode } from '@/components/view/ViewMode';
 import { takeHomeReturn } from '@/components/home/homeReturn';
 import Home from '@/pages/Home';
 import { hashAliases, legacyRoutes } from '@/data/routes';
+import { focusTarget } from '@/lib/focusTarget';
 
 const ServiceMapPlanner = lazy(() => import('@/pages/projects/ServiceMapPlanner'));
 const ScaleGarageStudio = lazy(() => import('@/pages/projects/ScaleGarageStudio'));
@@ -79,7 +80,7 @@ function AppRoutes() {
         if (lenis) lenis.scrollTo(target, { immediate: !motion, force: true });
         else target.scrollIntoView({ behavior: 'instant', block: 'start' });
         // Keyboard and screen-reader users continue from the section they asked for.
-        if (target.tabIndex === -1) target.focus({ preventScroll: true });
+        focusTarget(target)?.focus({ preventScroll: true });
         return;
       }
       attempts += 1;

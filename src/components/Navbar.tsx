@@ -5,7 +5,7 @@ import ThemeToggle from './theme/ThemeToggle';
 import { ViewSwitch } from './view/ViewControls';
 import { useViewMode } from './view/ViewMode';
 import { mailto, profile, resumeUrl } from '@/data/profile';
-import { homeSectionLinks } from '@/data/navigation';
+import { cinematicSectionLinks, homeSectionLinks } from '@/data/navigation';
 import { useActiveSection } from '@/hooks/useActiveSection';
 
 /**
@@ -19,6 +19,7 @@ export default function Navbar() {
   const home = pathname === '/';
   const onFilm = home && mode === 'cinematic';
   const active = useActiveSection(home);
+  const links = onFilm ? cinematicSectionLinks : homeSectionLinks;
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [route, setRoute] = useState(pathname + hash);
@@ -49,7 +50,7 @@ export default function Navbar() {
 
         <nav className="site-nav" aria-label="Sections">
           <ul>
-            {homeSectionLinks.map((l) => (
+            {links.map((l) => (
               <li key={l.id}>
                 <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>{l.label}</Link>
               </li>
@@ -88,7 +89,7 @@ export default function Navbar() {
           </a>
         </div>
         <ul className="site-menu__links">
-          {homeSectionLinks.map((l) => (
+          {links.map((l) => (
             <li key={l.id}>
               <Link to={l.href} aria-current={active === l.id ? 'location' : undefined}>{l.label}</Link>
             </li>

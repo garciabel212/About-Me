@@ -1,7 +1,18 @@
 import { useEffect, useState } from 'react';
 import { sectionIds, type SectionId } from '@/data/routes';
 
-/** The Home section under the upper third of the viewport, for the header's current-location mark. */
+/**
+ * The section that most recently passed the probe line: the one with the
+ * greatest top at or above it. Works whatever order the ids are listed in
+ * (Cinematic and Read modes order their sections differently).
+ */
+export function activeFrom<T extends string>(tops: readonly { id: T; top: number }[], probe: number): T | null {
+  let best: { id: T; top: number } | null = null;
+  // Ties go to the later id (Cinematic: about and contact share the closing point; Contact is the one in the nav).
+  for (const t of tops) if (t.top <= probe && (!best || t.top >= best.top)) best = t;
+  return best?.id ?? tops[0]?.id ?? null;
+}
+
 export function useActiveSection(enabled: boolean): SectionId | null {
   const [active, setActive] = useState<SectionId | null>(null);
 
@@ -10,13 +21,11 @@ export function useActiveSection(enabled: boolean): SectionId | null {
     let frame = 0;
     const measure = () => {
       frame = 0;
-      const probe = window.innerHeight * 0.35;
-      let current: SectionId | null = null;
-      for (const id of sectionIds) {
+      const tops = sectionIds.flatMap((id) => {
         const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= probe) current = id;
-      }
-      setActive(current ?? sectionIds[0]);
+        return el ? [{ id, top: el.getBoundingClientRect().top }] : [];
+      });
+      setActive(activeFrom(tops, window.innerHeight * 0.35) ?? sectionIds[0]);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(measure);

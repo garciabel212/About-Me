@@ -72,7 +72,7 @@ Matte:
 
 - Model: SegFormer-B5 fine-tuned on ADE20K (`nvidia/segformer-b5-finetuned-ade-640-640`), safetensors only, pinned to a commit hash.
 - Run on each HD frame; keep the per-pixel class probabilities (not hard labels) for softer, truer edges.
-- matte = 1 − P(sky + water + sea + river + lake). Streets, palms, rooftops, bridges and boats count as foreground.
+- matte = P(upright occluders): building, skyscraper, house, tower, tree, palm, pole, bridge, streetlight, boat, ship, column, fence, railing, booth, canopy, awning, tent, signboard. *Changed 2026-10-17:* the first rule, 1 − P(sky + water + sea + river + lake), also counted sand, shoreline and roads as foreground (51% of the Beach text zone), which would hide the light over flat ground. Sky, water and ground now all stay clear.
 - Temporal smoothing: each frame's matte is averaged with its neighbours at weights 0.25 / 0.5 / 0.25 (at the 413-frame rate), to stop flicker in flight. Stop frames use their own matte unsmoothed, so a held matte never ghosts a neighbouring frame.
 - Specks smaller than 0.1% of the frame are removed; then a 1px feather.
 - Expected size: about 5–15 KB per matte.
@@ -139,7 +139,7 @@ Automatic checks in `export_site.py`, which fails the export if any break:
 - 413 frames in every set (hd, desktop, phone, matte/wide, matte/phone).
 - Stops at 40, 114, 189, 264, 338, 412.
 - Frame and matte dimensions as specified; frame and matte counts match one for one.
-- At each stop, matte coverage inside that stop's text zone is under 2%: no building behind the text.
+- At each stop, matte coverage inside that stop's text zone is under 15%. *Changed 2026-10-17 (owner's call):* the first limit was 2%, but a full-height text column always crosses the horizon. The rendered stops measure River 0.02%, Brickell 9.29% (far shoreline lights), Downtown 13.08% (bridge and two small towers at the vanishing point), Bay 1.97%, Beach 0.00%, Sunset Harbour 7.58% (the skyline's left edge in the zone's top-right corner). All of that is distant and low-detail; the text's dark backing covers it. 15% still refuses a tower standing behind the text.
 - The upper sky band (top 15% of the frame, outside buildings) never brightens from one stop to the next: light only moves forward.
 
 Unit tests (Vitest):

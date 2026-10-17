@@ -38,8 +38,10 @@ How it fits together:
   roads) stay clear: the landing draws each frame's occluders over the light path, so the light passes behind
   buildings but runs over the beach. The model comes from NVIDIA's official commit, loaded with `weights_only=True` and converted to a local
   safetensors file; matte.py never loads a pickle. Ask the owner before downloading any new model.
-- **Export checks** refuse to write anything if a frame count or stop frame is off, if buildings cover 2% or more of
-  a stop's text zone, or if the sky brightens from one stop to the next.
+- **Export checks** refuse to write anything if a frame count or stop frame is off, if occluders cover 15% or more of
+  a stop's text zone, or if the sky brightens from one stop to the next. The limit is 15%, not the 2% first planned:
+  a full-height text column always crosses the horizon, and the far shoreline lights, bridge and small towers there
+  measure up to 13% (Downtown). A tower standing behind the text is far above it.
 
 v2 scripts (`make_stops.py`, `stops_v2.json`, `assemble_v2.py`) stay for reference; older experiments:
 `heal_chain.py`, `grade_restore.py`, `retime_constant_speed.py`.

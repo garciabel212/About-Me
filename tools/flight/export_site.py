@@ -26,7 +26,7 @@ PHONE_W = 420
 MATTE = (960, 528)
 PHONE_MATTE_W = 315  # PHONE_W at matte scale (0.75)
 SITE_STOPS = [40, 114, 189, 264, 338, 412]
-MAX_ZONE_COVERAGE = 0.02
+MAX_ZONE_COVERAGE = 0.15  # distant horizon structures cross full-height text columns; a near tower is far above this
 QUALITY = {'hd': 78, 'desktop': 72, 'phone': 74}
 
 here = os.path.dirname(os.path.abspath(__file__))

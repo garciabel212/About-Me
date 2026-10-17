@@ -23,7 +23,7 @@ function placeRects(cinematic: boolean): PlaceRect[] {
 }
 
 /**
- * Home. Cinematic mode is the site survey over the Miami flight; Read mode is
+ * Home. Cinematic mode is the light path landing over the Miami flight; Read mode is
  * the same content as a compact, plain page.
  */
 export default function Home() {

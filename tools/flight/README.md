@@ -33,9 +33,10 @@ How it fits together:
 - **Light only moves forward** (afterglow → twilight → blue hour). The still model ignores that, so `grade_stills`
   darkens each pick toward a falling sky target (never stronger than x0.6). No sun disk, and never the words "sun" or
   "sunset" in a prompt (the model paints a sun disk).
-- **The matte** is 1 − P(sky + water + sea + river + lake) from SegFormer, smoothed across neighbouring frames (stop
-  frames keep their own), so the landing can draw each frame's buildings over the light path and the light passes
-  behind them. The model comes from NVIDIA's official commit, loaded with `weights_only=True` and converted to a local
+- **The matte** is SegFormer's probability of an upright occluder (buildings, trees, palms, poles, bridges, boats …),
+  smoothed across neighbouring frames (stop frames keep their own). Sky, water and flat ground (sand, shoreline,
+  roads) stay clear: the landing draws each frame's occluders over the light path, so the light passes behind
+  buildings but runs over the beach. The model comes from NVIDIA's official commit, loaded with `weights_only=True` and converted to a local
   safetensors file; matte.py never loads a pickle. Ask the owner before downloading any new model.
 - **Export checks** refuse to write anything if a frame count or stop frame is off, if buildings cover 2% or more of
   a stop's text zone, or if the sky brightens from one stop to the next.

@@ -32,11 +32,16 @@ def clip(still, prompt, seed, prefix):
 
 
 def main():
+    depart_seed = 7200  # --depart-seed N re-rolls a messy departure (the arrival's seed doesn't reach it)
+    if '--depart-seed' in sys.argv:
+        i = sys.argv.index('--depart-seed')
+        depart_seed = int(sys.argv[i + 1])
+        del sys.argv[i:i + 2]
     stop_id, still, arrive, depart = sys.argv[1:5]   # pass '-' to skip the departure (last stop)
     seed = int(sys.argv[5]) if len(sys.argv) > 5 else 7100  # a new seed re-rolls a messy arrival
     pull = sys.argv[6] if len(sys.argv) > 6 else PULL_BACK  # per-stop pull-back wording (open water needs its own)
     arrival = clip(still, pull + arrive, seed, f'video/flight/stops/{stop_id}_pullback')[::-1]
-    departure = clip(still, FORWARD + depart, 7200, f'video/flight/stops/{stop_id}_depart') if depart != '-' else [arrival[-1]]
+    departure = clip(still, FORWARD + depart, depart_seed, f'video/flight/stops/{stop_id}_depart') if depart != '-' else [arrival[-1]]
     frames = arrival + departure[1:]  # both clips start on the stop still; keep it once
     h, w = frames[0].shape[:2]
     path = os.path.join(COMFY, 'output', 'video', 'flight', 'stops', f'{stop_id}_stop.mp4')

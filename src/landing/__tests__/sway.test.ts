@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SWAY, swayStep, swayTarget } from '../sway';
+import { FILM_SELECTOR, SWAY, swayStep, swayTarget } from '../sway';
 
 describe('swayTarget', () => {
   it('maps the pointer to -1..1 around the screen centre', () => {
@@ -19,5 +19,11 @@ describe('swayStep', () => {
     expect(SWAY.film.x).toBeLessThan(0);
     expect(SWAY.text.x).toBeGreaterThan(0);
     expect(Math.abs(SWAY.film.x)).toBeLessThanOrEqual(16);
+  });
+});
+
+describe('sway layers', () => {
+  it('moves the building layer with the film, so buildings never slide off the light', () => {
+    expect(FILM_SELECTOR).toBe('.film__canvas, .film__poster, .film__front');
   });
 });

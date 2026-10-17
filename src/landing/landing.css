@@ -125,13 +125,10 @@
 .film { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--dusk); pointer-events: none; }
 .film__poster, .film__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .film__poster { object-fit: cover; }
-/* Building cut-outs: the stop frame with alpha only on its towers, laid over the light so the
-   light passes behind buildings and comes out the other side. Covers the screen exactly as the
-   canvas does (centred cover). Shown only while the camera holds at that stop; it leaves faster
-   than it arrives so a stale cut-out never lingers over a moving camera. */
-.film-occluders { position: fixed; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
-.film__occluder { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 80ms linear; }
-.film__occluder[data-on] { opacity: 1; transition-duration: 200ms; }
+/* Building layer: each painted frame cut to its own occlusion matte (buildings and foreground; sky and water
+   clear), drawn over the light and under the text, so the light passes behind buildings in every frame. */
+.film-front { position: fixed; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+.film__front { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* Header legibility: a soft dark band under the fixed header only. */
 .landing__veil, .landing__veil--bottom { position: fixed; left: 0; right: 0; z-index: 5; pointer-events: none; }
 /* Top: an opaque bar exactly the header's height (nothing ghosts behind the nav), then a short 24px fade into the film. */

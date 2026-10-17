@@ -24,25 +24,29 @@
     "arrive": "Tall downtown towers with warm lit windows on both banks of the calm Miami River at twilight, open violet sky and dark water up the middle between them, a faint glow low on the far horizon.",
     "depart": "The camera rises and flies forward along the river past the last downtown towers, out over the wide calm bay, turning right so the towers slide away to the left, pink and violet twilight sky.",
     "pick": 6606,
-    "sky": 84
+    "sky": 84,
+    "seed": 8123,
+    "depart_seed": 8223
   },
   {
     "id": "v3_bay",
     "zone": "bay",
     "still": "Hovering 60 meters above calm Biscayne Bay in deep twilight, the sky already dark. On the LEFT side of the frame a few residential towers with warm lit windows stand on the shore, a few anchored sailboats with tiny lights near them on the dark glassy water. The sky is a dark, deep violet overhead fading to dusky mauve, with only a faint thin pink glow low on the horizon. Composition: the towers and boats sit in the left 45 percent of the frame; the right half of the frame is open, calm dark water at the bottom and smooth dark violet twilight sky above, with nothing in it, no bridge, no causeway, no clouds.",
     "arrive": "Calm Biscayne Bay at twilight, residential towers with lit windows and a long lit causeway on the left, anchored sailboats, open water and pink and violet sky on the right.",
-    "depart": "The camera flies forward low across the calm bay toward the distant beach and palm trees, glittering reflections on the water, the violet sky turning deep blue.",
+    "depart": "The camera accelerates and flies fast forward, low across the wide calm bay straight toward the distant beach and palm trees, the water rushing past below, glittering reflections, the violet sky turning deep blue.",
     "pick": 1212,
-    "sky": 73
+    "sky": 73,
+    "seed": 8124
   },
   {
     "id": "v3_beach",
     "zone": "beach",
     "still": "Low aerial view of a wide empty white sand beach in Miami Beach in the deep blue hour, the sky already dark navy and deep violet overhead, looking north along the shore. A pastel pink lifeguard tower with a warm glowing light stands raised in the upper right of the frame, tall palm silhouettes behind it on the right against a faint dim afterglow low in the western sky. The calm Atlantic Ocean on the left lies under a dark navy and deep violet sky with only a faint dusky pink line just above the sea horizon. Composition: the lifeguard tower and the palms sit in the upper half of the frame on the right; the lower half of the frame is smooth, empty sand softly lit by the tower light; the left 40 percent is calm ocean and soft cool twilight sky.",
     "arrive": "A pastel pink lifeguard tower with a warm glowing light on a wide empty sand beach in the blue hour, palm silhouettes behind it on the right against a faint peach afterglow, the calm ocean on the left under a cool deep blue and violet sky.",
-    "depart": "The camera rises past the lifeguard tower and banks right, turning away from the ocean, flying low over the palm silhouettes and softly lit rooftops toward the calm bay, the glowing lit skyline of downtown Miami appearing across the water under a deep violet sky with a thin ember-orange afterglow on the horizon.",
+    "depart": "The camera rises high and steadily above the beach, the small lifeguard tower far below, then banks right, turning away from the ocean, flying high over the palm silhouettes and softly lit rooftops toward the calm bay, the glowing lit skyline of downtown Miami appearing across the water under a deep violet sky with a thin ember-orange afterglow on the horizon.",
     "pick": 9909,
-    "sky": 66
+    "sky": 66,
+    "seed": 8125
   },
   {
     "id": "v3_sunset",

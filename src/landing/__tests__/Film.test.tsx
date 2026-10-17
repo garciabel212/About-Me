@@ -38,3 +38,12 @@ describe('film layering', () => {
     expect(z('.film-front')).toBeLessThan(3); // .point sits at z-index 3
   });
 });
+
+describe('currentSet', () => {
+  it('measures the window like the media queries do, scrollbar included', async () => {
+    vi.stubGlobal('window', { innerWidth: 1440, innerHeight: 900, devicePixelRatio: 1, matchMedia: () => ({ matches: false }) });
+    vi.stubGlobal('document', { documentElement: { clientWidth: 1430 } });
+    const { currentSet } = await import('../Film');
+    expect(currentSet()).toBe('hd');
+  });
+});

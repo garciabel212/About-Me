@@ -15,8 +15,9 @@ const STOP_FRAMES = flight.stops.map((s) => s.frame);
 /** Seconds for the drawn frame to catch up with the scroll position. */
 const LAG = 0.12;
 
-function currentSet(): FrameSet {
-  const width = typeof document === 'undefined' ? window.innerWidth : document.documentElement.clientWidth;
+/** The set for this window, measured like SET_QUERIES (innerWidth, scrollbar included) so the two never disagree. */
+export function currentSet(): FrameSet {
+  const width = window.innerWidth;
   const nav = typeof navigator === 'undefined' ? undefined : (navigator as Navigator & { connection?: { saveData?: boolean } });
   return pickSet(width, window.devicePixelRatio || 1, nav?.connection?.saveData ?? false);
 }

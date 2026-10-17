@@ -22,8 +22,8 @@ from matte_core import drop_specks, feather, from_probs, smooth, to_alpha8  # no
 from retime import MASTER_FRAMES, MASTER_STOPS  # noqa: E402
 from zones import zone_coverage  # noqa: E402
 
-MODEL = 'nvidia/segformer-b5-finetuned-ade-640-640'
-REVISION = ''  # commit sha pinned when the owner approves the download
+# Local safetensors copy of nvidia/segformer-b5-finetuned-ade-640-640@739f5d4, made by fetch_segformer.py.
+MODEL = r'C:\Users\abel\AI\models\segformer-b5-ade'
 CLEAR = {'sky', 'water', 'sea', 'river', 'lake'}
 INFER = (1280, 704)  # SegFormer runs at film resolution (multiple of 32); logits are upsampled to HD
 SITE_STOPS = [f // 2 for f in MASTER_STOPS]
@@ -33,9 +33,9 @@ FLIGHT = os.path.join(COMFY, 'output', 'video', 'flight')
 
 def load_model():
     from transformers import SegformerForSemanticSegmentation, SegformerImageProcessor
-    assert REVISION, 'pin REVISION to the model commit sha first'
-    processor = SegformerImageProcessor.from_pretrained(MODEL, revision=REVISION, do_resize=False)
-    model = SegformerForSemanticSegmentation.from_pretrained(MODEL, revision=REVISION, use_safetensors=True)
+    assert os.path.exists(os.path.join(MODEL, 'model.safetensors')), 'run fetch_segformer.py first'
+    processor = SegformerImageProcessor.from_pretrained(MODEL, local_files_only=True, do_resize=False)
+    model = SegformerForSemanticSegmentation.from_pretrained(MODEL, local_files_only=True, use_safetensors=True)
     model = model.to('cuda', torch.float16).eval()
     names = {v.lower(): int(k) for k, v in model.config.id2label.items()}
     missing = CLEAR - set(names)

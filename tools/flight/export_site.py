@@ -7,6 +7,7 @@ Phone frames are a PHONE_W-wide crop (at desktop scale) around the landmark, int
 Refuses to write anything if a check fails: frame counts, stop frames, a building behind a stop's text, or a
 sky that brightens from one stop to the next.
 """
+import io
 import json
 import os
 import sys
@@ -29,6 +30,8 @@ PHONE_MATTE_W = 315  # PHONE_W at matte scale (0.75)
 SITE_STOPS = [40, 114, 189, 264, 338, 412]
 MAX_ZONE_COVERAGE = 0.15  # distant horizon structures cross full-height text columns; a near tower is far above this
 QUALITY = {'hd': 78, 'desktop': 72, 'phone': 74}
+MATTE_BUDGET = 15_000  # bytes per matte: they stream beside every frame, so they must stay small
+MATTE_QUALITY = 50  # alpha error under 1/255 on the real mattes, about a third of the size of quality 80
 SKY_STEP = 1.5  # a stop's sky may sit at most this much above the previous one (check_light_forward allows 2)
 
 here = os.path.dirname(os.path.abspath(__file__))
@@ -43,6 +46,14 @@ def focal_x(i, stops):
             t = (i - a['frame']) / (b['frame'] - a['frame'])
             return a['x'] + (b['x'] - a['x']) * t
     return stops[-1]['x']
+
+
+def encode_matte(alpha):
+    """An 8-bit matte as a white RGBA WebP whose alpha carries the matte (the landing cuts frames with it)."""
+    im = Image.merge('RGBA', (*Image.new('RGB', alpha.size, (255, 255, 255)).split(), alpha))
+    out = io.BytesIO()
+    im.save(out, 'WEBP', quality=MATTE_QUALITY, alpha_quality=MATTE_QUALITY, method=6)
+    return out.getvalue()
 
 
 def fail(msg):
@@ -104,10 +115,9 @@ def main():
         desk.crop((left, 0, left + PHONE_W, DESKTOP[1])).save(os.path.join(dirs['phone'], f'f{i:03d}.webp'), quality=QUALITY['phone'], method=6)
         crops.append(left)
         alpha = Image.open(mp).convert('L').resize(MATTE, Image.LANCZOS)
-        matte = Image.merge('RGBA', (*Image.new('RGB', MATTE, (255, 255, 255)).split(), alpha))
-        matte.save(os.path.join(dirs['matte/wide'], f'f{i:03d}.webp'), quality=80, alpha_quality=80, method=6)
+        open(os.path.join(dirs['matte/wide'], f'f{i:03d}.webp'), 'wb').write(encode_matte(alpha))
         ml = round(left * MATTE[0] / DESKTOP[0])
-        matte.crop((ml, 0, ml + PHONE_MATTE_W, MATTE[1])).save(os.path.join(dirs['matte/phone'], f'f{i:03d}.webp'), quality=80, alpha_quality=80, method=6)
+        open(os.path.join(dirs['matte/phone'], f'f{i:03d}.webp'), 'wb').write(encode_matte(alpha.crop((ml, 0, ml + PHONE_MATTE_W, MATTE[1]))))
 
     for s in stops:
         s['phoneX'] = round((s['x'] * DESKTOP[0] - crops[s['frame']]) / PHONE_W, 4)

@@ -13,6 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import matte_core  # noqa: E402
 import retime  # noqa: E402
 import assemble_v3  # noqa: E402
+import export_site  # noqa: E402
 import grade  # noqa: E402
 import upscale_hd  # noqa: E402
 import zones  # noqa: E402
@@ -128,6 +129,20 @@ class Grade(unittest.TestCase):
         self.assertAlmostEqual(curve[4], 0.8)
         self.assertEqual(curve[6], 0.6)
         self.assertEqual(curve[8], 0.6)
+
+
+class MatteEncoding(unittest.TestCase):
+    FIXTURES = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fixtures')
+
+    def test_encode_matte_fits_the_budget_and_keeps_the_alpha(self):
+        import io
+        from PIL import Image
+        for name in ('matte_f114.png', 'matte_f189.png', 'matte_f300.png'):  # Brickell stop, Downtown stop, the tower gap
+            alpha = Image.open(os.path.join(self.FIXTURES, name)).convert('L')
+            data = export_site.encode_matte(alpha)
+            self.assertLess(len(data), export_site.MATTE_BUDGET, name)
+            back = np.asarray(Image.open(io.BytesIO(data)))[..., 3].astype(int)
+            self.assertLess(np.abs(back - np.asarray(alpha, int)).mean(), 2.0, name)
 
 
 class Assemble(unittest.TestCase):

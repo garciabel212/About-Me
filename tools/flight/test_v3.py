@@ -100,6 +100,35 @@ class Grade(unittest.TestCase):
         self.assertEqual(k, 1.0)
         self.assertTrue(np.array_equal(out, self.gray(120)))
 
+    def sky_and_tower(self):
+        rgb = np.full((40, 40, 3), 150, np.uint8)
+        rgb[:, 20:] = 60  # a dark tower on the right
+        matte = np.zeros((40, 40), np.uint8)
+        matte[:, 20:] = 255
+        return rgb, matte
+
+    def test_sky_gain_leaves_buildings_alone(self):
+        rgb, matte = self.sky_and_tower()
+        out = grade.apply_sky_gain(rgb, matte, 0.7)
+        self.assertTrue(np.array_equal(out[:, 20:], rgb[:, 20:]))
+        self.assertLess(int(out[0, 0, 0]), 150)
+
+    def test_sky_gain_to_hits_target_within_floor(self):
+        rgb, matte = self.sky_and_tower()
+        k = grade.sky_gain_to(rgb, matte, 130)
+        self.assertGreaterEqual(k, 0.6)
+        self.assertAlmostEqual(zones.sky_level(grade.apply_sky_gain(rgb, matte, k), matte), 130, delta=1)
+        self.assertEqual(grade.sky_gain_to(rgb, matte, 200), 1.0)
+
+    def test_gain_curve_eases_between_stops(self):
+        curve = grade.gain_curve([2, 6], [1.0, 0.6], 9)
+        self.assertEqual(len(curve), 9)
+        self.assertEqual(curve[0], 1.0)
+        self.assertEqual(curve[2], 1.0)
+        self.assertAlmostEqual(curve[4], 0.8)
+        self.assertEqual(curve[6], 0.6)
+        self.assertEqual(curve[8], 0.6)
+
 
 class Assemble(unittest.TestCase):
     def test_assemble_marks(self):

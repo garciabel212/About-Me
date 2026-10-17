@@ -15,6 +15,7 @@ import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # the embedded Python doesn't add the script's folder
+from grade import apply_sky_gain, gain_curve, sky_gain_to  # noqa: E402
 from heal_chain import COMFY  # noqa: E402
 from retime import MASTER_FRAMES, MASTER_STOPS  # noqa: E402
 from zones import check_light_forward, sky_level, zone_coverage  # noqa: E402
@@ -28,6 +29,7 @@ PHONE_MATTE_W = 315  # PHONE_W at matte scale (0.75)
 SITE_STOPS = [40, 114, 189, 264, 338, 412]
 MAX_ZONE_COVERAGE = 0.15  # distant horizon structures cross full-height text columns; a near tower is far above this
 QUALITY = {'hd': 78, 'desktop': 72, 'phone': 74}
+SKY_STEP = 1.5  # a stop's sky may sit at most this much above the previous one (check_light_forward allows 2)
 
 here = os.path.dirname(os.path.abspath(__file__))
 FLIGHT = os.path.join(COMFY, 'output', 'video', 'flight')
@@ -65,7 +67,9 @@ def main():
     missing = [p for p in hd_paths + matte_paths if not os.path.exists(p)]
     if missing:
         fail(f'{len(missing)} missing inputs, first {missing[0]}')
-    levels = []
+    # Dusk only moves forward: a stop whose sky (sky and water only, buildings untouched) is brighter than the stop
+    # before it is darkened sky-only, never past grade.FLOOR, and the gain eases across the hops on either side.
+    levels, gains, raw = [], [], []
     for s in stops:
         rgb = np.asarray(Image.open(hd_paths[s['frame']]).convert('RGB'))
         m = np.asarray(Image.open(matte_paths[s['frame']]))
@@ -74,9 +78,13 @@ def main():
         cover = zone_coverage(m, s['id'])
         if cover >= MAX_ZONE_COVERAGE:
             fail(f"{s['id']}: buildings cover {cover * 100:.1f}% of its text zone (limit {MAX_ZONE_COVERAGE * 100:.0f}%)")
-        levels.append(sky_level(rgb, m))
+        raw.append(sky_level(rgb, m))
+        k = sky_gain_to(rgb, m, levels[-1] + SKY_STEP) if levels else 1.0
+        gains.append(k)
+        levels.append(sky_level(apply_sky_gain(rgb, m, k), m))
     if not check_light_forward(levels):
-        fail(f'the sky brightens between stops: {[round(v, 1) for v in levels]}')
+        fail(f'the sky brightens between stops even after grading: {[round(v, 1) for v in levels]}')
+    curve = gain_curve([s['frame'] for s in stops], gains, n)
 
     dirs = {k: os.path.join(root, 'public', 'flight', *k.split('/')) for k in ('hd', 'desktop', 'phone', 'matte/wide', 'matte/phone')}
     for d in dirs.values():
@@ -86,7 +94,9 @@ def main():
 
     crops = []
     for i, (fp, mp) in enumerate(zip(hd_paths, matte_paths)):
-        hd = Image.open(fp).convert('RGB')
+        with Image.open(mp) as mi:
+            mask = np.asarray(mi.convert('L'))
+        hd = Image.fromarray(apply_sky_gain(np.asarray(Image.open(fp).convert('RGB')), mask, curve[i]))
         hd.save(os.path.join(dirs['hd'], f'f{i:03d}.webp'), quality=QUALITY['hd'], method=6)
         desk = hd.resize(DESKTOP, Image.LANCZOS)
         desk.save(os.path.join(dirs['desktop'], f'f{i:03d}.webp'), quality=QUALITY['desktop'], method=6)
@@ -116,7 +126,8 @@ def main():
     open(os.path.join(root, 'src', 'flight', 'flightData.ts'), 'w', encoding='utf8').write(ts)
     sizes = {k: sum(os.path.getsize(os.path.join(d, f)) for f in os.listdir(d)) / 1e6 for k, d in dirs.items()}
     print(f'EXPORTED {n} frames: ' + ', '.join(f'{k} {v:.1f} MB' for k, v in sizes.items()) + f'; stops {SITE_STOPS}')
-    print('sky levels at stops', [round(v, 1) for v in levels])
+    print('sky levels at stops', [round(v, 1) for v in raw], '-> graded', [round(v, 1) for v in levels],
+          'sky gains', [round(g, 2) for g in gains])
 
 
 if __name__ == '__main__':

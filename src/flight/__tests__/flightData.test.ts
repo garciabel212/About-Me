@@ -19,4 +19,15 @@ describe('generated flight data', () => {
       }
     }
   });
+  it('keeps the six stop frames the landing is built around', () => {
+    expect(flight.frames).toBe(413);
+    expect(flight.stops.map((s) => s.frame)).toEqual([40, 114, 189, 264, 338, 412]);
+  });
+  it('describes the HD set and the occlusion mattes', () => {
+    expect(flight.hdWidth).toBe(1920);
+    expect(flight.hdHeight).toBe(1056);
+    expect(flight.matteWidth).toBe(960);
+    expect(flight.matteHeight).toBe(528);
+    expect(flight.phoneMatteWidth).toBe(315);
+  });
 });

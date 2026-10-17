@@ -61,6 +61,11 @@ class Matte(unittest.TestCase):
         probs[0], probs[1], probs[2] = 0.7, 0.2, 0.1
         np.testing.assert_allclose(matte_core.from_probs(probs, [0, 1]), 0.1, atol=1e-6)
 
+    def test_from_occluders_ignores_ground(self):
+        probs = np.zeros((4, 2, 2), np.float32)
+        probs[0], probs[1], probs[2], probs[3] = 0.5, 0.2, 0.2, 0.1  # sand, building, palm, sky
+        np.testing.assert_allclose(matte_core.from_occluders(probs, [1, 2]), 0.4, atol=1e-6)
+
     def test_stops_unsmoothed(self):
         mattes = [np.full((4, 4), v, np.float32) for v in (0, 1, 0, 1, 0)]
         out = matte_core.smooth(mattes, stops=[2])

@@ -11,6 +11,13 @@ def from_probs(probs, clear_ids):
     return np.clip(1.0 - probs[clear_ids].sum(axis=0), 0.0, 1.0).astype(np.float32)
 
 
+def from_occluders(probs, occluder_ids):
+    """Per-pixel class probabilities (C, H, W) to a soft matte: P(any upright occluder class).
+
+    Ground (sand, shoreline, roads, grass) is not an occluder: the light runs over it, not behind it."""
+    return np.clip(probs[occluder_ids].sum(axis=0), 0.0, 1.0).astype(np.float32)
+
+
 def smooth(mattes, stops):
     """Averages each matte with its neighbours (0.25 / 0.5 / 0.25) so edges don't flicker in flight.
 

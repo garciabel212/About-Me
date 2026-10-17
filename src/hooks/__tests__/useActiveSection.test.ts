@@ -3,7 +3,7 @@ import { activeFrom } from '../useActiveSection';
 
 describe('activeFrom', () => {
   it('picks the section that most recently passed the probe line, whatever order ids are listed in', () => {
-    // Survey order on the page: overview/about (River) at the top, projects (Brickell) below.
+    // Order on the page: overview/about (River) at the top, projects (Brickell) below.
     const tops = [
       { id: 'overview', top: -2400 },
       { id: 'projects', top: 120 },

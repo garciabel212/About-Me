@@ -13,9 +13,9 @@ import ServiceWorkflow from './ServiceWorkflow';
 
 const base = import.meta.env.BASE_URL;
 
-function Section({ id, title, lead, evidence, children }: { id: SectionId; title: string; lead?: string; evidence?: string; children: ReactNode }) {
+function Section({ id, title, lead, children }: { id: SectionId; title: string; lead?: string; children: ReactNode }) {
   return (
-    <section id={id} tabIndex={-1} aria-labelledby={`${id}-title`} className={`home-section home-section--${id}`} data-evidence={evidence}>
+    <section id={id} tabIndex={-1} aria-labelledby={`${id}-title`} className={`home-section home-section--${id}`}>
       <div className="panel">
         <header className="section-head">
           <h2 id={`${id}-title`}>{title}</h2>
@@ -63,7 +63,7 @@ export function Overview() {
 
 export function Experience() {
   return (
-    <Section id="experience" title="Experience" evidence="timeline" lead="Professional roles, most recent first. Personal projects are listed separately under Projects.">
+    <Section id="experience" title="Experience" lead="Professional roles, most recent first. Personal projects are listed separately under Projects.">
       <div className="inline-evidence"><CareerTimeline /></div>
       <div className="roles">
         {experience.map((e) => (
@@ -177,7 +177,7 @@ export function Projects() {
   const [featured, ...rest] = projects;
   return (
     <Section id="projects" title="Projects" lead="Personal projects I designed and built on my own time, separate from my employment.">
-      <article className="project project--featured" aria-labelledby="project-featured-title" data-evidence={featured.slug}>
+      <article className="project project--featured" aria-labelledby="project-featured-title">
         <ProjectFigure project={featured} featured />
         <div className="project__body">
           <p className="project__focus">{featured.focus}</p>
@@ -190,7 +190,7 @@ export function Projects() {
       </article>
       <div className="project-grid">
         {rest.map((p) => (
-          <article key={p.slug} className="project" aria-labelledby={`project-${p.slug}-title`} data-evidence={p.image ? p.slug : undefined}>
+          <article key={p.slug} className="project" aria-labelledby={`project-${p.slug}-title`}>
             <ProjectFigure project={p} />
             <div className="project__body">
               {p.image && <p className="project__focus">{p.focus}</p>}

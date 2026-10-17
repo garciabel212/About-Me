@@ -126,6 +126,19 @@ class Chunks(unittest.TestCase):
         self.assertEqual(spans[0], (0, 99, 0))
         self.assertEqual(spans[1], (91, 198, 8))
 
+    def test_place_frame_moves_full_size_and_resizes_others(self):
+        import tempfile
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as d:
+            ok, off = os.path.join(d, 'ok.png'), os.path.join(d, 'off.png')
+            Image.new('RGB', (upscale_hd.W, upscale_hd.H)).save(ok)
+            Image.new('RGB', (1918, 1056)).save(off)
+            upscale_hd.place_frame(ok, os.path.join(d, 'a.png'))
+            upscale_hd.place_frame(off, os.path.join(d, 'b.png'))
+            self.assertFalse(os.path.exists(ok))
+            with Image.open(os.path.join(d, 'b.png')) as b:
+                self.assertEqual(b.size, (upscale_hd.W, upscale_hd.H))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -51,6 +51,19 @@ def graph(video_name, prefix):
     }
 
 
+def place_frame(src, dst):
+    """Moves an upscaled frame into the master, resizing to exactly W x H if the model was off by a few pixels.
+    The image is closed before the move (Windows refuses to move an open file)."""
+    with Image.open(src) as im:
+        size = im.size
+        if size != (W, H):
+            im.convert('RGB').resize((W, H), Image.LANCZOS).save(dst)
+    if size == (W, H):
+        shutil.move(src, dst)
+    else:
+        os.remove(src)
+
+
 def write_chunk(frames, path):
     """Lossless RGB mp4, so the upscaler sees exactly the assembled frames."""
     c = av.open(path, mode='w')
@@ -81,12 +94,7 @@ def main():
         assert len(images) == end - start, (len(images), end - start)
         for j, img in enumerate(images[skip:]):
             src = os.path.join(COMFY, 'output', img['subfolder'], img['filename'])
-            dst = os.path.join(out_dir, f'f{first + start + skip + j:04d}.png')
-            im = Image.open(src)
-            if im.size != (W, H):
-                im.convert('RGB').resize((W, H), Image.LANCZOS).save(dst)
-            else:
-                shutil.move(src, dst)
+            place_frame(src, os.path.join(out_dir, f'f{first + start + skip + j:04d}.png'))
         os.remove(os.path.join(COMFY, 'input', name))
         print(f'chunk {k}: frames {start + skip}..{end - 1} done', flush=True)
     shutil.rmtree(os.path.join(COMFY, 'output', 'video', 'flight', 'hd_tmp'), ignore_errors=True)

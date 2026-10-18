@@ -11,6 +11,9 @@ export const SWAY = {
   text: { x: 7, y: 5 },
 } as const;
 
+/** Everything that moves as the film: the frame canvas, its poster, and the building layer drawn over the light. */
+export const FILM_SELECTOR = '.film__canvas, .film__poster, .film__front';
+
 /** The pointer as -1..1 around the screen centre. */
 export function swayTarget(px: number, py: number, w: number, h: number): Vec {
   return { x: (px / w) * 2 - 1, y: (py / h) * 2 - 1 };
@@ -23,7 +26,7 @@ export function swayStep(current: Vec, target: Vec, k = 0.08): Vec {
 
 /**
  * Camera sway on desktop: moving the mouse turns the "camera" a little. The
- * film (and its building cut-outs) shift one way, the text and light the
+ * film (and its building layer) shift one way, the text and light the
  * other. Transforms are written straight to the few elements that move.
  */
 export function useCameraSway(root: RefObject<HTMLElement | null>, enabled: boolean): void {
@@ -33,7 +36,7 @@ export function useCameraSway(root: RefObject<HTMLElement | null>, enabled: bool
     let current: Vec = { x: 0, y: 0 };
     let target: Vec = { x: 0, y: 0 };
     let raf = 0;
-    const film = () => el.querySelectorAll<HTMLElement>('.film__canvas, .film__poster, .film__occluder');
+    const film = () => el.querySelectorAll<HTMLElement>(FILM_SELECTOR);
     const text = () => el.querySelectorAll<HTMLElement | SVGElement>('.point__body, .light-path');
     const write = () => {
       const f = `${(current.x * SWAY.film.x).toFixed(2)}px ${(current.y * SWAY.film.y).toFixed(2)}px`;

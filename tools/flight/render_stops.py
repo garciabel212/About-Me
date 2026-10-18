@@ -16,6 +16,7 @@ for stop in route:
         continue
     print(f"rendering {stop['id']}", flush=True)
     subprocess.run([sys.executable, os.path.join(here, 'stop_clips.py'), stop['id'], f"flight/stops/{stop['id']}.png",
-                    stop['arrive'], stop['depart'], str(stop.get('seed', 7100)), *([stop['pullback']] if 'pullback' in stop else [])],
+                    stop['arrive'], stop['depart'], str(stop.get('seed', 7100)), *([stop['pullback']] if 'pullback' in stop else []),
+                    '--depart-seed', str(stop.get('depart_seed', 7200))],
                    check=True)
 print('ALL_STOPS_DONE', flush=True)

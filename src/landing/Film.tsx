@@ -5,32 +5,33 @@ import { coverDraw } from '@/flight/crop';
 import { flight } from '@/flight/flightData';
 import { flightTarget, type Span } from '@/flight/flightTarget';
 import { FrameStore } from '@/flight/FrameStore';
+import { pickSet, SET_QUERIES, type FrameSet } from '@/flight/frameSet';
 import { POSTER_FRAME } from '@/flight/poster';
+import { frameUrl, matteUrl, pairFront, srcSize } from './filmAssets';
+import { drawFront } from './front';
 
 const base = import.meta.env.BASE_URL;
-const pad = (n: number) => String(n).padStart(3, '0');
 const STOP_FRAMES = flight.stops.map((s) => s.frame);
-const PHONE = '(max-width: 767px)';
 /** Seconds for the drawn frame to catch up with the scroll position. */
 const LAG = 0.12;
 
-/**
- * Which stop the film is holding at, from the frame on screen: -1 while flying. A frame
- * of slack covers the eased catch-up landing one frame short of the stop.
- */
-export function heldStop(frame: number, stopFrames: number[]): number {
-  return frame < 0 ? -1 : stopFrames.findIndex((f) => Math.abs(frame - f) <= 1);
+/** The set for this window, measured like SET_QUERIES (innerWidth, scrollbar included) so the two never disagree. */
+export function currentSet(): FrameSet {
+  const width = window.innerWidth;
+  const nav = typeof navigator === 'undefined' ? undefined : (navigator as Navigator & { connection?: { saveData?: boolean } });
+  return pickSet(width, window.devicePixelRatio || 1, nav?.connection?.saveData ?? false);
 }
 
-function useMatches(query: string): boolean {
-  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+/** The frame set for this screen, re-picked whenever one of its breakpoints flips. */
+function useFrameSet(): FrameSet {
+  const [set, setSet] = useState(currentSet);
   useEffect(() => {
-    const list = window.matchMedia(query);
-    const onChange = () => setMatches(list.matches);
-    list.addEventListener('change', onChange);
-    return () => list.removeEventListener('change', onChange);
-  }, [query]);
-  return matches;
+    const lists = SET_QUERIES.map((q) => window.matchMedia(q));
+    const onChange = () => setSet(currentSet());
+    lists.forEach((l) => l.addEventListener('change', onChange));
+    return () => lists.forEach((l) => l.removeEventListener('change', onChange));
+  }, []);
+  return set;
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -54,21 +55,25 @@ function pointSpans(ids: string[]): (Span | null)[] {
  * points, driven by scroll. With motion off it shows one still per point.
  */
 export default function Film({ motion, pointIds }: { motion: boolean; pointIds: string[] }) {
-  const phone = useMatches(PHONE);
+  const set = useFrameSet();
   const root = useRef<HTMLDivElement>(null);
-  const set = phone ? 'phone' : 'desktop';
+  const front = useRef<HTMLCanvasElement>(null);
+  // The poster stays a desktop or phone frame: index.html preloads exactly those.
+  const posterSet = set === 'phone' ? 'phone' : 'desktop';
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const el = root.current!;
     const canvas = el.querySelector('canvas')!;
     const poster = el.querySelector('img')!;
-    // Building cut-outs, one per stop, in their own layer over the light (see landing.css).
-    const cutouts = [...(el.parentElement?.querySelectorAll<HTMLImageElement>('.film__occluder') ?? [])];
+    // The building layer over the light (see landing.css): each painted frame cut to its own matte.
+    const frontCanvas = front.current!;
     const ctx = canvas.getContext('2d')!;
-    const srcW = phone ? flight.phoneWidth : flight.width;
-    const srcH = flight.height;
-    const url = (i: number) => `${base}flight/${set}/f${pad(i)}.webp`;
+    const fctx = frontCanvas.getContext('2d')!;
+    const src = srcSize(set);
+    const url = (i: number) => frameUrl(base, set, i);
+    const stillMattes = new Map<number, HTMLImageElement>();
+    let lastImg: HTMLImageElement | null = null;
     let w = 0;
     let h = 0;
     let raf = 0;
@@ -79,15 +84,18 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
     let still: HTMLImageElement | null = null;
     let disposed = false;
 
+    const paintFront = () => {
+      if (lastImg) drawFront(fctx, lastImg, pairFront(painted, mattes ?? stillMattes), src, { w, h });
+    };
+
     const paint = (img: HTMLImageElement, frame: number) => {
-      const r = coverDraw(srcW, srcH, w, h);
+      const r = coverDraw(src.w, src.h, w, h);
       ctx.clearRect(0, 0, w, h);
       ctx.drawImage(img, r.dx, r.dy, r.dw, r.dh);
       poster.style.visibility = 'hidden';
       painted = frame;
-      // While the camera holds at a stop, that stop's buildings stand in front of the light.
-      const held = heldStop(frame, STOP_FRAMES);
-      cutouts.forEach((c, i) => c.toggleAttribute('data-on', i === held));
+      lastImg = img;
+      paintFront();
     };
 
     const store = motion
@@ -102,12 +110,24 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
           },
         })
       : null;
+    // Mattes stream alongside the frames; a matte that lands for the frame on screen repaints the building layer.
+    const mattes = motion
+      ? new FrameStore<HTMLImageElement>({
+          frameCount: flight.frames,
+          load: (i) => loadImage(matteUrl(base, set, i)),
+          onLoad: (i) => {
+            if (!disposed && i === painted) paintFront();
+          },
+        })
+      : null;
 
     const showStill = (i: number) => {
-      loadImage(url(STOP_FRAMES[i])).then((img) => {
+      const f = STOP_FRAMES[i];
+      const matte = loadImage(matteUrl(base, set, f)).then((m) => stillMattes.set(f, m), () => {});
+      Promise.all([loadImage(url(f)), matte]).then(([img]) => {
         if (disposed || i !== current) return;
         still = img;
-        paint(img, STOP_FRAMES[i]);
+        paint(img, f);
       }, () => {});
     };
 
@@ -127,6 +147,7 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
       if (Math.abs(target.frame - shown) < 0.3) shown = target.frame;
       const f = Math.round(shown);
       store.setPlayhead(f);
+      mattes?.setPlayhead(f);
       const hit = store.nearest(f);
       if (hit && hit.index !== painted) paint(hit.frame, hit.index);
       if (shown !== target.frame) schedule();
@@ -141,10 +162,12 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = document.documentElement.clientWidth;
       h = window.innerHeight;
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.imageSmoothingQuality = 'high';
+      for (const [c, x] of [[canvas, ctx], [frontCanvas, fctx]] as const) {
+        c.width = Math.round(w * dpr);
+        c.height = Math.round(h * dpr);
+        x.setTransform(dpr, 0, 0, dpr, 0, 0);
+        x.imageSmoothingQuality = 'high';
+      }
       painted = -1;
       if (still) paint(still, STOP_FRAMES[current]);
       schedule();
@@ -157,6 +180,7 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
         if (!started) {
           started = true;
           store.start();
+          mattes?.start();
         }
       };
       poster.decode().then(begin, begin);
@@ -173,19 +197,20 @@ export default function Film({ motion, pointIds }: { motion: boolean; pointIds: 
       window.removeEventListener('resize', layout);
       ro.disconnect();
       store?.dispose();
+      mattes?.dispose();
+      // A new set brings its own frames and mattes; never leave this set's buildings over them.
+      fctx.clearRect(0, 0, w, h);
     };
-  }, [phone, set, motion, pointIds]);
+  }, [set, motion, pointIds]);
 
   return (
     <>
       <div ref={root} className="film" aria-hidden="true">
-        <img className="film__poster" src={`${base}flight/${set}/f${pad(POSTER_FRAME)}.webp`} alt="" fetchPriority="high" />
+        <img className="film__poster" src={frameUrl(base, posterSet, POSTER_FRAME)} alt="" fetchPriority="high" />
         <canvas className="film__canvas" />
       </div>
-      <div className="film-occluders" aria-hidden="true">
-        {flight.stops.map((s) => (
-          <img key={s.id} className="film__occluder" src={`${base}flight/occluders/${set}/${s.id}.webp`} alt="" decoding="async" />
-        ))}
+      <div className="film-front" aria-hidden="true">
+        <canvas ref={front} className="film__front" />
       </div>
     </>
   );

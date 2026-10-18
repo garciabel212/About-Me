@@ -4,5 +4,11 @@
   "s3_canyon": {"key": "downtown", "place": "Downtown",  "coords": "25.774° N · 80.194° W", "x": 0.65, "y": 0.28},
   "s4_bay":    {"key": "bay",      "place": "The Bay",   "coords": "25.790° N · 80.170° W", "x": 0.56, "y": 0.42},
   "s5_palms":  {"key": "beach",    "place": "The Beach", "coords": "25.790° N · 80.130° W", "x": 0.585, "y": 0.42},
-  "s6_sunset": {"key": "sunset",   "place": "Sunset Harbour", "coords": "25.795° N · 80.145° W", "x": 0.625, "y": 0.36}
+  "s6_sunset": {"key": "sunset",   "place": "Sunset Harbour", "coords": "25.795° N · 80.145° W", "x": 0.625, "y": 0.36},
+  "v3_river":    {"key": "river", "place": "River", "coords": "25.770° N · 80.189° W", "x": 0.15, "y": 0.35},
+  "v3_brickell": {"key": "brickell", "place": "Brickell", "coords": "25.759° N · 80.194° W", "x": 0.62, "y": 0.4},
+  "v3_downtown": {"key": "downtown", "place": "Downtown", "coords": "25.774° N · 80.194° W", "x": 0.5, "y": 0.45},
+  "v3_bay":      {"key": "bay", "place": "The Bay", "coords": "25.790° N · 80.170° W", "x": 0.15, "y": 0.6},
+  "v3_beach":    {"key": "beach", "place": "The Beach", "coords": "25.790° N · 80.130° W", "x": 0.57, "y": 0.45},
+  "v3_sunset":   {"key": "sunset", "place": "Sunset Harbour", "coords": "25.795° N · 80.145° W", "x": 0.65, "y": 0.42}
 }

@@ -1,0 +1,61 @@
+[
+  {
+    "id": "v3_river",
+    "zone": "river",
+    "still": "Hovering a few meters above the calm dark Miami River at dusk, looking down the river toward Brickell. Modern glass residential towers with warm lit windows rise along the LEFT bank of the river, the riverwalk lights glowing at their base, long glowing reflections on the dark water. Composition: the towers fill the left half of the frame; the dark river runs across the bottom of the frame; the upper right of the frame is open, calm deep violet sky with no buildings and no clouds, and the orange afterglow is only a thin band low on the far horizon.",
+    "arrive": "Modern glass residential towers with warm lit windows on the left bank of the Miami River at dusk, open deep violet sky on the right, a thin orange afterglow low on the horizon, glowing reflections on the dark water.",
+    "depart": "The camera flies forward low over the river, crosses toward the right bank and turns right toward a tall glass residential tower with warm lit windows in Brickell, late afterglow on the horizon.",
+    "pick": 1101,
+    "sky": 88
+  },
+  {
+    "id": "v3_brickell",
+    "zone": "brickell",
+    "still": "Hovering at mid-height beside a tall modern glass residential tower in Brickell at dusk. The tower fills the right edge of the frame with warm lit windows and curved white balconies, crisp straight edges. Composition: the tower occupies the right third of the frame from top to bottom; the left 45 percent of the frame is open, calm sky fading from soft violet above to a late peach afterglow low on the horizon, above dark calm bay water and a low distant shoreline with small lights.",
+    "arrive": "A tall modern glass residential tower with warm lit windows and white balconies close on the right, open violet sky and dark calm bay water on the left, a late peach afterglow low on the horizon.",
+    "depart": "The camera banks left and flies through the narrow gap between two tall glass towers with warm lit windows, the towers sliding past close on both sides, then out over the river toward the downtown towers under a twilight sky.",
+    "pick": 3303,
+    "sky": 87
+  },
+  {
+    "id": "v3_downtown",
+    "zone": "downtown",
+    "still": "Symmetrical one-point perspective view from a camera hovering above the middle of a very wide, calm river channel in downtown Miami at twilight. Tall office and residential towers with warm lit windows stand far apart, set back along both banks: one wall of towers fills only the left 30 percent of the frame and another fills only the right 30 percent of the frame. The central 40 percent of the frame, from the top edge to the bottom edge, contains only smooth open twilight sky in soft violet and blue above a very low distant flat horizon, and calm dark open water below it; no buildings, towers, bridges, cranes, boats or clouds in the central 40 percent.",
+    "arrive": "Tall downtown towers with warm lit windows on both banks of the calm Miami River at twilight, open violet sky and dark water up the middle between them, a faint glow low on the far horizon.",
+    "depart": "The camera rises and flies forward along the river past the last downtown towers, out over the wide calm bay, turning right so the towers slide away to the left, pink and violet twilight sky.",
+    "pick": 6606,
+    "sky": 84,
+    "seed": 8123,
+    "depart_seed": 8223
+  },
+  {
+    "id": "v3_bay",
+    "zone": "bay",
+    "still": "Hovering 60 meters above calm Biscayne Bay in deep twilight, the sky already dark. On the LEFT side of the frame a few residential towers with warm lit windows stand on the shore, a few anchored sailboats with tiny lights near them on the dark glassy water. The sky is a dark, deep violet overhead fading to dusky mauve, with only a faint thin pink glow low on the horizon. Composition: the towers and boats sit in the left 45 percent of the frame; the right half of the frame is open, calm dark water at the bottom and smooth dark violet twilight sky above, with nothing in it, no bridge, no causeway, no clouds.",
+    "arrive": "Calm Biscayne Bay at twilight, residential towers with lit windows and a long lit causeway on the left, anchored sailboats, open water and pink and violet sky on the right.",
+    "depart": "The camera accelerates and flies fast forward, low across the wide calm bay straight toward the distant beach and palm trees, the water rushing past below, glittering reflections, the violet sky turning deep blue.",
+    "pick": 1212,
+    "sky": 73,
+    "seed": 8124
+  },
+  {
+    "id": "v3_beach",
+    "zone": "beach",
+    "still": "Low aerial view of a wide empty white sand beach in Miami Beach in the deep blue hour, the sky already dark navy and deep violet overhead, looking north along the shore. A pastel pink lifeguard tower with a warm glowing light stands raised in the upper right of the frame, tall palm silhouettes behind it on the right against a faint dim afterglow low in the western sky. The calm Atlantic Ocean on the left lies under a dark navy and deep violet sky with only a faint dusky pink line just above the sea horizon. Composition: the lifeguard tower and the palms sit in the upper half of the frame on the right; the lower half of the frame is smooth, empty sand softly lit by the tower light; the left 40 percent is calm ocean and soft cool twilight sky.",
+    "arrive": "A pastel pink lifeguard tower with a warm glowing light on a wide empty sand beach in the blue hour, palm silhouettes behind it on the right against a faint peach afterglow, the calm ocean on the left under a cool deep blue and violet sky.",
+    "depart": "The camera rises high and steadily above the beach, the small lifeguard tower far below, then banks right, turning away from the ocean, flying high over the palm silhouettes and softly lit rooftops toward the calm bay, the glowing lit skyline of downtown Miami appearing across the water under a deep violet sky with a thin ember-orange afterglow on the horizon.",
+    "pick": 9909,
+    "sky": 66,
+    "seed": 8125
+  },
+  {
+    "id": "v3_sunset",
+    "zone": "sunset",
+    "still": "Hovering low over the calm dark water of Biscayne Bay just off the bayside shore of Miami Beach in the deep blue hour, looking west across the wide bay. A compact cluster of tall downtown towers with warm lit windows stands only in the right half of the frame, with long glowing reflections of their lights stretching across the glassy water toward the camera, and a thin band of ember-orange afterglow lies low on the horizon behind them, fading up into deep violet and blue sky. Composition: the waterline sits high, about 35 percent from the top of the frame; the entire left half of the frame is an empty, flat, very distant horizon line with no buildings above open calm dark water; the lower half of the frame is calm dark water.",
+    "arrive": "The downtown Miami skyline with warm lit windows across the calm dark bay in the deep blue hour, long glowing reflections of the city lights on the water, a thin ember-orange afterglow low on the horizon behind the towers, deep violet sky.",
+    "depart": "-",
+    "pullback": "Use the provided image as the first frame. FPV drone footage: the camera flies fast backward and upward away from the skyline, out over the dark bay toward Miami Beach, the towers shrink into the distance, softly lit rooftops and palm silhouettes of Miami Beach slide in at the bottom of the frame, smooth continuous motion, no cuts, calm still water, crisp clean architecture. ",
+    "pick": 6606,
+    "sky": 64
+  }
+]

@@ -55,17 +55,12 @@ describe('lightFor', () => {
     expect(l.head.y).toBeCloseTo(1000 + 1000 * HEAD_LINE, 0);
   });
 
-  it('lights every node the head has passed', () => {
-    expect(lightFor(samples, nodes, view(0)).lit).toBe(1);
-    expect(lightFor(samples, nodes, view(1400 - 1000 * HEAD_LINE)).lit).toBe(2);
-  });
-
   it('is complete at the bottom of the page', () => {
-    expect(lightFor(samples, nodes, view(5000))).toMatchObject({ fraction: 1, lit: 4 });
+    expect(lightFor(samples, nodes, view(5000))).toMatchObject({ fraction: 1 });
   });
 
-  it('with motion off draws the whole light and lights every node', () => {
-    expect(lightFor(samples, nodes, view(0, false))).toEqual({ fraction: 1, head: nodes[3], lit: 4 });
+  it('with motion off draws the whole light', () => {
+    expect(lightFor(samples, nodes, view(0, false))).toEqual({ fraction: 1, head: nodes[3] });
   });
 
   it('measures from the landing top, not the document top', () => {
@@ -78,10 +73,10 @@ describe('reached', () => {
   const stops = [{ x: 0, y: 100 }, { x: 0, y: 1400 }, { x: 0, y: 2700 }];
 
   it('marks every point the light head has arrived at, in order', () => {
-    expect(reached(stops, { fraction: 0.3, head: { x: 0, y: 1500 }, lit: 2 })).toEqual([true, true, false]);
+    expect(reached(stops, { fraction: 0.3, head: { x: 0, y: 1500 } })).toEqual([true, true, false]);
   });
 
   it('marks all of them once the light is complete (bottom of the page, or motion off)', () => {
-    expect(reached(stops, { fraction: 1, head: { x: 0, y: 0 }, lit: 3 })).toEqual([true, true, true]);
+    expect(reached(stops, { fraction: 1, head: { x: 0, y: 0 } })).toEqual([true, true, true]);
   });
 });

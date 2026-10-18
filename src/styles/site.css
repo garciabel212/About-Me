@@ -46,7 +46,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
   --border: rgba(244, 239, 230, 0.12); --border-strong: rgba(244, 239, 230, 0.26); --border-subtle: rgba(244, 239, 230, 0.07);
 }
 .site-shell.is-film ::selection { background: rgba(74, 168, 255, 0.35); }
-/* The survey owns the page in Cinematic mode: dark scrollbar, no light gutter. */
+/* The landing owns the page in Cinematic mode: dark scrollbar, no light gutter. */
 html:has(.site-shell.is-film) { color-scheme: dark; background: #0b0d18; scrollbar-color: rgba(243, 244, 246, 0.3) #0b0d18; }
 
 /* ── Buttons and links ─────────────────────────────────────────────── */

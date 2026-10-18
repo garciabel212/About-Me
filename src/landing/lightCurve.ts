@@ -17,8 +17,6 @@ export interface Light {
   fraction: number;
   /** Where the bright head is. */
   head: Node;
-  /** Nodes the head has reached. */
-  lit: number;
 }
 
 /** The head sits this far down the screen: ahead of the reader, so the light reaches the next point first. */
@@ -70,19 +68,18 @@ export function samplePath(nodes: Node[], steps = 32): Sample[] {
 /** How much of the light is drawn for a scroll position. */
 export function lightFor(samples: Sample[], nodes: Node[], view: { scrollY: number; vh: number; maxScroll: number; top: number; motion: boolean }): Light {
   const last = nodes[nodes.length - 1];
-  if (!last || samples.length === 0) return { fraction: 0, head: { x: 0, y: 0 }, lit: 0 };
-  if (!view.motion || view.scrollY >= view.maxScroll - 1) return { fraction: 1, head: last, lit: nodes.length };
+  if (!last || samples.length === 0) return { fraction: 0, head: { x: 0, y: 0 } };
+  if (!view.motion || view.scrollY >= view.maxScroll - 1) return { fraction: 1, head: last };
   const y = view.scrollY + view.vh * HEAD_LINE - view.top;
   const total = samples[samples.length - 1].len || 1;
-  const lit = nodes.filter((n) => n.y <= y + 0.5).length;
-  if (y <= samples[0].y) return { fraction: 0, head: { x: samples[0].x, y: samples[0].y }, lit: Math.max(1, lit) };
+  if (y <= samples[0].y) return { fraction: 0, head: { x: samples[0].x, y: samples[0].y } };
   const i = samples.findIndex((s) => s.y >= y);
-  if (i < 0) return { fraction: 1, head: last, lit: nodes.length };
+  if (i < 0) return { fraction: 1, head: last };
   const a = samples[i - 1];
   const b = samples[i];
   const t = b.y === a.y ? 1 : (y - a.y) / (b.y - a.y);
   const head = { x: a.x + (b.x - a.x) * t, y };
-  return { fraction: (a.len + (b.len - a.len) * t) / total, head, lit: Math.max(1, lit) };
+  return { fraction: (a.len + (b.len - a.len) * t) / total, head };
 }
 
 /** Which stops (points' entry nodes) the light has reached: all of them once it is complete. */
